@@ -151,8 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#BDBDBD',
     width: width,
     height: height * 0.02
-  }
-  ,
+  },
   cardContainer: {
     width: width * 0.35,
     height: height * 0.2,
