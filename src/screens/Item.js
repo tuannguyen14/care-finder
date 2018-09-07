@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList, TouchableOpacity, ListView } from "react-native";
 import { Text, Rating, Avatar } from 'react-native-elements';
-import { Container, Tab, Tabs } from 'native-base';
+import { Container, Tab, Tabs, Accordion } from 'native-base';
 import { ListItem, List } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Entypo';
 
@@ -59,6 +59,8 @@ export default class Item extends Component {
                     />
                 </View>
 
+                 <View style={[styles.line]} />
+
                 <View style={{ marginLeft: '1%' }}>
                     <Text h3 style={{ color: 'black' }}>{this.state.name}</Text>
                     <View style={styles.rowView}>
@@ -75,7 +77,9 @@ export default class Item extends Component {
                     </View>
                 </View>
 
-                <Container style={{ marginTop: '3%' }}>
+                 <View style={[styles.line, { marginTop: '1%' }]} />
+
+                <Container>
                     <Container>
                         <Tabs>
                             <Tab heading="Thông tin" tabStyle={{ backgroundColor: '#E57373' }} activeTabStyle={{ backgroundColor: '#E57373' }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
@@ -106,23 +110,35 @@ export class InformationItem extends Component {
             },
             address: '99 Bùi Thị Xuân',
             phoneNumber: '0909000000',
-            website: 'https://hahaha.com'
+            website: 'https://hahaha.com',
+            calendar: '',
+            dataArray: [
+                { title: "Giờ làm việc", content: "Thứ hai: " + "Cả ngày \n" + "Thứ ba: " + "Cả ngày \n" + "Thứ Tư: " + "Cả ngày \n" + "Thứ Sáu: " + "Cả ngày \n" + "Thứ Thứ bảy: " + "Cả ngày \n" + "Chủ nhật: " + "Cả ngày \n" },
+            ]
         };
     }
 
     componentWillMount() {
         const listDefaultItemTemp = [
             {
-                name: this.state.address,
+                describe: 'address',
+                detail: this.state.address,
                 icon: 'location-on'
             },
             {
-                name: this.state.phoneNumber,
+                describe: 'phoneNumber',
+                detail: this.state.phoneNumber,
                 icon: 'phone'
             },
             {
-                name: this.state.website,
-                icon: 'web'
+                describe: 'website',
+                detail: this.state.website,
+                icon: 'public'
+            },
+            {
+                describe: 'calendar',
+                detail: this.state.calendar,
+                icon: 'event-note'
             }
         ]
         this.setState({
@@ -137,8 +153,19 @@ export class InformationItem extends Component {
                     this.state.listDefaultItem.map((l, i) => (
                         <ListItem
                             key={i}
+                            hideChevron={true}
                             leftAvatar={{ source: { uri: l.avatar_url } }}
-                            title={l.name}
+                            title={
+                                <View>
+                                    {
+                                        (l.describe != 'calendar') ?
+                                            <Text style={{ color: 'black', fontSize: 19 }}>{l.detail}</Text>
+                                            :
+                                            <Accordion dataArray={this.state.dataArray} />
+
+                                    }
+                                </View>
+                            }
                             leftIcon={{ name: l.icon, color: '#F44336' }}
                         />
                     ))
