@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList, TouchableOpa
 import { Text, Rating, Avatar } from 'react-native-elements';
 import { Container, Tab, Tabs, Accordion } from 'native-base';
 import { ListItem, List } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 let { width, height } = Dimensions.get("window");
 
@@ -59,7 +59,7 @@ export default class Item extends Component {
                     />
                 </View>
 
-                 <View style={[styles.line]} />
+                <View style={[styles.line]} />
 
                 <View style={{ marginLeft: '1%' }}>
                     <Text h3 style={{ color: 'black' }}>{this.state.name}</Text>
@@ -77,7 +77,7 @@ export default class Item extends Component {
                     </View>
                 </View>
 
-                 <View style={[styles.line, { marginTop: '1%' }]} />
+                <View style={[styles.line, { marginTop: '1%' }]} />
 
                 <Container>
                     <Container>
@@ -149,28 +149,41 @@ export class InformationItem extends Component {
     render() {
         return (
             <ScrollView>
-                {
-                    this.state.listDefaultItem.map((l, i) => (
-                        <ListItem
-                            key={i}
-                            hideChevron={true}
-                            leftAvatar={{ source: { uri: l.avatar_url } }}
-                            title={
-                                <View>
-                                    {
-                                        (l.describe != 'calendar') ?
-                                            <Text style={{ color: 'black', fontSize: 19 }}>{l.detail}</Text>
-                                            :
-                                            <Accordion dataArray={this.state.dataArray} />
+                <View style={[styles.rowView, { width: width }]} >
+                    <View style={[styles.centerContainer, { width: width * 0.5 }]}>
+                        <Icon name={'directions'} size={50} color={'#F44336'} />
+                        <Text>Chỉ đường</Text>
+                    </View>
+                    <View style={[styles.centerContainer, { width: width * 0.5 }]}>
+                        <Icon name={'star'} size={50} color={'#F44336'} />
+                        <Text>lưu</Text>
+                    </View>
+                </View>
+                <View style={[styles.line, { marginTop: '1%' }]} />
+                <View>
+                    {
+                        this.state.listDefaultItem.map((l, i) => (
+                            <ListItem
+                                key={i}
+                                hideChevron={true}
+                                leftAvatar={{ source: { uri: l.avatar_url } }}
+                                title={
+                                    <View>
+                                        {
+                                            (l.describe != 'calendar') ?
+                                                <Text style={{ color: 'black', fontSize: 19 }}>{l.detail}</Text>
+                                                :
+                                                <Accordion dataArray={this.state.dataArray} />
 
-                                    }
-                                </View>
-                            }
-                            leftIcon={{ name: l.icon, color: '#F44336' }}
-                        />
-                    ))
-                }
-            </ScrollView>
+                                        }
+                                    </View>
+                                }
+                                leftIcon={{ name: l.icon, color: '#F44336' }}
+                            />
+                        ))
+                    }
+                </View>
+            </ScrollView >
         );
     }
 }
@@ -432,11 +445,10 @@ const styles = StyleSheet.create({
     rowView: {
         flexDirection: 'row'
     },
-
     line: {
         backgroundColor: '#BDBDBD',
         width: width,
-        height: height * 0.005
+        height: height * 0.003
     },
     centerContainer: {
         justifyContent: 'center',
