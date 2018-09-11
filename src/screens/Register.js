@@ -21,7 +21,7 @@ export default class Login extends Component {
     }
 
     register() {
-        fetch('http://localhost:3000/user/', {
+        fetch(' http://localhost:3000/register', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -34,11 +34,13 @@ export default class Login extends Component {
                 password: this.state.password,
                 gender: this.state.male ? 'Nam' : 'Nữ'
             }),
-        }).catch(function (error) {
-            console.log('There has been a problem with your fetch operation: ' + error.message);
-            // ADD THIS THROW error
-            throw error;
-        });;
+        }).then((response) => response.json())
+            .then((responseJson) => {
+                return responseJson.movies;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     checkMale() {
