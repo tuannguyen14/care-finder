@@ -3,7 +3,11 @@ import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList, TouchableOpa
 import { Text, Rating, Avatar } from 'react-native-elements';
 import { Container, Tab, Tabs, Accordion } from 'native-base';
 import { ListItem, List } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import IconFoundation from 'react-native-vector-icons/Foundation';
+import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/Entypo';
+
+import { AppColors } from '../styles/AppColors.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -82,13 +86,13 @@ export default class Item extends Component {
                 <Container>
                     <Container>
                         <Tabs>
-                            <Tab heading="Thông tin" tabStyle={{ backgroundColor: '#E57373' }} activeTabStyle={{ backgroundColor: '#E57373' }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
+                            <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
                                 <InformationItem />
                             </Tab>
-                            <Tab heading="Đánh giá" tabStyle={{ backgroundColor: '#E57373' }} activeTabStyle={{ backgroundColor: '#E57373' }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                            <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
                                 <RatingItem />
                             </Tab>
-                            <Tab heading="Ảnh" tabStyle={{ backgroundColor: '#E57373' }} activeTabStyle={{ backgroundColor: '#E57373' }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                            <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
                                 <ListImagesItem />
                             </Tab>
                         </Tabs>
@@ -149,14 +153,14 @@ export class InformationItem extends Component {
     render() {
         return (
             <ScrollView>
-                <View style={[styles.rowView, { width: width }]} >
+                <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
                     <View style={[styles.centerContainer, { width: width * 0.5 }]}>
-                        <Icon name={'directions'} size={50} color={'#F44336'} />
-                        <Text>Chỉ đường</Text>
+                        <IconFontAwesome5 name={'directions'} size={50} color={'#F44336'} />
+                        <Text style={{ color: 'black' }}>Chỉ đường</Text>
                     </View>
                     <View style={[styles.centerContainer, { width: width * 0.5 }]}>
-                        <Icon name={'star'} size={50} color={'#F44336'} />
-                        <Text>lưu</Text>
+                        <IconFoundation name={'book-bookmark'} size={50} color={'#F44336'} />
+                        <Text style={{ color: 'black' }}>lưu</Text>
                     </View>
                 </View>
                 <View style={[styles.line, { marginTop: '1%' }]} />
@@ -174,7 +178,6 @@ export class InformationItem extends Component {
                                                 <Text style={{ color: 'black', fontSize: 19 }}>{l.detail}</Text>
                                                 :
                                                 <Accordion dataArray={this.state.dataArray} />
-
                                         }
                                     </View>
                                 }

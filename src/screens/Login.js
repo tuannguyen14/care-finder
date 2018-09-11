@@ -14,7 +14,7 @@ export default class Login extends Component {
     }
 
     login() {
-        this.props.navigation.navigate("MainTabScreen");
+        this.props.navigation.navigate("RootDrawer");
     }
 
     render() {
@@ -28,9 +28,6 @@ export default class Login extends Component {
                             style={styles.logo}
                         />
                     </View>
-                    <View style={styles.containerLine}>
-                        <Text style={{ color: "white", fontSize: 17 }}>_____________        Login       _____________</Text>
-                    </View>
                     <View style={styles.inputGroup}>
                         <InputGroup>
                             <Icon name={'mail'} size={27} color={'white'} />
@@ -38,7 +35,8 @@ export default class Login extends Component {
                                 style={{ color: "white", marginLeft: "3%" }}
                                 placeholder="Email"
                                 placeholderTextColor="rgba(255,255,255,255)"
-                                value={this.state.email} />
+                                value={this.state.email}
+                                autoCorrect={false} />
                         </InputGroup>
 
                         <InputGroup>
@@ -47,7 +45,9 @@ export default class Login extends Component {
                                 style={{ color: "white", marginLeft: "3%" }}
                                 placeholder="Mật khẩu"
                                 placeholderTextColor="rgba(255,255,255,255)"
-                                value={this.state.password} />
+                                value={this.state.password}
+                                secureTextEntry
+                                autoCorrect={false} />
                         </InputGroup>
                     </View>
                     <View style={styles.buttonGroup}>
@@ -80,15 +80,10 @@ export default class Login extends Component {
 }
 
 const styles = StyleSheet.create({
-    containerLine: {
-        marginLeft: "13%",
-        marginRight: "13%",
-        marginTop: "46%",
-    },
     inputGroup: {
         marginLeft: "15%",
         marginRight: "15%",
-        marginTop: "10%"
+        marginTop: "50%"
     },
     containerLogo: {
         flex: 1,

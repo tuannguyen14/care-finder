@@ -1,8 +1,10 @@
 import React, { Component, } from 'react';
 import { Dimensions } from "react-native";
 import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
-import { SearchBar, Card, Text } from 'react-native-elements'
+import { Header, SearchBar, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import { AppColors } from '../styles/AppColors.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -52,6 +54,11 @@ export default class Home extends Component {
     return (
       <View>
         <ScrollView style={{ marginBottom: '1%' }}>
+          <Header
+            backgroundColor={AppColors.color}
+            leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
+            centerComponent={{ text: 'Trang chính', style: { color: '#fff', fontSize: 20 } }}
+          />
           <View style={styles.searchBarContainer}>
 
             <SearchBar
