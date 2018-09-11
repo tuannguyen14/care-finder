@@ -4,15 +4,15 @@ import { InputGroup, Input, CheckBox, Body, ListItem } from 'native-base';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import axios from 'axios';
 let { width, height } = Dimensions.get("window");
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "nu",
-            email: "nu@gmail.com",
+            name: "nusafafsaf",
+            email: "nusfafasfasf@gmail.com",
             password: "admin123",
             phoneNumber: "admin123",
             male: false,
@@ -20,12 +20,24 @@ export default class Login extends Component {
         }
     }
 
+<<<<<<< HEAD
     register() {
         fetch(' http://localhost:3000/register', {
             method: 'POST',
+=======
+    register= async () => {
+        var body= {
+            name: this.state.name,
+            phoneNumber: this.state.phoneNumber,
+            email: this.state.email,
+            password: this.state.password,
+            gender: this.state.male ? 'Nam' : 'Nữ'
+        }
+        axios.post('http://192.168.1.3:3000/register', body,{
+>>>>>>> c0b6f6da3af05efc53c127147ee4eff32665a1ed
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
+<<<<<<< HEAD
             },
             body: JSON.stringify({
                 name: this.state.name,
@@ -42,6 +54,17 @@ export default class Login extends Component {
                 console.error(error);
             });
     }
+=======
+            }
+            
+        })
+        .then(response => {
+            console.log(response)
+        }).catch(err =>{
+            console.log(err)
+        })
+      }
+>>>>>>> c0b6f6da3af05efc53c127147ee4eff32665a1ed
 
     checkMale() {
         this.setState({
