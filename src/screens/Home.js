@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import { Dimensions } from "react-native";
-import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
 import { Header, SearchBar, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -48,6 +48,18 @@ export default class Home extends Component {
 
   detailItem() {
     this.props.navigation.navigate("ItemScreen");
+  }
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton() {
+    return true;
   }
 
   render() {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList, TouchableOpacity, ListView } from "react-native";
-import { Text, Rating, Avatar } from 'react-native-elements';
+import { Header, Text, Rating, Avatar } from 'react-native-elements';
 import { Container, Tab, Tabs, Accordion } from 'native-base';
 import { ListItem, List } from 'react-native-elements'
 import IconFoundation from 'react-native-vector-icons/Foundation';
@@ -44,61 +44,66 @@ export default class Item extends Component {
     render() {
         return (
             <Container>
-
-                <View>
-                    <FlatList
-                        data={this.state.listImage}
-                        horizontal={true}
-                        renderItem={({ item: rowData }) => {
-                            return (
-                                <View>
-                                    <Image
-                                        source={{ uri: rowData.uri }}
-                                        style={styles.image}
-                                    />
-                                </View>
-                            );
-                        }}
-                        keyExtractor={(item, index) => index.toString()}
+                <ScrollView>
+                    <Header
+                        backgroundColor={AppColors.color}
+                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () =>  this.props.navigation.goBack() }}
+                        centerComponent={{ text: 'Item', style: { color: '#fff', fontSize: 20 } }}
                     />
-                </View>
-
-                <View style={[styles.line]} />
-
-                <View style={{ marginLeft: '1%' }}>
-                    <Text h3 style={{ color: 'black' }}>{this.state.name}</Text>
-                    <View style={styles.rowView}>
-                        <Text >{this.state.countRating}</Text>
-                        <Rating
-                            type="heart"
-                            ratingCount={5}
-                            fractions={2}
-                            startingValue={this.state.countRating}
-                            imageSize={20}
-                            readonly
-                            style={{ marginLeft: '1%' }}
+                    <View>
+                        <FlatList
+                            data={this.state.listImage}
+                            horizontal={true}
+                            renderItem={({ item: rowData }) => {
+                                return (
+                                    <View>
+                                        <Image
+                                            source={{ uri: rowData.uri }}
+                                            style={styles.image}
+                                        />
+                                    </View>
+                                );
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
                         />
                     </View>
-                </View>
 
-                <View style={[styles.line, { marginTop: '1%' }]} />
+                    <View style={[styles.line]} />
 
-                <Container>
+                    <View style={{ marginLeft: '1%' }}>
+                        <Text h3 style={{ color: 'black' }}>{this.state.name}</Text>
+                        <View style={styles.rowView}>
+                            <Text >{this.state.countRating}</Text>
+                            <Rating
+                                type="heart"
+                                ratingCount={5}
+                                fractions={2}
+                                startingValue={this.state.countRating}
+                                imageSize={20}
+                                readonly
+                                style={{ marginLeft: '1%' }}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={[styles.line, { marginTop: '1%' }]} />
+
                     <Container>
-                        <Tabs>
-                            <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
-                                <InformationItem />
-                            </Tab>
-                            <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                <RatingItem />
-                            </Tab>
-                            <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                <ListImagesItem />
-                            </Tab>
-                        </Tabs>
+                        <Container>
+                            <Tabs>
+                                <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
+                                    <InformationItem />
+                                </Tab>
+                                <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                                    <RatingItem />
+                                </Tab>
+                                <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                                    <ListImagesItem />
+                                </Tab>
+                            </Tabs>
+                        </Container>
                     </Container>
-                </Container>
-
+                </ScrollView>
             </Container>
         );
     }

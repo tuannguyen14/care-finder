@@ -5,5 +5,6 @@ import { name as appName } from './app.json';
 import { YellowBox } from 'react-native';
 import Main from './src/navigation/Main';
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings(['Warning: Failed prop type', 'Module RCTImageLoader']);
 
 AppRegistry.registerComponent(appName, () => Main);

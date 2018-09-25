@@ -23,6 +23,10 @@ class MainDrawer extends Component {
                 name: '',
                 icon: ''
             },
+            listUtilitiesItem: {
+                name: '',
+                icon: ''
+            },
         };
     }
 
@@ -30,20 +34,30 @@ class MainDrawer extends Component {
         const listDefaultItemTemp = [
             {
                 icon: 'person',
-                name: 'Thông tin người dùng'
+                name: 'Thông tin người dùng',
+                navigation: 'InformationUserScreen'
             },
             {
                 icon: 'sentiment-dissatisfied',
                 name: 'Đăng xuất'
             }
         ]
+        const listUtilitiesItem = [
+            {
+                icon: 'assistant-photo',
+                name: 'Tạo địa điểm',
+                navigation: 'CreateNewLocationScreen'
+            }
+        ]
         this.setState({
-            listSettingsItem: listDefaultItemTemp
+            listSettingsItem: listDefaultItemTemp,
+            listUtilitiesItem: listUtilitiesItem
         })
     }
 
 
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
 
@@ -72,6 +86,23 @@ class MainDrawer extends Component {
 
                 <View>
                     <View>
+                        <Text style={[styles.title, styles.textShadow]}>Tiện ích</Text>
+                        <View>
+                            {
+                                this.state.listUtilitiesItem.map((l, i) => (
+                                    <ListItem
+                                        key={i}
+                                        hideChevron={true}
+                                        title={l.name}
+                                        leftIcon={{ name: l.icon, color: '#F44336', style: { marginLeft: '10%' } }}
+                                        onPress={() => navigate(l.navigation)}
+                                    />
+                                ))
+                            }
+                        </View>
+                    </View>
+
+                    <View>
                         <Text style={[styles.title, styles.textShadow]}>Cài Đặt</Text>
                         <View>
                             {
@@ -80,7 +111,8 @@ class MainDrawer extends Component {
                                         key={i}
                                         hideChevron={true}
                                         title={l.name}
-                                        leftIcon={{ name: l.icon, color: '#F44336' }}
+                                        leftIcon={{ name: l.icon, color: '#F44336', style: { marginLeft: '10%' } }}
+                                        onPress={() => navigate(l.navigation)}
                                     />
                                 ))
                             }
@@ -114,7 +146,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 21,
         color: '#9E9E9E',
-        marginLeft: '1%'
+        marginLeft: '5%'
     }
 });
 

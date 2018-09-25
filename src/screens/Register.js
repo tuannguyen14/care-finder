@@ -5,66 +5,49 @@ import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import Toast, { DURATION } from 'react-native-easy-toast'
+import { AppColors } from '../styles/AppColors.js';
+
 let { width, height } = Dimensions.get("window");
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "nusafafsaf",
-            email: "nusfafasfasf@gmail.com",
+            name: "Tuan",
+            email: "tuan123@gmail.com",
             password: "admin123",
             phoneNumber: "admin123",
             male: false,
-            female: false
+            female: false,
+            showToast: false,
         }
     }
 
-<<<<<<< HEAD
-    register() {
-        fetch(' http://localhost:3000/register', {
-            method: 'POST',
-=======
-    register= async () => {
-        var body= {
+    register = async () => {
+        const body = {
             name: this.state.name,
             phoneNumber: this.state.phoneNumber,
             email: this.state.email,
             password: this.state.password,
             gender: this.state.male ? 'Nam' : 'Nữ'
         }
-        axios.post('http://192.168.1.3:3000/register', body,{
->>>>>>> c0b6f6da3af05efc53c127147ee4eff32665a1ed
+        axios.post('http://10.10.56.172:3000/register', body, {
             headers: {
                 'Content-Type': 'application/json',
-<<<<<<< HEAD
-            },
-            body: JSON.stringify({
-                name: this.state.name,
-                phoneNumber: this.state.phoneNumber,
-                email: this.state.email,
-                password: this.state.password,
-                gender: this.state.male ? 'Nam' : 'Nữ'
-            }),
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                return responseJson.movies;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-=======
             }
-            
         })
-        .then(response => {
-            console.log(response)
-        }).catch(err =>{
-            console.log(err)
-        })
-      }
->>>>>>> c0b6f6da3af05efc53c127147ee4eff32665a1ed
+            .then(response => {
+                this.refs.toast.show('Đăng ký thành công');
+                this.timeoutHandle = setTimeout(() => {
+                    this.props.navigation.goBack();
+                }, 1000)
+                console.log(response)
+            }).catch(err => {
+                this.refs.toast.show('Đăng ký thất bại');
+                console.log(err)
+            })
+    }
 
     checkMale() {
         this.setState({
@@ -120,6 +103,7 @@ export default class Login extends Component {
                                         onChangeText={email => this.setState({ email })}
                                         value={this.state.email}
                                         ref={(input) => { this.emailInput = input; }}
+                                        keyboardType="email-address"
                                         returnKeyType={"next"}
                                         onSubmitEditing={() => { this.passwordInput._root.focus() }} />
                                 </InputGroup>
@@ -191,7 +175,7 @@ export default class Login extends Component {
                                     onPress={() => this.register()}
                                     title='Đăng ký'
                                     buttonStyle={{
-                                        backgroundColor: "#E57373",
+                                        backgroundColor: AppColors.color,
                                         width: 300,
                                         height: 45,
                                         borderColor: "transparent",
@@ -201,6 +185,7 @@ export default class Login extends Component {
                                 />
                             </View>
                         </View>
+                        <Toast ref="toast" />
                     </ImageBackground >
                 </ScrollView>
             </View>

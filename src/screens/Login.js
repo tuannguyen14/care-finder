@@ -3,18 +3,34 @@ import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity } from
 import Icon from 'react-native-vector-icons/Entypo';
 import { InputGroup, Input } from 'native-base';
 import { Button } from 'react-native-elements';
+import axios from 'axios';
+import { AppColors } from '../styles/AppColors.js';
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "",
-            password: ""
+            email: "tuan123@gmail.com",
+            password: "admin123"
         }
     }
 
-    login() {
-        this.props.navigation.navigate("RootDrawer");
+    login = async () => {
+        const body = {
+            email: this.state.email,
+            password: this.state.password,
+        }
+        axios.post('http://192.168.1.6:3000/login', body, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                this.props.navigation.navigate("RootDrawer");
+            }).catch(err => {
+                this.refs.toast.show('Đăng nhập thất bại');
+                console.log(err)
+            })
     }
 
     render() {
@@ -36,7 +52,10 @@ export default class Login extends Component {
                                 placeholder="Email"
                                 placeholderTextColor="rgba(255,255,255,255)"
                                 value={this.state.email}
-                                autoCorrect={false} />
+                                autoCorrect={false}
+                                keyboardType="email-address"
+                                onSubmitEditing={() => { this.passWordInput._root.focus() }}
+                                returnKeyType={"next"} />
                         </InputGroup>
 
                         <InputGroup>
@@ -47,6 +66,7 @@ export default class Login extends Component {
                                 placeholderTextColor="rgba(255,255,255,255)"
                                 value={this.state.password}
                                 secureTextEntry
+                                ref={(input) => { this.passWordInput = input; }}
                                 autoCorrect={false} />
                         </InputGroup>
                     </View>
@@ -54,7 +74,7 @@ export default class Login extends Component {
                         <Button
                             title='Đăng nhập'
                             buttonStyle={{
-                                backgroundColor: "#E57373",
+                                backgroundColor: AppColors.color,
                                 width: 300,
                                 height: 45,
                                 borderColor: "transparent",
