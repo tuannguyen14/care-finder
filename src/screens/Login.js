@@ -12,8 +12,8 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "tuan123@gmail.com",
-            password: "admin123"
+            email: "ntd180295@gmail.com",
+            password: "hahaha"
         }
     }
 
@@ -22,7 +22,11 @@ export default class Login extends Component {
             email: this.state.email,
             password: this.state.password,
         }
+<<<<<<< HEAD
         axios.post(IPServer.ip + '/login', body, {
+=======
+        axios.post('http://192.168.137.28:3000/login', body, {
+>>>>>>> 63914378efd5d697865c830661b2ba88f5e476d7
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -56,6 +60,7 @@ export default class Login extends Component {
                                 value={this.state.email}
                                 autoCorrect={false}
                                 keyboardType="email-address"
+                                onChangeText={email => this.setState({ email })}
                                 onSubmitEditing={() => { this.passWordInput._root.focus() }}
                                 returnKeyType={"next"} />
                         </InputGroup>
@@ -68,6 +73,7 @@ export default class Login extends Component {
                                 placeholderTextColor="rgba(255,255,255,255)"
                                 value={this.state.password}
                                 secureTextEntry
+                                onChangeText={password => this.setState({ password })}
                                 ref={(input) => { this.passWordInput = input; }}
                                 autoCorrect={false} />
                         </InputGroup>

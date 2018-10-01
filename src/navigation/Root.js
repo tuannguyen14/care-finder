@@ -9,6 +9,7 @@ import Item from "../screens/Item";
 import InformationUser from "../screens/InformationUser";
 import ChangeInformationUser from "../screens/ChangeInformationUser";
 import CreateNewLocation from "../screens/CreateNewLocation";
+import Verify from "../screens/Verify";
 
 export const MainScreen = createStackNavigator({
   LoginScreen: { screen: Login },
@@ -17,7 +18,8 @@ export const MainScreen = createStackNavigator({
   ItemScreen: { screen: Item },
   InformationUserScreen: { screen: InformationUser },
   ChangeInformationUserScreen: { screen: ChangeInformationUser },
-  CreateNewLocationScreen: { screen: CreateNewLocation }
+  CreateNewLocationScreen: { screen: CreateNewLocation },
+  VerifyScreen: {screen: Verify}
 },
   {
     headerMode: 'none'
