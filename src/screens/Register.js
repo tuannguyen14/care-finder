@@ -14,10 +14,11 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "Tuan",
+            firstName: "Tuan",
+            lastName: "Nguyen",
             email: "tuan123@gmail.com",
             password: "admin123",
-            phoneNumber: "admin123",
+            phoneNumber: "0963448001",
             male: false,
             female: false,
             showToast: false,
@@ -26,13 +27,14 @@ export default class Login extends Component {
 
     register = async () => {
         const body = {
-            name: this.state.name,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
             phoneNumber: this.state.phoneNumber,
             email: this.state.email,
             password: this.state.password,
             gender: this.state.male ? 'Nam' : 'Nữ'
         }
-        axios.post('http://10.10.56.172:3000/register', body, {
+        axios.post('http://192.168.137.28:3000/register', body, {
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -40,7 +42,8 @@ export default class Login extends Component {
             .then(response => {
                 this.refs.toast.show('Đăng ký thành công');
                 this.timeoutHandle = setTimeout(() => {
-                    this.props.navigation.goBack();
+                    let user = response.data.createdUser;
+                    this.props.navigation.navigate('VerifyScreen',{user});
                 }, 1000)
                 console.log(response)
             }).catch(err => {
@@ -84,11 +87,23 @@ export default class Login extends Component {
                                     <Icon name={'user'} size={27} color={'white'} />
                                     <Input
                                         style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Họ và Tên"
+                                        placeholder="Họ"
                                         placeholderTextColor="rgba(255,255,255,255)"
                                         autoCorrect={false}
-                                        onChangeText={name => this.setState({ name })}
-                                        value={this.state.name}
+                                        onChangeText={lastName => this.setState({ lastName })}
+                                        value={this.state.lastName}
+                                        returnKeyType={"next"}
+                                        onSubmitEditing={() => { this.emailInput._root.focus() }} />
+                                </InputGroup>
+                                <InputGroup>
+                                    <Icon name={'user'} size={27} color={'white'} />
+                                    <Input
+                                        style={{ color: "white", marginLeft: "3%" }}
+                                        placeholder="Tên"
+                                        placeholderTextColor="rgba(255,255,255,255)"
+                                        autoCorrect={false}
+                                        onChangeText={firstName => this.setState({ firstName })}
+                                        value={this.state.firstName}
                                         returnKeyType={"next"}
                                         onSubmitEditing={() => { this.emailInput._root.focus() }} />
                                 </InputGroup>

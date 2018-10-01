@@ -93,6 +93,7 @@ export default class CreateNewLocation extends Component {
         if (poi == null) {
             this.refs.toast.show('Vui lòng chọn địa điểm');
         } else {
+            console.log(poi)
             this.refs.toast.show('Chọn địa điểm thành công');
         }
     }
