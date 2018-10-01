@@ -5,6 +5,8 @@ import { InputGroup, Input } from 'native-base';
 import { Button } from 'react-native-elements';
 import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
+import { IPServer } from '../Server/IPServer.js';
+
 
 export default class Login extends Component {
     constructor(props) {
@@ -20,7 +22,7 @@ export default class Login extends Component {
             email: this.state.email,
             password: this.state.password,
         }
-        axios.post('http://192.168.1.6:3000/login', body, {
+        axios.post(IPServer.ip + '/login', body, {
             headers: {
                 'Content-Type': 'application/json',
             }

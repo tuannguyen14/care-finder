@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity, Dimensions, ScrollView, FlatList } from "react-native";
-import { InputGroup, Input, Form, Picker, Container } from 'native-base';
+import { InputGroup, Input, Picker } from 'native-base';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
-import Toast, { DURATION } from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast'
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import MapView, { Callout, Marker, ProviderPropType } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
+import { IPServer } from '../Server/IPServer.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -33,10 +34,10 @@ export default class CreateNewLocation extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "",
-            address: "",
-            phoneNumber: "",
-            website: "",
+            name: "Test",
+            address: "Test address",
+            phoneNumber: "09020309",
+            website: "muahaha.com",
             selectedCity: undefined,
             selectedWeekStart: undefined,
             selectedWeekEnd: undefined,
@@ -145,7 +146,7 @@ export default class CreateNewLocation extends Component {
                 const listUploadImage = this.state.listUploadImage;
                 let listUploadImageTemp = listUploadImage;
                 for (const o in listUploadImage) {
-                    if (listUploadImage[o].uri == 5) {
+                    if (listUploadImage[o].uri < Number.MAX_SAFE_INTEGER) {
                         listUploadImageTemp = []
                     }
                     this.setState({
@@ -156,6 +157,7 @@ export default class CreateNewLocation extends Component {
                 const uriTemp = { uri: response.uri };
                 listUploadImageTemp.push({ uri: uriTemp });
                 this.setState({ listUploadImage: listUploadImageTemp });
+                console.log(this.state.listUploadImage)
             }
         });
     }
@@ -163,25 +165,28 @@ export default class CreateNewLocation extends Component {
     createLocation = async () => {
         const body = {
             name: this.state.name,
-            address: this.state.address,
+            address: {
+                street: this.state.address,
+                city: this.state.selectedCity
+            },
+            department: this.state.website,
             phoneNumber: this.state.phoneNumber,
-            email: this.state.email,
-            website: this.state.website,
-            
+            imageUrls: this.state.listUploadImage
         }
-        axios.post('http://10.10.56.172:3000/register', body, {
+        console.log(body);
+        axios.post(IPServer.ip + '/clinic', body, {
             headers: {
                 'Content-Type': 'application/json',
             }
         })
             .then(response => {
-                this.refs.toast.show('Đăng ký thành công');
+                this.refs.toast.show('Tạo địa điểm thành công');
                 this.timeoutHandle = setTimeout(() => {
                     this.props.navigation.goBack();
                 }, 1000)
                 console.log(response)
             }).catch(err => {
-                this.refs.toast.show('Đăng ký thất bại');
+                this.refs.toast.show('Tạo địa điểm thất bại');
                 console.log(err)
             })
     }
@@ -193,9 +198,9 @@ export default class CreateNewLocation extends Component {
                 <ScrollView style={styles.container}>
                     <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}>
                         <TouchableOpacity onPress={() => goBack()}>
-                        <View style={styles.backButtonContainer}>
-                            <Icon name={'arrow-long-left'} size={27} color={'white'} />
-                        </View>
+                            <View style={styles.backButtonContainer}>
+                                <Icon name={'arrow-long-left'} size={27} color={'white'} />
+                            </View>
                         </TouchableOpacity>
                         <View style={styles.containerLogo}>
                             <Image
@@ -245,22 +250,6 @@ export default class CreateNewLocation extends Component {
                                         autoCorrect={false}
                                         ref={(input) => { this.phoneNumberInput = input; }}
                                         onSubmitEditing={() => { this.emailInput._root.focus() }}
-                                    />
-                                </InputGroup>
-
-                                <InputGroup>
-                                    <Icon name={'mail'} size={27} color={'white'} />
-                                    <Input
-                                        style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Email"
-                                        placeholderTextColor="rgba(255,255,255,255)"
-                                        onChangeText={phoneNumber => this.setState({ phoneNumber })}
-                                        value={this.state.email}
-                                        keyboardType="email-address"
-                                        autoCorrect={false}
-                                        ref={(input) => { this.emailInput = input; }}
-                                        onSubmitEditing={() => { this.websiteInput._root.focus() }}
-                                        returnKeyType={"next"}
                                     />
                                 </InputGroup>
 

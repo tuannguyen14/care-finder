@@ -7,10 +7,11 @@ import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import { AppColors } from '../styles/AppColors.js';
+import { IPServer } from '../Server/IPServer.js';
 
 let { width, height } = Dimensions.get("window");
 
-export default class Login extends Component {
+export default class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,7 +33,7 @@ export default class Login extends Component {
             password: this.state.password,
             gender: this.state.male ? 'Nam' : 'Nữ'
         }
-        axios.post('http://10.10.56.172:3000/register', body, {
+        axios.post(IPServer.ip + '/register', body, {
             headers: {
                 'Content-Type': 'application/json',
             }
