@@ -22,11 +22,7 @@ export default class Login extends Component {
             email: this.state.email,
             password: this.state.password,
         }
-<<<<<<< HEAD
-        axios.post(IPServer.ip + '/login', body, {
-=======
-        axios.post('http://192.168.137.28:3000/login', body, {
->>>>>>> 63914378efd5d697865c830661b2ba88f5e476d7
+        axios.post(IPServer.ip+'/login', body, {
             headers: {
                 'Content-Type': 'application/json',
             }

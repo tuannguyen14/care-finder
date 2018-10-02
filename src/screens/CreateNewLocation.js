@@ -163,32 +163,32 @@ export default class CreateNewLocation extends Component {
     }
 
     createLocation = async () => {
-        const body = {
-            name: this.state.name,
-            address: {
-                street: this.state.address,
-                city: this.state.selectedCity
-            },
-            department: this.state.website,
-            phoneNumber: this.state.phoneNumber,
-            imageUrls: this.state.listUploadImage
-        }
-        console.log(body);
-        axios.post(IPServer.ip + '/clinic', body, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => {
-                this.refs.toast.show('Tạo địa điểm thành công');
-                this.timeoutHandle = setTimeout(() => {
-                    this.props.navigation.goBack();
-                }, 1000)
-                console.log(response)
-            }).catch(err => {
-                this.refs.toast.show('Tạo địa điểm thất bại');
-                console.log(err)
+
+        const body = new FormData();
+        body.append('_idDoctor','5b94ce2b6b34ae003a557c33')
+        body.append('name',this.state.name);
+        body.append('address', 'saasfaf');
+        body.append('department','asfsaf');
+        body.append('phoneNumber','244242424');
+        var arrayImage = this.state.listUploadImage.map(e=> {
+            body.append('imageUrls',{
+                uri: Object.values(e.uri)[0],
+                type: 'image/jpg',
+                name: 'image.jpg'
             })
+        })
+        console.log(arrayImage)
+        console.log(body)
+
+
+
+        fetch(IPServer.ip +'/clinic', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },body
+        });
+
     }
 
     render() {
