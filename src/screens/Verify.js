@@ -6,6 +6,7 @@ import { Button } from 'react-native-elements';
 import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
 import CodeInput from 'react-native-confirmation-code-input';
+import { IPServer } from '../Server/IPServer.js';
 
 export default class Verify extends Component {
     constructor(props) {
@@ -19,9 +20,10 @@ export default class Verify extends Component {
     _onFinishCheckingCode(code,user) {
         let body = {
             'code':code,
-            'phoneNumber': user.phoneNumber
+            'phoneNumber': user.phoneNumber,
+            'userId': user._id
         }
-        axios.post('http://192.168.137.28:3000/register/verify', body, {
+        axios.post(IPServer.ip+'/register/verify', body, {
             headers: {
                 'Content-Type': 'application/json',
             }

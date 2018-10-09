@@ -35,6 +35,7 @@ export default class Register extends Component {
             password: this.state.password,
             gender: this.state.male ? 'Nam' : 'Nữ'
         }
+        console.log(body)
         axios.post(IPServer.ip + '/register', body, {
             headers: {
                 'Content-Type': 'application/json',

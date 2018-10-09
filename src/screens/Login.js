@@ -30,6 +30,7 @@ export default class Login extends Component {
             }
         })
             .then(response => {
+                console.log(response)
                 this.props.navigation.navigate("RootDrawer");
             }).catch(err => {
                 this.refs.toast.show('Đăng nhập thất bại');
