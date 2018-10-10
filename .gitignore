@@ -29,14 +29,13 @@ build/
 .gradle
 local.properties
 *.iml
-.flowconfig
+
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
 
-src/Server/IPServer.js
 # BUCK
 buck-out/
 \.buckd/

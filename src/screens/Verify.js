@@ -17,20 +17,20 @@ export default class Verify extends Component {
         }
     }
 
-    _onFinishCheckingCode(code,user) {
+    _onFinishCheckingCode(code, user) {
         let body = {
-            'code':code,
+            'code': code,
             'phoneNumber': user.phoneNumber,
             'userId': user._id
         }
-        axios.post(IPServer.ip+'/register/verify', body, {
+        axios.post(IPServer.ip + '/register/verify', body, {
             headers: {
                 'Content-Type': 'application/json',
             }
         })
             .then(response => {
                 console.log(response)
-                this.props.navigation.navigate('LoginScreen');    
+                this.props.navigation.navigate('LoginScreen');
             }).catch(err => {
                 this.refs.toast.show('Code sai');
                 console.log(err)
@@ -52,7 +52,7 @@ export default class Verify extends Component {
                     ignoreCase={true}
                     inputPosition='center'
                     size={50}
-                    onFulfill={(code) => this._onFinishCheckingCode(code,user)}
+                    onFulfill={(code) => this._onFinishCheckingCode(code, user)}
                     containerStyle={{ marginTop: 30 }}
                     codeInputStyle={{ borderWidth: 1.5 }}
                 />
