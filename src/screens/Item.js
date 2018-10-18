@@ -1,44 +1,21 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList, TouchableOpacity, ListView } from "react-native";
-import { Header, Text, Rating, Avatar } from 'react-native-elements';
-import { Container, Tab, Tabs, Accordion } from 'native-base';
-import { ListItem, List } from 'react-native-elements'
-import IconFoundation from 'react-native-vector-icons/Foundation';
-import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Icon from 'react-native-vector-icons/Entypo';
-
+import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList } from "react-native";
+import { Header, Text, Rating } from 'react-native-elements';
+import { Container, Tab, Tabs } from 'native-base';
 import { AppColors } from '../styles/AppColors.js';
+import InformationItem from './InformationItem.js';
+import RatingItem from './RatingItem.js';
+import ListImagesItem from './ListImagesItem.js';
 
 let { width, height } = Dimensions.get("window");
-
-const square = require('../img/square-shape-shadow.png')
 
 export default class Item extends Component {
     static navigationOptions = { header: null }
     constructor(props) {
         super(props);
         this.state = {
-            listImage: {
-                uri: ''
-            },
-            name: 'Hello',
-            countRating: 4.6
+            item: this.props.navigation.state.params.item
         };
-    }
-
-    componentWillMount() {
-        const data = [{
-            uri: 'https://healthitsecurity.com/images/site/article_headers/_normal/2017-11-08large-data-breach.jpg'
-        },
-        {
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy_Z-ysrnYjyeczessyvpVae-YRZvrDThYEvm-VMbEKak5hy87'
-        },
-        {
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRen6nkzfduANVrWDuKo1brc6KRjbTzeG0jWRyF4sK3s3exQM5u'
-        }];
-        this.setState({
-            listImage: data
-        })
     }
 
     render() {
@@ -47,18 +24,18 @@ export default class Item extends Component {
                 <ScrollView>
                     <Header
                         backgroundColor={AppColors.color}
-                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () =>  this.props.navigation.goBack() }}
-                        centerComponent={{ text: 'Item', style: { color: '#fff', fontSize: 20 } }}
+                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
+                        centerComponent={{ text: this.state.item.name, style: { color: '#fff', fontSize: 20 } }}
                     />
                     <View>
                         <FlatList
-                            data={this.state.listImage}
+                            data={this.state.item.imageUrls}
                             horizontal={true}
                             renderItem={({ item: rowData }) => {
                                 return (
                                     <View>
                                         <Image
-                                            source={{ uri: rowData.uri }}
+                                            source={{ uri: rowData }}
                                             style={styles.image}
                                         />
                                     </View>
@@ -71,9 +48,9 @@ export default class Item extends Component {
                     <View style={[styles.line]} />
 
                     <View style={{ marginLeft: '1%' }}>
-                        <Text h3 style={{ color: 'black' }}>{this.state.name}</Text>
+                        <Text h3 style={{ color: 'black' }}>{this.state.item.name}</Text>
                         <View style={styles.rowView}>
-                            <Text >{this.state.countRating}</Text>
+                            <Text >0.0</Text>
                             <Rating
                                 type="heart"
                                 ratingCount={5}
@@ -92,355 +69,19 @@ export default class Item extends Component {
                         <Container>
                             <Tabs>
                                 <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
-                                    <InformationItem />
+                                    <InformationItem item={this.state.item} />
                                 </Tab>
                                 <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                    <RatingItem />
+                                    <RatingItem item={this.state.item} />
                                 </Tab>
                                 <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                    <ListImagesItem />
+                                    <ListImagesItem item={this.state.item} />
                                 </Tab>
                             </Tabs>
                         </Container>
                     </Container>
                 </ScrollView>
             </Container>
-        );
-    }
-}
-
-export class InformationItem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            listDefaultItem: {
-                name: '',
-                icon: ''
-            },
-            address: '99 Bùi Thị Xuân',
-            phoneNumber: '0909000000',
-            website: 'https://hahaha.com',
-            calendar: '',
-            dataArray: [
-                { title: "Giờ làm việc", content: "Thứ hai: " + "Cả ngày \n" + "Thứ ba: " + "Cả ngày \n" + "Thứ Tư: " + "Cả ngày \n" + "Thứ Sáu: " + "Cả ngày \n" + "Thứ Thứ bảy: " + "Cả ngày \n" + "Chủ nhật: " + "Cả ngày \n" },
-            ]
-        };
-    }
-
-    componentWillMount() {
-        const listDefaultItemTemp = [
-            {
-                describe: 'address',
-                detail: this.state.address,
-                icon: 'location-on'
-            },
-            {
-                describe: 'phoneNumber',
-                detail: this.state.phoneNumber,
-                icon: 'phone'
-            },
-            {
-                describe: 'website',
-                detail: this.state.website,
-                icon: 'public'
-            },
-            {
-                describe: 'calendar',
-                detail: this.state.calendar,
-                icon: 'event-note'
-            }
-        ]
-        this.setState({
-            listDefaultItem: listDefaultItemTemp
-        })
-    }
-
-    render() {
-        return (
-            <ScrollView>
-                <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
-                    <View style={[styles.centerContainer, { width: width * 0.5 }]}>
-                        <IconFontAwesome5 name={'directions'} size={50} color={'#F44336'} />
-                        <Text style={{ color: 'black' }}>Chỉ đường</Text>
-                    </View>
-                    <View style={[styles.centerContainer, { width: width * 0.5 }]}>
-                        <IconFoundation name={'book-bookmark'} size={50} color={'#F44336'} />
-                        <Text style={{ color: 'black' }}>lưu</Text>
-                    </View>
-                </View>
-                <View style={[styles.line, { marginTop: '1%' }]} />
-                <View>
-                    {
-                        this.state.listDefaultItem.map((l, i) => (
-                            <ListItem
-                                key={i}
-                                hideChevron={true}
-                                leftAvatar={{ source: { uri: l.avatar_url } }}
-                                title={
-                                    <View>
-                                        {
-                                            (l.describe != 'calendar') ?
-                                                <Text style={{ color: 'black', fontSize: 19 }}>{l.detail}</Text>
-                                                :
-                                                <Accordion dataArray={this.state.dataArray} />
-                                        }
-                                    </View>
-                                }
-                                leftIcon={{ name: l.icon, color: '#F44336' }}
-                            />
-                        ))
-                    }
-                </View>
-            </ScrollView >
-        );
-    }
-}
-
-export class RatingItem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            countRating: 4.6,
-            listComments: []
-        };
-    }
-
-    componentWillMount() {
-        const list = [
-            {
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon',
-                ratingCount: 5
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Bệnh viện như shit',
-                ratingCount: 1
-            }
-        ]
-        this.setState({
-            listComments: list
-        })
-    }
-
-    render() {
-        return (
-            <ScrollView>
-                <View style={[styles.rowView]}>
-                    <View style={{ width: width * 0.6 }}>
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>5</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={5}
-                                fractions={2}
-                                startingValue={4}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>4</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={4}
-                                fractions={2}
-                                startingValue={4}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>3</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={3}
-                                fractions={2}
-                                startingValue={4}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>2</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={2}
-                                fractions={2}
-                                startingValue={2}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>1</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={1}
-                                fractions={2}
-                                startingValue={4}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                    </View>
-                    <View style={styles.centerContainer}>
-                        <Text h1>{this.state.countRating}</Text>
-                        <Rating
-                            type="heart"
-                            readonly
-                            ratingCount={5}
-                            fractions={2}
-                            startingValue={this.state.countRating}
-                            imageSize={27}
-                            style={{ marginLeft: '1%' }}
-                        />
-                    </View>
-                </View>
-
-                <View style={[styles.line, { marginTop: '3%' }]} />
-
-                <View style={[styles.centerContainer, { marginTop: '1%' }]}>
-                    <Avatar
-                        large
-                        rounded
-                        source={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
-                        onPress={() => console.log("Works!")}
-                        activeOpacity={0.7}
-                    />
-                    <Text style={{ color: 'black' }}>Xếp hạng và đánh giá</Text>
-                    <Text>Chia sẽ trải nghiệm của bạn để giúp đỡ người khác</Text>
-                    <Rating
-                        type="heart"
-                        ratingCount={5}
-                        fractions={2}
-                        startingValue={0}
-                        imageSize={40}
-                        style={{ marginLeft: '1%' }}
-                    />
-                </View>
-
-                <View style={[styles.line, { marginTop: '3%' }]} />
-
-                <View>
-                    <View style={[styles.centerContainer, { marginTop: '1%' }]}>
-                        <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
-                    </View>
-                    <List>
-                        {
-                            this.state.listComments.map((l, i) => (
-                                <ListItem
-                                    roundAvatar
-                                    hideChevron={true}
-                                    key={i}
-                                    leftAvatar={{ source: { uri: l.avatar_url } }}
-                                    title={l.name}
-                                    subtitle={
-                                        <View>
-                                            <Rating
-                                                type="heart"
-                                                ratingCount={5}
-                                                fractions={2}
-                                                startingValue={l.ratingCount}
-                                                imageSize={21}
-                                                style={{ marginLeft: '3%' }}
-                                            />
-                                            <Text style={{ marginLeft: '3%' }}>{l.subtitle}</Text>
-                                        </View>
-                                    }
-                                    avatar={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
-                                />
-                            ))
-                        }
-                    </List>
-                </View>
-            </ScrollView >
-        );
-    }
-}
-
-export class ListImagesItem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            listImage: {
-                uri: ''
-            },
-        };
-    }
-
-    componentWillMount() {
-        const data = [{
-            uri: 'https://healthitsecurity.com/images/site/article_headers/_normal/2017-11-08large-data-breach.jpg'
-        },
-        {
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy_Z-ysrnYjyeczessyvpVae-YRZvrDThYEvm-VMbEKak5hy87'
-        },
-        {
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRen6nkzfduANVrWDuKo1brc6KRjbTzeG0jWRyF4sK3s3exQM5u'
-        }];
-        this.setState({
-            listImage: data
-        })
-    }
-
-    render() {
-        return (
-            <View>
-                <FlatList
-                    data={this.state.listImage}
-                    removeClippedSubviews={false}
-                    renderItem={({ item: rowData }) => {
-                        return (
-                            <View>
-                                <Image
-                                    source={{ uri: rowData.uri }}
-                                    style={styles.image}
-                                />
-                                <View style={[styles.line, { marginTop: '1%', marginBottom: '1%' }]} />
-                            </View>
-                        );
-                    }}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
         );
     }
 }

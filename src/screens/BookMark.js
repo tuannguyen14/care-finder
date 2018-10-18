@@ -37,7 +37,7 @@ export default class BookMark extends Component {
             }
         ]
         this.setState({
-            listSettingsItem: listDefaultItemTemp
+            listBookMark: listDefaultItemTemp
         })
     }
 
@@ -51,7 +51,7 @@ export default class BookMark extends Component {
                 />
                 <View>
                     {
-                        this.state.listSettingsItem.map((l, i) => (
+                        this.state.listBookMark.map((l, i) => (
                             <ListItem
                                 key={i}
                                 hideChevron={true}

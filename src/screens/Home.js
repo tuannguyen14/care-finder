@@ -1,8 +1,11 @@
 import React, { Component, } from 'react';
 import { Dimensions } from "react-native";
-import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler, Image } from 'react-native';
 import { Header, SearchBar, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import axios from 'axios';
+
+import { IPServer } from '../Server/IPServer.js';
 
 import { AppColors } from '../styles/AppColors.js';
 
@@ -12,42 +15,33 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nearByData: {
-        id: '',
-        uri: '',
-        name: '',
-        address: ''
-      }
+      nearByData: []
     };
   }
 
   componentWillMount() {
-    const data = [{
-      uri: 'https://healthitsecurity.com/images/site/article_headers/_normal/2017-11-08large-data-breach.jpg',
-      name: 'Becamex',
-      address: 'Thủ Dầu Một'
-    },
-    {
-      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy_Z-ysrnYjyeczessyvpVae-YRZvrDThYEvm-VMbEKak5hy87',
-      name: 'Vạn Phúc',
-      address: 'Thành Phố Mới'
-    },
-    {
-      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRen6nkzfduANVrWDuKo1brc6KRjbTzeG0jWRyF4sK3s3exQM5u',
-      name: 'Hạnh Phúc',
-      address: 'Sài Gòn'
-    }
-    ]
-    this.setState({
-      nearByData: data
-    });
+    axios({
+      method: 'get',
+      url: IPServer.ip + '/clinic',
+      responseType: 'stream'
+    })
+      .then((response) => {
+        this.setState({
+          nearByData: response.data.all
+        })
+        console.log(this.state.nearByData)
+        console.log(this.state.nearByData[0].imageUrls[0])
+      });
+  }
+  openDetailItem(rowData) {
+    this.props.navigation.navigate("ItemScreen", { item: rowData });
   }
 
   moreNearBy() {
   }
 
-  detailItem() {
-    this.props.navigation.navigate("ItemScreen");
+  allItems() {
+    this.props.navigation.navigate("AllItems");
   }
 
   componentDidMount() {
@@ -64,105 +58,103 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View>
-        <ScrollView style={{ marginBottom: '1%' }}>
-          <Header
-            backgroundColor={AppColors.color}
-            leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
-            centerComponent={{ text: 'Trang chính', style: { color: '#fff', fontSize: 20 } }}
+      <ScrollView style={styles.container}>
+        <Header
+          backgroundColor={AppColors.color}
+          leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
+          centerComponent={{ text: 'Trang Chính', style: { color: '#fff', fontSize: 20 } }}
+        />
+        <View style={styles.searchBarContainer}>
+          <SearchBar
+            lightTheme
+            round
+            searchIcon={{ size: 31 }}
+            clearIcon={{ color: 'red' }}
+            // onChangeText={someMethod}
+            // onClear={someMethod}
+            placeholder='Tìm kiếm tên phòng khám...' />
+        </View>
+
+        <View style={styles.line} />
+
+        <View style={{ width: width, height: height * 0.45 }}>
+
+          <View style={styles.rowView}>
+            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', }}>Gần đây</Text>
+            <TouchableOpacity onPress={() => this.moreNearBy()}>
+              <View style={[styles.childRowView, { marginLeft: width * 0.68, }]}>
+                <Text h5 style={{ marginRight: '4%' }}>Thêm</Text>
+                <Icon name={'expand-more'} size={27} color={'black'} />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <FlatList
+            data={this.state.nearByData}
+            horizontal={true}
+            renderItem={({ item: rowData }) => {
+              return (
+                <TouchableOpacity onPress={() => this.openDetailItem(rowData)}>
+                  <View>
+                    <Card
+                      title={rowData.name}
+                      image={{ uri: rowData.imageUrls[0] }}
+                      imageStyle={styles.cardContainer}>
+                      <Text>
+                        {rowData.address}
+                      </Text>
+                    </Card>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item, index) => index.toString()}
           />
-          <View style={styles.searchBarContainer}>
+        </View>
 
-            <SearchBar
-              lightTheme
-              round
-              searchIcon={{ size: 31 }}
-              clearIcon={{ color: 'red' }}
-              // onChangeText={someMethod}
-              // onClear={someMethod}
-              placeholder='Tìm kiếm tên phòng khám...' />
+        <View style={{ width: width, height: height * 0.5 }}>
+
+          <View style={styles.rowView}>
+            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', }}>Gần đây</Text>
+            <TouchableOpacity onPress={() => this.moreNearBy()}>
+              <View style={[styles.childRowView, { marginLeft: width * 0.68, }]}>
+                <Text h5 style={{ marginRight: '4%' }}>Thêm</Text>
+                <Icon name={'expand-more'} size={27} color={'black'} />
+              </View>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.line} />
-
-          <View>
-
-            <View style={styles.rowView}>
-              <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', }}>Gần đây</Text>
-              <TouchableOpacity onPress={() => this.moreNearBy()}>
-                <View style={[styles.childRowView, { marginLeft: width * 0.68, }]}>
-                  <Text h5 style={{ marginRight: '4%' }}>Thêm</Text>
-                  <Icon name={'expand-more'} size={27} color={'black'} />
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <FlatList
-              data={this.state.nearByData}
-              horizontal={true}
-              renderItem={({ item: rowData }) => {
-                return (
-                  <TouchableOpacity onPress={() => this.detailItem()}>
-                    <View>
-                      <Card
-                        title={rowData.name}
-                        image={{ uri: rowData.uri }}
-                        imageStyle={styles.cardContainer}>
-                        <Text>
-                          {rowData.address}
-                        </Text>
-                      </Card>
-                    </View>
-                  </TouchableOpacity>
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </View>
-
-          <View style={[styles.line, { marginTop: '3%' }]} />
-
-          <View>
-
-            <View style={styles.rowView}>
-              <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', }}>Đánh giá cao</Text>
-              <TouchableOpacity onPress={() => this.moreNearBy()}>
-                <View style={[styles.childRowView, { marginLeft: width * 0.606, }]}>
-                  <Text h5 style={{ marginRight: '4%' }}>Thêm</Text>
-                  <Icon name={'expand-more'} size={27} color={'black'} />
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <FlatList
-              data={this.state.nearByData}
-              horizontal={true}
-              renderItem={({ item: rowData }) => {
-                return (
-                  <TouchableOpacity onPress={() => this.detailItem()}>
-                    <View>
-                      <Card
-                        title={rowData.name}
-                        image={{ uri: rowData.uri }}
-                        imageStyle={styles.cardContainer}>
-                        <Text>
-                          {rowData.address}
-                        </Text>
-                      </Card>
-                    </View>
-                  </TouchableOpacity>
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </View>
-        </ScrollView>
-      </View>
+          <FlatList
+            data={this.state.nearByData}
+            horizontal={true}
+            renderItem={({ item: rowData }) => {
+              return (
+                <TouchableOpacity onPress={() => this.detailItem()}>
+                  <View>
+                    <Card
+                      title={rowData.name}
+                      image={{ uri: rowData.imageUrls[0] }}
+                      imageStyle={styles.cardContainer}>
+                      <Text>
+                        {rowData.address}
+                      </Text>
+                    </Card>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   searchBarContainer: {
     margin: '3%',
   },

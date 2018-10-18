@@ -19,17 +19,17 @@ export default class Login extends Component {
 
 
     login = async () => {
-
         const body = {
             email: this.state.email,
             password: this.state.password,
         }
-        axios.post(IPServer.ip+'/login', body, {
+        axios.post(IPServer.ip + '/login', body, {
             headers: {
                 'Content-Type': 'application/json',
             }
         })
             .then(response => {
+                // console.log(response)
                 this.props.navigation.navigate("RootDrawer");
             }).catch(err => {
                 this.refs.toast.show('Đăng nhập thất bại');

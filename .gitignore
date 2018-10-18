@@ -54,5 +54,3 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
-
-src/Server/IPServer\.js

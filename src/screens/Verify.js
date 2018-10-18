@@ -6,6 +6,7 @@ import { Button } from 'react-native-elements';
 import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
 import CodeInput from 'react-native-confirmation-code-input';
+import { IPServer } from '../Server/IPServer.js';
 
 export default class Verify extends Component {
     constructor(props) {
