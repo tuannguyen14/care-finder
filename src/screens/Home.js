@@ -1,6 +1,5 @@
 import React, { Component, } from 'react';
-import { Dimensions } from "react-native";
-import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler, Image } from 'react-native';
+import { Dimensions, View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler, Image } from 'react-native';
 import { Header, SearchBar, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
@@ -29,10 +28,12 @@ export default class Home extends Component {
         this.setState({
           nearByData: response.data.all
         })
-        console.log(this.state.nearByData)
-        console.log(this.state.nearByData[0].imageUrls[0])
+        global.allLocations = response.data.all;
+        console.log(response.data.all)
+        // console.log(this.state.nearByData[0].imageUrls[0])
       });
   }
+
   openDetailItem(rowData) {
     this.props.navigation.navigate("ItemScreen", { item: rowData });
   }

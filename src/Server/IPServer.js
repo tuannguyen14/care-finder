@@ -1,3 +1,3 @@
 export class IPServer {
-    static ip = "http://192.168.1.4:3000"
+    static ip = "http://192.168.0.101:3000"
 }

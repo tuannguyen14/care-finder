@@ -47,6 +47,11 @@ class MainDrawer extends Component {
                 icon: 'assistant-photo',
                 name: 'Tạo địa điểm',
                 navigation: 'CreateNewLocationScreen'
+            },
+            {
+                icon: 'edit-location',
+                name: 'Quản lý địa điểm',
+                navigation: 'LocationManagerScreen'
             }
         ]
         this.setState({
