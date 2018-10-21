@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import { InputGroup, Input, CheckBox, Body, ListItem } from 'native-base';
 import { Button, Header } from 'react-native-elements';
-import Toast, { DURATION } from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast'
 import { AppColors } from '../styles/AppColors.js';
 
 let { width, height } = Dimensions.get("window");

@@ -8,12 +8,6 @@ import Toast from 'react-native-easy-toast'
 
 let { width, height } = Dimensions.get("window");
 
-const ASPECT_RATIO = width / height;
-const LATITUDE = 0;
-const LONGITUDE = 0;
-const LATITUDE_DELTA = 0.001;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
 const ImagePicker = require("react-native-image-picker");
 
 const options = {
@@ -29,27 +23,15 @@ export default class BasicInformation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "Test",
-      address: "Test address",
-      phoneNumber: "09020309",
-      website: "muahaha.com",
-      selectedCity: undefined,
-      selectedWeekStart: undefined,
-      selectedWeekEnd: undefined,
-      isDateTimePickerStartVisible: false,
-      isDateTimePickerEndVisible: false,
-      timeStart: '00:00',
-      timeEnd: '00:00',
-      listUploadImage: [{
-        uri: require('../../img/NoImageAvailable.png')
-      }, {
-        uri: require('../../img/NoImageAvailable.png')
-      }, {
-        uri: require('../../img/NoImageAvailable.png')
-      }],
+      name: this.props.navigation.state.params.item.name,
+      address: this.props.navigation.state.params.item.address,
+      phoneNumber: this.props.navigation.state.params.item.phoneNumber,
+      website: this.props.navigation.state.params.item.department,
+      listUploadImage: this.props.navigation.state.params.item.imageUrls
     };
+    console.log(this.state.listUploadImage)
   }
-  
+
   uploadPhoto() {
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
@@ -72,6 +54,7 @@ export default class BasicInformation extends Component {
         }
         const uriTemp = { uri: response.uri };
         listUploadImageTemp.push({ uri: uriTemp });
+        console.log(listUploadImageTemp);
         this.setState({ listUploadImage: listUploadImageTemp });
       }
     });

@@ -42,7 +42,7 @@ export default class LocationManager extends Component {
                                         </Text>
 
                                         <View style={styles.containerRow} >
-                                            <TouchableOpacity onPress={() => navigate('BasicInformationScreen')}>
+                                            <TouchableOpacity onPress={() => navigate('BasicInformationScreen', { item: rowData })}>
                                                 <View>
                                                     <Icon name={'edit'} size={24} color={'black'} />
                                                     <Text>Sửa</Text>

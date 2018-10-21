@@ -5,6 +5,7 @@ import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-easy-toast'
+import { IPServer } from '../Server/IPServer.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -70,6 +71,35 @@ export default class CreateNewLocation extends Component {
             }
         });
     }
+
+    createLocation = async () => {
+        const body = new FormData();
+        body.append('_idDoctor', '5b94ce2b6b34ae003a557c33')
+        body.append('name', this.state.name);
+        body.append('address', this.state.address);
+        body.append('department', this.state.website);
+        body.append('phoneNumber', this.state.phoneNumber);
+        this.state.listUploadImage.map(e => {
+            body.append('imageUrls', {
+                uri: Object.values(e.uri)[0],
+                type: 'image/jpg',
+                name: 'image.jpg'
+            })
+        })
+
+        fetch(IPServer.ip + '/clinic', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }, body
+        }).then(response => {
+            this.refs.toast.show('Thành công');
+        }).catch(err => {
+            this.refs.toast.show('Thất bại');
+            console.log(err)
+        });
+    }
+
 
     render() {
         const { goBack } = this.props.navigation;

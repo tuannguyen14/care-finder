@@ -14,7 +14,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-export default class Maps extends Component<{}> {
+export default class NearBy extends Component {
     constructor(props) {
         super(props);
         this.state = {

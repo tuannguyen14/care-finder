@@ -30,7 +30,6 @@ export default class Home extends Component {
         })
         global.allLocations = response.data.all;
         console.log(response.data.all)
-        // console.log(this.state.nearByData[0].imageUrls[0])
       });
   }
 
