@@ -12,7 +12,7 @@ export default class RatingItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            countRating: 4.6,
+            item: this.props.item,
             listComments: []
         };
     }
@@ -38,6 +38,7 @@ export default class RatingItem extends Component {
     }
 
     render() {
+        const ratingCount = this.state.item.ratingCount == undefined ? '0.0' : item.ratingCount;
         return (
             <ScrollView>
                 <View style={[styles.rowView]}>
@@ -54,7 +55,7 @@ export default class RatingItem extends Component {
                                 ratingImage={square}
                                 ratingCount={5}
                                 fractions={2}
-                                startingValue={4}
+                                startingValue={ratingCount}
                                 imageSize={30.5}
                                 style={{ marginLeft: '1%', marginTop: '1.5%' }}
                             />
@@ -140,7 +141,7 @@ export default class RatingItem extends Component {
                             readonly
                             ratingCount={5}
                             fractions={2}
-                            startingValue={this.state.countRating}
+                            startingValue={ratingCount}
                             imageSize={27}
                             style={{ marginLeft: '1%' }}
                         />

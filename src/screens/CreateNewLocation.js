@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity, Dimensions, ScrollView, FlatList } from "react-native";
-import { InputGroup, Input, Picker } from 'native-base';
+import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Dimensions, ScrollView, FlatList } from "react-native";
+import { InputGroup, Input } from 'native-base';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import axios from 'axios';
 import Toast from 'react-native-easy-toast'
-import DateTimePicker from 'react-native-modal-datetime-picker';
-import MapView, { Marker } from 'react-native-maps';
-import { IPServer } from '../Server/IPServer.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -37,13 +33,6 @@ export default class CreateNewLocation extends Component {
             address: "Test address",
             phoneNumber: "09020309",
             website: "muahaha.com",
-            selectedCity: undefined,
-            selectedWeekStart: undefined,
-            selectedWeekEnd: undefined,
-            isDateTimePickerStartVisible: false,
-            isDateTimePickerEndVisible: false,
-            timeStart: '00:00',
-            timeEnd: '00:00',
             listUploadImage: [{
                 uri: require('../img/NoImageAvailable.png')
             }, {
@@ -51,87 +40,7 @@ export default class CreateNewLocation extends Component {
             }, {
                 uri: require('../img/NoImageAvailable.png')
             }],
-
-            region: new MapView.AnimatedRegion({
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-            }),
-            poi: null,
         };
-        this.onPoiClick = this.onPoiClick.bind(this);
-    }
-
-    onPoiClick(e) {
-        const poi = e.nativeEvent;
-
-        this.setState({
-            poi,
-        });
-    }
-
-    _showDateTimePickerStart = () => this.setState({ isDateTimePickerStartVisible: true });
-
-    _hideDateTimePickerStart = () => this.setState({ isDateTimePickerStartVisible: false });
-
-    _showDateTimePickerEnd = () => this.setState({ isDateTimePickerEndVisible: true });
-
-    _hideDateTimePickerEnd = () => this.setState({ isDateTimePickerEndVisible: false });
-
-    _handleDatePickedStart = (date) => {
-        this.setState({ timeStart: date.getHours() + ":" + date.getMinutes() });
-        this._hideDateTimePickerStart();
-    };
-
-    _handleDatePickedEnd = (date) => {
-        this.setState({ timeEnd: date.getHours() + ":" + date.getMinutes() });
-        this._hideDateTimePickerEnd();
-    };
-
-    addLocation(poi) {
-        if (poi == null) {
-            this.refs.toast.show('Vui lòng chọn địa điểm');
-        } else {
-            console.log(poi)
-            this.refs.toast.show('Chọn địa điểm thành công');
-        }
-    }
-
-    componentDidMount() {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                this.setState({
-                    region: new MapView.AnimatedRegion({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA
-                    }
-                    )
-                });
-            },
-            error => console.log(error.message),
-        );
-        this.watchID = navigator.geolocation.watchPosition(position => {
-            this.setState({
-                region: new MapView.AnimatedRegion({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA
-                }
-                )
-            });
-        });
-    }
-
-    componentWillUnmount() {
-        navigator.geolocation.clearWatch(this.watchID);
-    }
-
-    onRegionChange(region) {
-        this.setState({ region });
     }
 
     uploadPhoto() {
@@ -160,34 +69,6 @@ export default class CreateNewLocation extends Component {
                 console.log(this.state.listUploadImage)
             }
         });
-    }
-
-    createLocation = async () => {
-        const body = new FormData();
-        body.append('_idDoctor', '5b94ce2b6b34ae003a557c33')
-        body.append('name', this.state.name);
-        body.append('address', this.state.address);
-        body.append('department', this.state.website);
-        body.append('phoneNumber', this.state.phoneNumber);
-        let arrayImage = this.state.listUploadImage.map(e => {
-            body.append('imageUrls', {
-                uri: Object.values(e.uri)[0],
-                type: 'image/jpg',
-                name: 'image.jpg'
-            })
-        })
-        console.log(arrayImage)
-        console.log(body)
-
-
-
-        fetch(IPServer.ip + '/clinic', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }, body
-        });
-
     }
 
     render() {
@@ -323,9 +204,6 @@ export default class CreateNewLocation extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },
-    map: {
-        height: 200
     },
     rowView: {
         flexDirection: 'row'

@@ -53,6 +53,7 @@ export default class InformationItem extends Component {
     }
 
     render() {
+        const ratingCount = this.state.item.ratingCount == undefined ? '0.0' : item.ratingCount;
         return (
             <ScrollView>
                 <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >

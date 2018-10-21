@@ -19,6 +19,7 @@ export default class LocationManager extends Component {
 
 
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <ScrollView style={styles.container}>
                 <Header
@@ -30,31 +31,39 @@ export default class LocationManager extends Component {
                     data={this.state.listLocation}
                     renderItem={({ item: rowData }) => {
                         return (
-                            <View>
-                                <Card
-                                    title={rowData.name}
-                                    image={{ uri: rowData.imageUrls[0] }}
-                                    imageStyle={styles.cardContainer}>
-                                    <Text>
-                                        {rowData.address}
-                                    </Text>
-                                    <View style={styles.containerRow} >
-                                        <View>
-                                            <Icon name={'edit'} size={24} color={'black'} />
-                                            <Text>Sửa</Text>
+                            <TouchableOpacity>
+                                <View>
+                                    <Card
+                                        title={rowData.name}
+                                        image={{ uri: rowData.imageUrls[0] }}
+                                        imageStyle={styles.cardContainer}>
+                                        <Text>
+                                            {rowData.address}
+                                        </Text>
+
+                                        <View style={styles.containerRow} >
+                                            <TouchableOpacity onPress={() => navigate('BasicInformationScreen')}>
+                                                <View>
+                                                    <Icon name={'edit'} size={24} color={'black'} />
+                                                    <Text>Sửa</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={{ marginLeft: '3%' }}>
+                                                <View>
+                                                    <Icon name={'delete'} size={24} color={'black'} />
+                                                    <Text>Xóa</Text>
+                                                </View>
+                                            </TouchableOpacity>
                                         </View>
-                                        <View style={{ marginLeft: '3%' }}>
-                                            <Icon name={'delete'} size={24} color={'black'} />
-                                            <Text>Xóa</Text>
-                                        </View>
-                                    </View>
-                                </Card>
-                            </View>
+                                    </Card>
+                                </View>
+                            </TouchableOpacity>
                         );
-                    }}
+                    }
+                    }
                     keyExtractor={(item, index) => index.toString()}
                 />
-            </ScrollView>
+            </ScrollView >
         );
     }
 }
