@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, FlatList, Image } from "react-native";
-
+import { IPServer } from '../Server/IPServer.js';
 let { width, height } = Dimensions.get("window");
 
 export default class ListImagesItem extends Component {
@@ -21,7 +21,7 @@ export default class ListImagesItem extends Component {
                         return (
                             <View>
                                 <Image
-                                    source={{ uri: rowData }}
+                                    source={{ uri: rowData.replace('http://localhost:3000', IPServer.ip) }}
                                     style={styles.image}
                                 />
                                 <View style={[styles.line, { marginTop: '1%', marginBottom: '1%' }]} />

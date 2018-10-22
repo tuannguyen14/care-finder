@@ -7,6 +7,8 @@ import InformationItem from './InformationItem.js';
 import RatingItem from './RatingItem.js';
 import ListImagesItem from './ListImagesItem.js';
 
+import { IPServer } from '../Server/IPServer.js';
+
 let { width, height } = Dimensions.get("window");
 
 export default class Item extends Component {
@@ -36,7 +38,7 @@ export default class Item extends Component {
                                 return (
                                     <View>
                                         <Image
-                                            source={{ uri: rowData }}
+                                            source={{ uri: rowData.replace('http://localhost:3000', IPServer.ip) }}
                                             style={styles.image}
                                         />
                                     </View>
