@@ -19,6 +19,7 @@ export default class Item extends Component {
     }
 
     render() {
+        const ratingCount = this.state.item.ratingCount == undefined ? '0.0' : item.ratingCount;
         return (
             <Container>
                 <ScrollView>
@@ -50,12 +51,12 @@ export default class Item extends Component {
                     <View style={{ marginLeft: '1%' }}>
                         <Text h3 style={{ color: 'black' }}>{this.state.item.name}</Text>
                         <View style={styles.rowView}>
-                            <Text >0.0</Text>
+                            <Text>{ratingCount}</Text>
                             <Rating
                                 type="heart"
                                 ratingCount={5}
                                 fractions={2}
-                                startingValue={this.state.countRating}
+                                startingValue={ratingCount}
                                 imageSize={20}
                                 readonly
                                 style={{ marginLeft: '1%' }}

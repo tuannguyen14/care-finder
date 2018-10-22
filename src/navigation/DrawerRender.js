@@ -44,6 +44,12 @@ class MainDrawer extends Component {
         ]
         const listUtilitiesItem = [
             {
+                icon: 'place',
+                name: 'Địa điểm gần đây',
+                navigation: 'NearByScreen'
+            }
+            ,
+            {
                 icon: 'assistant-photo',
                 name: 'Tạo địa điểm',
                 navigation: 'CreateNewLocationScreen'
