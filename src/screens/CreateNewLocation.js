@@ -341,7 +341,7 @@ export default class CreateNewLocation extends Component {
                                 }}
                             />
                         </View>
-                    </View>
+                    
                     <Toast ref="toast" />
                 </ImageBackground >
             </ScrollView>
