@@ -163,7 +163,7 @@ export default class RatingItem extends Component {
                     <Rating
                         type="heart"
                         ratingCount={5}
-                        fractions={2}
+                        fractions={1}
                         startingValue={0}
                         imageSize={40}
                         style={{ marginLeft: '1%' }}

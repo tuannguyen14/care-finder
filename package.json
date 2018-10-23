@@ -15,6 +15,7 @@
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "^0.19.1",
     "react-native-image-picker": "^0.27.1",
+    "react-native-image-zoom-viewer": "^2.2.23",
     "react-native-keyboard-aware-scroll-view": "^0.7.3",
     "react-native-maps": "^0.22.0",
     "react-native-maps-directions": "^1.6.0",

@@ -57,6 +57,7 @@ export default class Home extends Component {
   }
 
   render() {
+    const { navigate } = this.props.navigation
     return (
       <ScrollView style={styles.container}>
         <Header
@@ -81,7 +82,7 @@ export default class Home extends Component {
 
           <View style={styles.rowView}>
             <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', }}>Gần đây</Text>
-            <TouchableOpacity onPress={() => this.moreNearBy()}>
+            <TouchableOpacity onPress={() => navigate("AllItemsScreen")}>
               <View style={[styles.childRowView, { marginLeft: width * 0.68, }]}>
                 <Text h5 style={{ marginRight: '4%' }}>Thêm</Text>
                 <Icon name={'expand-more'} size={27} color={'black'} />

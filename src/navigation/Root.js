@@ -33,7 +33,7 @@ export const MainScreen = createStackNavigator({
   CoordinatesScreen: { screen: Coordinatess },
   WorkingTimeScreen: { screen: WorkingTime },
   NearByScreen: { screen: NearBy },
-  AllItems: { screen: AllItems }
+  AllItemsScreen: { screen: AllItems }
 },
   {
     headerMode: 'none'
