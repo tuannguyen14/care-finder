@@ -86,7 +86,7 @@ export default class CreateNewLocation extends Component {
                 name: 'image.jpg'
             })
         })
-
+        console.log(body)
         fetch(IPServer.ip + '/clinic', {
             method: 'POST',
             headers: {
