@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
-import { Text, Avatar, List, ListItem, Header } from 'react-native-elements';
+import { Text, Avatar, ListItem, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { AppColors } from '../styles/AppColors.js';

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { Text, Header } from 'react-native-elements';
-import { Content, List, ListItem } from 'native-base';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { List, ListItem } from 'native-base';
 import { AppColors } from '../styles/AppColors.js';
 
 let { width, height } = Dimensions.get("window");
@@ -11,10 +10,7 @@ export default class AllItems extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listAllItems: {
-        name: '',
-        icon: ''
-      },
+      listAllItems: [],
     };
   }
 
