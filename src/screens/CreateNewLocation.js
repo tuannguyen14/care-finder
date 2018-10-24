@@ -175,25 +175,54 @@ export default class CreateNewLocation extends Component {
                                 />
                             </InputGroup>
 
-                        </View>
+                            </View>
 
-                        <View style={{ marginTop: '3%' }}>
-                            <FlatList
-                                data={this.state.listUploadImage}
-                                horizontal={true}
-                                renderItem={({ item: rowData }) => {
-                                    return (
-                                        <View style={styles.rowView}>
-                                            <Image
-                                                style={styles.imageUpload}
-                                                source={rowData.uri} />
-                                            <View style={styles.lineVertical} />
-                                        </View>
-                                    );
-                                }}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
+                            <View style={{ marginTop: '3%' }}>
+                                <FlatList
+                                    data={this.state.listUploadImage}
+                                    horizontal={true}
+                                    renderItem={({ item: rowData }) => {
+                                        return (
+                                            <View style={styles.rowView}>
+                                                <Image
+                                                    style={styles.imageUpload}
+                                                    source={rowData.uri} />
+                                                <View style={styles.lineVertical} />
+                                            </View>
+                                        );
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
 
+                            </View>
+                            <View style={[styles.containerLogo]} >
+                                <Button
+                                    onPress={() => this.uploadPhoto()}
+                                    title='Thêm hình'
+                                    buttonStyle={{
+                                        backgroundColor: "#E57373",
+                                        width: 150,
+                                        height: 30,
+                                        borderColor: "transparent",
+                                        borderWidth: 0,
+                                        borderRadius: 5,
+                                    }}
+                                />
+                            </View>
+                            <View style={styles.buttonGroup}>
+                                <Button
+                                    onPress={() => this.createLocation()}
+                                    title='Thêm địa điểm'
+                                    buttonStyle={{
+                                        backgroundColor: "#E57373",
+                                        width: 300,
+                                        height: 45,
+                                        borderColor: "transparent",
+                                        borderWidth: 0,
+                                        borderRadius: 5,
+                                    }}
+                                />
+                            </View>
                         </View>
                         <View style={[styles.containerLogo]} >
                             <Button
@@ -223,7 +252,7 @@ export default class CreateNewLocation extends Component {
                                 }}
                             />
                         </View>
-                    </View>
+                    
                     <Toast ref="toast" />
                 </ImageBackground >
             </ScrollView>
