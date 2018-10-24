@@ -71,7 +71,18 @@ export default class componentName extends Component {
             this.setState({
               avatar: response.uri
             })
-
+            const body = new FormData();
+            body.append('avatar', {
+              uri: response.uri,
+              type: 'image/jpg',
+              name: 'image.jpg'
+            })
+            axios.patch(IPServer.ip + '/user', body, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${global.token}`
+              }
+          })
         }
     });
     }
