@@ -13,6 +13,7 @@ import Toast, { DURATION } from "react-native-easy-toast";
 import { Button, Header } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
 import axios from 'axios';
+const ImagePicker = require("react-native-image-picker");
 import { IPServer } from "../Server/IPServer.js";
 const options = {
     title: "Chọn ảnh từ:",
@@ -31,7 +32,8 @@ export default class componentName extends Component {
           gender: "",
           phoneNumber: "",
           email:"",
-          follows:[]
+          follows:[],
+          avatar:""
         };
     }
 
@@ -41,23 +43,42 @@ export default class componentName extends Component {
           "Authorization":`Bearer ${global.token}`
         },
       },).then(response => {
-          const {firstName, phoneNumber,lastName, gender,follows,email} = response.data;
-          console.log(email)
+          const {firstName, phoneNumber,lastName, gender,follows,email,avatar} = response.data;
+          console.log(response.data)
           this.setState({
-            firstName: response.data.firstName,
+            firstName,
             lastName,
             gender,
             phoneNumber,
             email,
-            follows
+            follows,
+            avatar
           })
       }).catch(err => {
         console.log(err)
       })
     }
 
+    changeAvatar() {
+      ImagePicker.showImagePicker(options, response => {
+        if (response.didCancel) {
+            console.log("User cancelled image picker");
+        } else if (response.error) {
+            console.log("ImagePicker Error: ", response.error);
+        } else if (response.customButton) {
+            console.log("User tapped custom button: ", response.customButton);
+        } else {
+            this.setState({
+              avatar: response.uri
+            })
+
+        }
+    });
+    }
+
     render() {
         const { navigate, goBack } = this.props.navigation;
+        console.log(this.state.avatar)
         return (
             <ScrollView style={styles.container}>
                 <Header
@@ -75,7 +96,7 @@ export default class componentName extends Component {
                       <View style={styles.containerTextImage}>
                           <TouchableOpacity onPress={() => this.changeAvatar()}>
                               <Image
-                                  source={{ uri: 'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D' }}
+                                  source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':this.state.avatar.replace('http://localhost:3000',IPServer.ip) }}
                                   style={styles.avatar}
                               >
                               </Image>
