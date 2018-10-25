@@ -12,12 +12,13 @@ import {
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Button, Header } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
+import {change_url_image} from '../utils/Utils';
 import axios from 'axios';
 const ImagePicker = require("react-native-image-picker");
 import { IPServer } from "../Server/IPServer.js";
 const options = {
     title: "Chọn ảnh từ:",
-    quality: 0.01,
+    quality: 1,
     storageOptions: {
         skipBackup: true,
         path: 'images'
@@ -107,7 +108,7 @@ export default class componentName extends Component {
                       <View style={styles.containerTextImage}>
                           <TouchableOpacity onPress={() => this.changeAvatar()}>
                               <Image
-                                  source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':this.state.avatar.replace('http://localhost:3000',IPServer.ip) }}
+                                  source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':change_url_image(this.state.avatar)}}
                                   style={styles.avatar}
                               >
                               </Image>
