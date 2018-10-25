@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     ImageBackground,
     Platform,
-    ScrollView
+    ScrollView,
+    Animated
 } from "react-native";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Button, Header } from 'react-native-elements';
@@ -36,6 +37,7 @@ export default class componentName extends Component {
           follows:[],
           avatar:""
         };
+        this.sideUp = new Animated.Value(-220);
     }
 
     componentWillMount() {
@@ -61,36 +63,41 @@ export default class componentName extends Component {
     }
 
     changeAvatar() {
-      ImagePicker.showImagePicker(options, response => {
-        if (response.didCancel) {
-            console.log("User cancelled image picker");
-        } else if (response.error) {
-            console.log("ImagePicker Error: ", response.error);
-        } else if (response.customButton) {
-            console.log("User tapped custom button: ", response.customButton);
-        } else {
-            this.setState({
-              avatar: response.uri
-            })
-            const body = new FormData();
-            body.append('avatar', {
-              uri: response.uri,
-              type: 'image/jpg',
-              name: 'image.jpg'
-            })
-            axios.patch(IPServer.ip + '/user', body, {
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${global.token}`
-              }
-          })
-        }
-    });
+    //   ImagePicker.showImagePicker(options, response => {
+    //     if (response.didCancel) {
+    //         console.log("User cancelled image picker");
+    //     } else if (response.error) {
+    //         console.log("ImagePicker Error: ", response.error);
+    //     } else if (response.customButton) {
+    //         console.log("User tapped custom button: ", response.customButton);
+    //     } else {
+    //         this.setState({
+    //           avatar: response.uri
+    //         })
+    //         const body = new FormData();
+    //         body.append('avatar', {
+    //           uri: response.uri,
+    //           type: 'image/jpg',
+    //           name: 'image.jpg'
+    //         })
+    //         axios.patch(IPServer.ip + '/user', body, {
+    //           headers: {
+    //               'Content-Type': 'application/json',
+    //               'Authorization': `Bearer ${global.token}`
+    //           }
+    //       })
+    //     }
+    // });
+      Animated.timing(this.sideUp, {
+        toValue:0,
+        duration:250
+      }).start();
     }
 
     render() {
         const { navigate, goBack } = this.props.navigation;
         console.log(this.state.avatar)
+        let marginBottom = this.sideUp;
         return (
             <ScrollView style={styles.container}>
                 <Header
@@ -157,6 +164,14 @@ export default class componentName extends Component {
                     </View>
                 </View>
                 <Toast ref="toast" />
+                <Animated.View style={[{
+                  position:"absolute",
+                  top:0,right:0,left:0,marginBottom
+                }]}>
+                  <View>
+                    <Text>Hello world</Text>
+                    </View>
+                </Animated.View>
             </ScrollView>
         );
     }
