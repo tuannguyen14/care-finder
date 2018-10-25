@@ -35,9 +35,10 @@ export default class componentName extends Component {
           phoneNumber: "",
           email:"",
           follows:[],
-          avatar:""
+          avatar:"",
+          slideAnim:new Animated.Value(-60)
         };
-        this.sideUp = new Animated.Value(-220);
+        
     }
 
     componentWillMount() {
@@ -62,7 +63,7 @@ export default class componentName extends Component {
       })
     }
 
-    changeAvatar() {
+    changeAvatar = () => {
     //   ImagePicker.showImagePicker(options, response => {
     //     if (response.didCancel) {
     //         console.log("User cancelled image picker");
@@ -88,18 +89,18 @@ export default class componentName extends Component {
     //       })
     //     }
     // });
-      Animated.timing(this.sideUp, {
-        toValue:0,
-        duration:250
+      Animated.timing(this.state.slideAnim, {
+        toValue: 0,
+        duration: 1000
       }).start();
+      console.log('aaa')
     }
 
     render() {
         const { navigate, goBack } = this.props.navigation;
-        console.log(this.state.avatar)
-        let marginBottom = this.sideUp;
+        let marginBottom = this.state.slideAnim;
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <Header
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
@@ -123,7 +124,7 @@ export default class componentName extends Component {
                       </View>
                     </ImageBackground>
                 </TouchableOpacity>
-                <View>
+                <View style={{flex:1}}>
                     
                     <View style={styles.containerText}>
                         <Text style={styles.textHeader}> Email </Text>
@@ -164,15 +165,19 @@ export default class componentName extends Component {
                     </View>
                 </View>
                 <Toast ref="toast" />
-                <Animated.View style={[{
-                  position:"absolute",
-                  top:0,right:0,left:0,marginBottom
-                }]}>
-                  <View>
-                    <Text>Hello world</Text>
-                    </View>
+                <Animated.View style={{
+
+                  position: "relative",
+                  backgroundColor:"#333333",
+                  marginBottom
+                }}>
+
+                    <Text style={{color:"#ffff00"}}>Hello world</Text>
+                    <Text style={{color:"#ffff00"}}>Hello world</Text>
+                    <Text style={{color:"#ffff00"}}>Hello world</Text>
+
                 </Animated.View>
-            </ScrollView>
+            </View>
         );
     }
 }
@@ -180,7 +185,7 @@ export default class componentName extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "red"
     },
     line: {
         borderColor: "#E0E0E0",
