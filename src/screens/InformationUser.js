@@ -25,6 +25,12 @@ const options = {
         path: 'images'
     }
 };
+
+
+
+// define your styles
+
+
 export default class componentName extends Component {
     constructor(props) {
         super(props);
@@ -36,7 +42,8 @@ export default class componentName extends Component {
           email:"",
           follows:[],
           avatar:"",
-          slideAnim:new Animated.Value(-60)
+          slideAnim:new Animated.Value(-200),
+          a:1
         };
         
     }
@@ -89,103 +96,130 @@ export default class componentName extends Component {
     //       })
     //     }
     // });
+      this.setState({
+        a:3
+      })
       Animated.timing(this.state.slideAnim, {
         toValue: 0,
         duration: 1000
       }).start();
+
       console.log('aaa')
+    }
+
+    slideDownAnim() {
+      this.setState({
+        a:1
+      })
+      Animated.timing(this.state.slideAnim, {
+        toValue:-200,
+        duration:1000
+      }).start();
     }
 
     render() {
         const { navigate, goBack } = this.props.navigation;
-        let marginBottom = this.state.slideAnim;
+        let bottom = this.state.slideAnim;
+
+        console.log(this.state.a)
         return (
             <View style={styles.container}>
-                <Header
+                
+                <View style={{height:"100%", zIndex: 2, backgroundColor:"#80DEEA"}}>
+                  <Header
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
                     centerComponent={{ text: 'Thông tin người dùng', style: { color: '#fff', fontSize: 20 } }}
-                />
-                <TouchableOpacity >
-                    <ImageBackground
-                        source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
-                        style={styles.coverPhoto}
-                    >
+                  />
+                  <TouchableOpacity >
+                      <ImageBackground
+                          source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
+                          style={styles.coverPhoto}
+                      >
+                        
+                        <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
+                        <View style={styles.containerTextImage}>
+                            <TouchableOpacity onPress={() => this.changeAvatar()}>
+                                <Image
+                                    source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':change_url_image(this.state.avatar)}}
+                                    style={styles.avatar}
+                                >
+                                </Image>
+                            </TouchableOpacity>
+                        </View>
+                      </ImageBackground>
+                  </TouchableOpacity>
+                  <View style={{flex:1}}>
                       
-                      <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
-                      <View style={styles.containerTextImage}>
-                          <TouchableOpacity onPress={() => this.changeAvatar()}>
-                              <Image
-                                  source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':change_url_image(this.state.avatar)}}
-                                  style={styles.avatar}
-                              >
-                              </Image>
-                          </TouchableOpacity>
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Email </Text>
+                          <Text style={styles.textState}>{this.state.email}</Text>
                       </View>
-                    </ImageBackground>
-                </TouchableOpacity>
-                <View style={{flex:1}}>
-                    
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Email </Text>
-                        <Text style={styles.textState}>{this.state.email}</Text>
-                    </View>
-                    <View
-                        style={styles.line}
-                    />
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Điện thoại </Text>
-                        <Text style={styles.textState}>{this.state.phoneNumber}</Text>
-                    </View>
-                    <View
-                        style={styles.line}
-                    />
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Giới tính </Text>
-                        <Text style={styles.textState}>{this.state.gender}</Text>
-                    </View>
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Lượt theo dõi </Text>
-                        <Text style={styles.textState}>{this.state.follows.length}</Text>
-                    </View>
+                      <View
+                          style={styles.line}
+                      />
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Điện thoại </Text>
+                          <Text style={styles.textState}>{this.state.phoneNumber}</Text>
+                      </View>
+                      <View
+                          style={styles.line}
+                      />
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Giới tính </Text>
+                          <Text style={styles.textState}>{this.state.gender}</Text>
+                      </View>
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Lượt theo dõi </Text>
+                          <Text style={styles.textState}>{this.state.follows.length}</Text>
+                      </View>
 
-                    <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
-                        <Button
-                            title='Đổi thông tin'
-                            buttonStyle={{
-                                backgroundColor: AppColors.color,
-                                width: 300,
-                                height: 45,
-                                borderColor: "transparent",
-                                borderWidth: 0,
-                                borderRadius: 5
-                            }}
-                            onPress={() => navigate("ChangeInformationUserScreen")}
-                        />
-                    </View>
+                      <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                          <Button
+                              title='Đổi thông tin'
+                              buttonStyle={{
+                                  backgroundColor: AppColors.color,
+                                  width: 300,
+                                  height: 45,
+                                  borderColor: "transparent",
+                                  borderWidth: 0,
+                                  borderRadius: 5
+                              }}
+                              onPress={() => navigate("ChangeInformationUserScreen")}
+                          />
+                      </View>
+                  </View>
+
                 </View>
-                <Toast ref="toast" />
+                <TouchableOpacity style={{position:"absolute",zIndex:this.state.a,backgroundColor:"#00000050", height:"100%", width:"100%",marginTop:"17%"}}>
+                  <View onPress={this.slideDownAnim()}>
+
+                  </View>
+                </TouchableOpacity>
+                
+
+                
                 <Animated.View style={{
-
-                  position: "relative",
-                  backgroundColor:"#333333",
-                  marginBottom
-                }}>
-
-                    <Text style={{color:"#ffff00"}}>Hello world</Text>
-                    <Text style={{color:"#ffff00"}}>Hello world</Text>
-                    <Text style={{color:"#ffff00"}}>Hello world</Text>
-
+                  backgroundColor:"#ffffff",
+                  zIndex:4,
+                  bottom,
+                  position:"absolute",
+                  width:"100%"
+                }}> 
+                  <Text name="Thay đổi ảnh đại diện">Thay đổi ảnh đại diện</Text>
+                  <Text name="Xem hình ảnh">Thay đổi ảnh đại diện</Text>
                 </Animated.View>
+                <Toast ref="toast"/>
             </View>
         );
     }
-}
+}     
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "red"
+    
+        backgroundColor: "red",
+        position:"relative"
     },
     line: {
         borderColor: "#E0E0E0",
