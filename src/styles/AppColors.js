@@ -1,3 +1,3 @@
 export class AppColors {
-    static color = '#E57373'
+    static color = '#00BCD4'
 }

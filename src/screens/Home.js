@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import {change_url_image} from '../utils/Utils'
 import { IPServer } from '../Server/IPServer.js';
-
 import { AppColors } from '../styles/AppColors.js';
 
 let { width, height } = Dimensions.get("window");

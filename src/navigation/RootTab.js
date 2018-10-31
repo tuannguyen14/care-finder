@@ -3,6 +3,7 @@ import Home from "../screens/Home";
 import BookMark from "../screens/BookMark";
 import React, { Component } from 'react';
 import IconFoundation from 'react-native-vector-icons/Foundation';
+import { AppColors } from '../styles/AppColors.js';
 
 export const RootTab = createBottomTabNavigator(
     {
@@ -30,7 +31,7 @@ export const RootTab = createBottomTabNavigator(
             initialRouteName: 'Home',
             style: {
             },
-            activeTintColor: "#F44336",
+            activeTintColor: AppColors.color,
             inactiveTintColor: "#979797"
         }
     }

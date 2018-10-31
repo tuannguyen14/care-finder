@@ -5,6 +5,7 @@ import { Accordion } from 'native-base';
 import { ListItem } from 'react-native-elements'
 import IconFoundation from 'react-native-vector-icons/Foundation';
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { AppColors } from '../styles/AppColors.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -57,11 +58,11 @@ export default class InformationItem extends Component {
             <ScrollView>
                 <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
                     <View style={[styles.centerContainer, { width: width * 0.5 }]}>
-                        <IconFontAwesome5 name={'directions'} size={50} color={'#F44336'} />
+                        <IconFontAwesome5 name={'directions'} size={50} color={AppColors.color} />
                         <Text style={{ color: 'black' }}>Chỉ đường</Text>
                     </View>
                     <View style={[styles.centerContainer, { width: width * 0.5 }]}>
-                        <IconFoundation name={'book-bookmark'} size={50} color={'#F44336'} />
+                        <IconFoundation name={'book-bookmark'} size={50} color={AppColors.color} />
                         <Text style={{ color: 'black' }}>lưu</Text>
                     </View>
                 </View>
@@ -83,7 +84,7 @@ export default class InformationItem extends Component {
                                         }
                                     </View>
                                 }
-                                leftIcon={{ name: l.icon, color: '#F44336' }}
+                                leftIcon={{ name: l.icon, color: AppColors.color }}
                             />
                         ))
                     }

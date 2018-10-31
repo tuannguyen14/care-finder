@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import {
     View,
     StyleSheet,
-    TouchableOpacity,
-    Platform,
     ImageBackground
 } from "react-native";
-import { Text, Avatar, List, ListItem } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Entypo';
+import { Text, Avatar, ListItem } from 'react-native-elements';
+import { AppColors } from '../styles/AppColors.js';
 
 // create a component
 class MainDrawer extends Component {
@@ -105,7 +103,7 @@ class MainDrawer extends Component {
                                         key={i}
                                         hideChevron={true}
                                         title={l.name}
-                                        leftIcon={{ name: l.icon, color: '#F44336', style: { marginLeft: '10%' } }}
+                                        leftIcon={{ name: l.icon, color: AppColors.color, style: { marginLeft: '10%' } }}
                                         onPress={() => navigate(l.navigation)}
                                     />
                                 ))
@@ -122,7 +120,7 @@ class MainDrawer extends Component {
                                         key={i}
                                         hideChevron={true}
                                         title={l.name}
-                                        leftIcon={{ name: l.icon, color: '#F44336', style: { marginLeft: '10%' } }}
+                                        leftIcon={{ name: l.icon, color: AppColors.color, style: { marginLeft: '10%' } }}
                                         onPress={() => navigate(l.navigation)}
                                     />
                                 ))

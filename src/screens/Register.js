@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity, Dimensions, ScrollView } from "react-native";
-import { InputGroup, Input, CheckBox, Body, ListItem } from 'native-base';
-import { Button } from 'react-native-elements';
+import { InputGroup, Input, ListItem } from 'native-base';
+import { Button, CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
@@ -54,166 +54,162 @@ export default class Register extends Component {
             })
     }
 
-    checkMale() {
-        this.setState({
-            male: !this.state.male
-        })
-    }
-
-    checkFeMale() {
-        this.setState({
-            female: !this.state.female
-        })
-    }
-
     render() {
         const { goBack } = this.props.navigation;
         return (
-            <View style={styles.container} >
-                <ScrollView>
-                    <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}>
-                        <View style={styles.container}>
-                            <TouchableOpacity onPress={() => goBack()}>
-                                <View style={styles.backButtonContainer}>
-                                    <Icon name={'arrow-long-left'} size={27} color={'white'} />
-                                </View>
-                            </TouchableOpacity>
-                            <View style={styles.containerLogo}>
-                                <Image
-                                    source={require("../img/hospitalLogo.png")}
-                                    style={styles.logo}
-                                />
-                            </View>
-                            <View style={styles.inputGroup}>
-                                <InputGroup>
-                                    <Icon name={'user'} size={27} color={'white'} />
-                                    <Input
-                                        style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Họ"
-                                        placeholderTextColor="rgba(255,255,255,255)"
-                                        autoCorrect={false}
-                                        onChangeText={lastName => this.setState({ lastName })}
-                                        value={this.state.lastName}
-                                        returnKeyType={"next"}
-                                        onSubmitEditing={() => { this.emailInput._root.focus() }} />
-                                </InputGroup>
-                                <InputGroup>
-                                    <Icon name={'user'} size={27} color={'white'} />
-                                    <Input
-                                        style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Tên"
-                                        placeholderTextColor="rgba(255,255,255,255)"
-                                        autoCorrect={false}
-                                        onChangeText={firstName => this.setState({ firstName })}
-                                        value={this.state.firstName}
-                                        returnKeyType={"next"}
-                                        onSubmitEditing={() => { this.emailInput._root.focus() }} />
-                                </InputGroup>
-
-                                <InputGroup>
-                                    <Icon name={'mail'} size={27} color={'white'} />
-                                    <Input
-                                        style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Email"
-                                        placeholderTextColor="rgba(255,255,255,255)"
-                                        autoCorrect={false}
-                                        onChangeText={email => this.setState({ email })}
-                                        value={this.state.email}
-                                        ref={(input) => { this.emailInput = input; }}
-                                        keyboardType="email-address"
-                                        returnKeyType={"next"}
-                                        onSubmitEditing={() => { this.passwordInput._root.focus() }} />
-                                </InputGroup>
-
-                                <InputGroup>
-                                    <Icon name={'lock'} size={27} color={'white'} />
-                                    <Input
-                                        style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Mật khẩu"
-                                        secureTextEntry
-                                        placeholderTextColor="rgba(255,255,255,255)"
-                                        onChangeText={password => this.setState({ password })}
-                                        value={this.state.password}
-                                        autoCorrect={false}
-                                        ref={(input) => { this.passwordInput = input; }}
-                                        returnKeyType={"next"}
-                                        onSubmitEditing={() => { this.submitPasswordInput._root.focus() }} />
-                                </InputGroup>
-
-                                <InputGroup>
-                                    <Icon name={'lock'} size={27} color={'white'} />
-                                    <Input
-                                        style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Xác nhận mật khẩu"
-                                        secureTextEntry
-                                        placeholderTextColor="rgba(255,255,255,255)"
-                                        onChangeText={confirmPassword => this.setState({ confirmPassword })}
-                                        value={this.state.confirmPassword}
-                                        autoCorrect={false}
-                                        ref={(input) => { this.submitPasswordInput = input; }}
-                                        returnKeyType={"next"}
-                                        onSubmitEditing={() => { this.phoneNumberInput._root.focus() }} />
-                                </InputGroup>
-
-                                <InputGroup>
-                                    <Icon name={'phone'} size={27} color={'white'} />
-                                    <Input
-                                        style={{ color: "white", marginLeft: "3%" }}
-                                        placeholder="Số điện thoại"
-                                        placeholderTextColor="rgba(255,255,255,255)"
-                                        onChangeText={phoneNumber => this.setState({ phoneNumber })}
-                                        value={this.state.phoneNumber}
-                                        keyboardType="numeric"
-                                        autoCorrect={false}
-                                        ref={(input) => { this.phoneNumberInput = input; }}
-                                        returnKeyType={"next"}
-                                    />
-                                </InputGroup>
-                            </View>
-
-                            <View style={styles.containerGender}>
-                                <ListItem>
-                                    <IconFontAwesome name={'male'} size={27} color={'white'} style={{ marginLeft: "3%" }} />
-                                    <CheckBox onPress={() => this.checkMale()} checked={this.state.male} color="white" style={{ marginLeft: "0.5%" }} />
-                                    <Body style={{ marginLeft: "3%" }}>
-                                        <Text style={{ color: 'white' }}>Nam</Text>
-                                    </Body>
-
-                                    <IconFontAwesome name={'female'} size={27} color={'white'} style={{ marginLeft: "3%" }} />
-                                    <CheckBox onPress={() => this.checkFeMale()} checked={this.state.female} color="white" style={{ marginLeft: "0.5%" }} />
-                                    <Body style={{ marginLeft: "3%" }}>
-                                        <Text style={{ color: 'white' }}>Nữ</Text>
-                                    </Body>
-                                </ListItem>
-                            </View>
-
-                            <View style={styles.buttonGroup}>
-                                <Button
-                                    onPress={() => this.register()}
-                                    title='Đăng ký'
-                                    buttonStyle={{
-                                        backgroundColor: AppColors.color,
-                                        width: 300,
-                                        height: 45,
-                                        borderColor: "transparent",
-                                        borderWidth: 0,
-                                        borderRadius: 5,
-                                    }}
-                                />
-                            </View>
+            <ScrollView style={styles.container}>
+                {/* <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}> */}
+                <View>
+                    <TouchableOpacity onPress={() => goBack()}>
+                        <View style={styles.backButtonContainer}>
+                            <Icon name={'arrow-long-left'} size={27} color={AppColors.color} />
                         </View>
-                        <Toast ref="toast" />
-                    </ImageBackground >
-                </ScrollView>
-            </View>
+                    </TouchableOpacity>
+                    {/* <View style={styles.containerLogo}>
+                        <Image
+                            source={require("../img/hospitalLogo.png")}
+                            style={styles.logo}
+                        />
+                    </View> */}
+                    <View style={styles.inputGroup}>
+                        <InputGroup borderColor={AppColors.color}>
+                            <Icon name={'user'} size={27} color={AppColors.color} />
+                            <Input
+                                style={{ color: "black", marginLeft: "3%" }}
+                                placeholder="Họ"
+                                placeholderTextColor="rgba(255,255,255,255)"
+                                autoCorrect={false}
+                                onChangeText={lastName => this.setState({ lastName })}
+                                value={this.state.lastName}
+                                returnKeyType={"next"}
+                                onSubmitEditing={() => { this.emailInput._root.focus() }} />
+                        </InputGroup>
+                        <InputGroup borderColor={AppColors.color}>
+                            <Icon name={'user'} size={27} color={AppColors.color} />
+                            <Input
+                                style={{ color: "black", marginLeft: "3%" }}
+                                placeholder="Tên"
+                                placeholderTextColor="rgba(255,255,255,255)"
+                                autoCorrect={false}
+                                onChangeText={firstName => this.setState({ firstName })}
+                                value={this.state.firstName}
+                                returnKeyType={"next"}
+                                onSubmitEditing={() => { this.emailInput._root.focus() }} />
+                        </InputGroup>
 
+                        <InputGroup borderColor={AppColors.color}>
+                            <Icon name={'mail'} size={27} color={AppColors.color} />
+                            <Input
+                                style={{ color: "black", marginLeft: "3%" }}
+                                placeholder="Email"
+                                placeholderTextColor={AppColors.color}
+                                autoCorrect={false}
+                                onChangeText={email => this.setState({ email })}
+                                value={this.state.email}
+                                ref={(input) => { this.emailInput = input; }}
+                                keyboardType="email-address"
+                                returnKeyType={"next"}
+                                onSubmitEditing={() => { this.passwordInput._root.focus() }} />
+                        </InputGroup>
+
+                        <InputGroup borderColor={AppColors.color}>
+                            <Icon name={'lock'} size={27} color={AppColors.color} />
+                            <Input
+                                style={{ color: "black", marginLeft: "3%" }}
+                                placeholder="Mật khẩu"
+                                secureTextEntry
+                                placeholderTextColor={AppColors.color}
+                                onChangeText={password => this.setState({ password })}
+                                value={this.state.password}
+                                autoCorrect={false}
+                                ref={(input) => { this.passwordInput = input; }}
+                                returnKeyType={"next"}
+                                onSubmitEditing={() => { this.submitPasswordInput._root.focus() }} />
+                        </InputGroup>
+
+                        <InputGroup borderColor={AppColors.color}>
+                            <Icon name={'lock'} size={27} color={AppColors.color} />
+                            <Input
+                                style={{ color: "black", marginLeft: "3%" }}
+                                placeholder="Xác nhận mật khẩu"
+                                secureTextEntry
+                                placeholderTextColor={AppColors.color}
+                                onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                                value={this.state.confirmPassword}
+                                autoCorrect={false}
+                                ref={(input) => { this.submitPasswordInput = input; }}
+                                returnKeyType={"next"}
+                                onSubmitEditing={() => { this.phoneNumberInput._root.focus() }} />
+                        </InputGroup>
+
+                        <InputGroup borderColor={AppColors.color}>
+                            <Icon name={'phone'} size={27} color={AppColors.color} />
+                            <Input
+                                style={{ color: "black", marginLeft: "3%" }}
+                                placeholder="Số điện thoại"
+                                placeholderTextColor={AppColors.color}
+                                onChangeText={phoneNumber => this.setState({ phoneNumber })}
+                                value={this.state.phoneNumber}
+                                keyboardType="numeric"
+                                autoCorrect={false}
+                                ref={(input) => { this.phoneNumberInput = input; }}
+                                returnKeyType={"next"}
+                            />
+                        </InputGroup>
+                    </View>
+
+                    <View style={styles.containerGender}>
+                        <ListItem>
+                            <IconFontAwesome name={'male'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
+                            <CheckBox
+                                center
+                                title='Nam'
+                                checkedIcon='check-circle-o'
+                                uncheckedIcon='circle-o'
+                                style={{ marginLeft: "0.5%" }}
+                                checked={this.state.male}
+                                onPress={() => this.setState({ male: !this.state.male, female: false })}
+                            />
+
+                            <IconFontAwesome name={'female'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
+                            <CheckBox
+                                center
+                                title='Nữ'
+                                checkedIcon='check-circle-o'
+                                uncheckedIcon='circle-o'
+                                style={{ marginLeft: "0.5%" }}
+                                checked={this.state.female}
+                                onPress={() => this.setState({ female: !this.state.female, male: false })}
+                            />
+                        </ListItem>
+                    </View>
+
+                    <View style={styles.buttonGroup}>
+                        <Button
+                            onPress={() => this.register()}
+                            title='Đăng ký'
+                            buttonStyle={{
+                                backgroundColor: AppColors.color,
+                                width: 300,
+                                height: 45,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5,
+                            }}
+                        />
+                    </View>
+                </View>
+                <Toast ref="toast" />
+                {/* </ImageBackground > */}
+            </ScrollView>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'white'
     },
     backButtonContainer: {
         margin: "5%"
