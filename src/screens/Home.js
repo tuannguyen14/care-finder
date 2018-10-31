@@ -3,7 +3,7 @@ import { Dimensions, View, StyleSheet, FlatList, TouchableOpacity, ScrollView, B
 import { Header, SearchBar, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
-
+import {change_url_image} from '../utils/Utils'
 import { IPServer } from '../Server/IPServer.js';
 
 import { AppColors } from '../styles/AppColors.js';
@@ -99,7 +99,7 @@ export default class Home extends Component {
                   <View>
                     <Card
                       title={rowData.name}
-                      image={{ uri: rowData.imageUrls[0].replace('http://localhost:3000', IPServer.ip) }}
+                      image={{ uri: change_url_image(rowData.imageUrls[0]) }}
                       imageStyle={styles.cardContainer}>
                       <Text>
                         {rowData.address}

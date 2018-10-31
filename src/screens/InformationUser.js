@@ -7,22 +7,30 @@ import {
     TouchableOpacity,
     ImageBackground,
     Platform,
-    ScrollView
+    ScrollView,
+    Animated
 } from "react-native";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Button, Header } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
+import {change_url_image} from '../utils/Utils';
 import axios from 'axios';
 const ImagePicker = require("react-native-image-picker");
 import { IPServer } from "../Server/IPServer.js";
 const options = {
     title: "Chọn ảnh từ:",
-    quality: 0.01,
+    quality: 1,
     storageOptions: {
         skipBackup: true,
         path: 'images'
     }
 };
+
+
+
+// define your styles
+
+
 export default class componentName extends Component {
     constructor(props) {
         super(props);
@@ -33,8 +41,11 @@ export default class componentName extends Component {
           phoneNumber: "",
           email:"",
           follows:[],
-          avatar:""
+          avatar:"",
+          slideAnim:new Animated.Value(-200),
+          a:1
         };
+        
     }
 
     componentWillMount() {
@@ -59,112 +70,156 @@ export default class componentName extends Component {
       })
     }
 
-    changeAvatar() {
-      ImagePicker.showImagePicker(options, response => {
-        if (response.didCancel) {
-            console.log("User cancelled image picker");
-        } else if (response.error) {
-            console.log("ImagePicker Error: ", response.error);
-        } else if (response.customButton) {
-            console.log("User tapped custom button: ", response.customButton);
-        } else {
-            this.setState({
-              avatar: response.uri
-            })
-            const body = new FormData();
-            body.append('avatar', {
-              uri: response.uri,
-              type: 'image/jpg',
-              name: 'image.jpg'
-            })
-            axios.patch(IPServer.ip + '/user', body, {
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${global.token}`
-              }
-          })
-        }
-    });
+    changeAvatar = () => {
+    //   ImagePicker.showImagePicker(options, response => {
+    //     if (response.didCancel) {
+    //         console.log("User cancelled image picker");
+    //     } else if (response.error) {
+    //         console.log("ImagePicker Error: ", response.error);
+    //     } else if (response.customButton) {
+    //         console.log("User tapped custom button: ", response.customButton);
+    //     } else {
+    //         this.setState({
+    //           avatar: response.uri
+    //         })
+    //         const body = new FormData();
+    //         body.append('avatar', {
+    //           uri: response.uri,
+    //           type: 'image/jpg',
+    //           name: 'image.jpg'
+    //         })
+    //         axios.patch(IPServer.ip + '/user', body, {
+    //           headers: {
+    //               'Content-Type': 'application/json',
+    //               'Authorization': `Bearer ${global.token}`
+    //           }
+    //       })
+    //     }
+    // });
+      this.setState({
+        a:3
+      })
+      Animated.timing(this.state.slideAnim, {
+        toValue: 0,
+        duration: 1000
+      }).start();
+
+      console.log('aaa')
+    }
+
+    slideDownAnim() {
+      this.setState({
+        a:1
+      })
+      Animated.timing(this.state.slideAnim, {
+        toValue:-200,
+        duration:1000
+      }).start();
     }
 
     render() {
         const { navigate, goBack } = this.props.navigation;
-        console.log(this.state.avatar)
+        let bottom = this.state.slideAnim;
+
+        console.log(this.state.a)
         return (
-            <ScrollView style={styles.container}>
-                <Header
+            <View style={styles.container}>
+                
+                <View style={{height:"100%", zIndex: 2, backgroundColor:"#80DEEA"}}>
+                  <Header
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
                     centerComponent={{ text: 'Thông tin người dùng', style: { color: '#fff', fontSize: 20 } }}
-                />
-                <TouchableOpacity >
-                    <ImageBackground
-                        source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
-                        style={styles.coverPhoto}
-                    >
+                  />
+                  <TouchableOpacity >
+                      <ImageBackground
+                          source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
+                          style={styles.coverPhoto}
+                      >
+                        
+                        <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
+                        <View style={styles.containerTextImage}>
+                            <TouchableOpacity onPress={() => this.changeAvatar()}>
+                                <Image
+                                    source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':change_url_image(this.state.avatar)}}
+                                    style={styles.avatar}
+                                >
+                                </Image>
+                            </TouchableOpacity>
+                        </View>
+                      </ImageBackground>
+                  </TouchableOpacity>
+                  <View style={{flex:1}}>
                       
-                      <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
-                      <View style={styles.containerTextImage}>
-                          <TouchableOpacity onPress={() => this.changeAvatar()}>
-                              <Image
-                                  source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':this.state.avatar.replace('http://localhost:3000',IPServer.ip) }}
-                                  style={styles.avatar}
-                              >
-                              </Image>
-                          </TouchableOpacity>
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Email </Text>
+                          <Text style={styles.textState}>{this.state.email}</Text>
                       </View>
-                    </ImageBackground>
-                </TouchableOpacity>
-                <View>
-                    
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Email </Text>
-                        <Text style={styles.textState}>{this.state.email}</Text>
-                    </View>
-                    <View
-                        style={styles.line}
-                    />
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Điện thoại </Text>
-                        <Text style={styles.textState}>{this.state.phoneNumber}</Text>
-                    </View>
-                    <View
-                        style={styles.line}
-                    />
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Giới tính </Text>
-                        <Text style={styles.textState}>{this.state.gender}</Text>
-                    </View>
-                    <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Lượt theo dõi </Text>
-                        <Text style={styles.textState}>{this.state.follows.length}</Text>
-                    </View>
+                      <View
+                          style={styles.line}
+                      />
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Điện thoại </Text>
+                          <Text style={styles.textState}>{this.state.phoneNumber}</Text>
+                      </View>
+                      <View
+                          style={styles.line}
+                      />
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Giới tính </Text>
+                          <Text style={styles.textState}>{this.state.gender}</Text>
+                      </View>
+                      <View style={styles.containerText}>
+                          <Text style={styles.textHeader}> Lượt theo dõi </Text>
+                          <Text style={styles.textState}>{this.state.follows.length}</Text>
+                      </View>
 
-                    <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
-                        <Button
-                            title='Đổi thông tin'
-                            buttonStyle={{
-                                backgroundColor: AppColors.color,
-                                width: 300,
-                                height: 45,
-                                borderColor: "transparent",
-                                borderWidth: 0,
-                                borderRadius: 5
-                            }}
-                            onPress={() => navigate("ChangeInformationUserScreen")}
-                        />
-                    </View>
+                      <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                          <Button
+                              title='Đổi thông tin'
+                              buttonStyle={{
+                                  backgroundColor: AppColors.color,
+                                  width: 300,
+                                  height: 45,
+                                  borderColor: "transparent",
+                                  borderWidth: 0,
+                                  borderRadius: 5
+                              }}
+                              onPress={() => navigate("ChangeInformationUserScreen")}
+                          />
+                      </View>
+                  </View>
+
                 </View>
-                <Toast ref="toast" />
-            </ScrollView>
+                <TouchableOpacity style={{position:"absolute",zIndex:this.state.a,backgroundColor:"#00000050", height:"100%", width:"100%",marginTop:"17%"}}>
+                  <View onPress={this.slideDownAnim()}>
+
+                  </View>
+                </TouchableOpacity>
+                
+
+                
+                <Animated.View style={{
+                  backgroundColor:"#ffffff",
+                  zIndex:4,
+                  bottom,
+                  position:"absolute",
+                  width:"100%"
+                }}> 
+                  <Text name="Thay đổi ảnh đại diện">Thay đổi ảnh đại diện</Text>
+                  <Text name="Xem hình ảnh">Thay đổi ảnh đại diện</Text>
+                </Animated.View>
+                <Toast ref="toast"/>
+            </View>
         );
     }
-}
+}     
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#FFFFFF"
+    
+        backgroundColor: "red",
+        position:"relative"
     },
     line: {
         borderColor: "#E0E0E0",

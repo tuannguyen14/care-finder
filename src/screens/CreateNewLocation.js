@@ -19,7 +19,7 @@ const ImagePicker = require("react-native-image-picker");
 
 const options = {
     title: "Chọn ảnh từ:",
-    quality: 0.01,
+    quality: 1,
     storageOptions: {
         skipBackup: true,
         path: 'images'
