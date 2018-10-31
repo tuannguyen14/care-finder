@@ -39,49 +39,19 @@ export default class NearBy extends Component {
                 latitude: 11.086520,
                 longitude: 106.672086
             },
-            listAllItems: []
+            listLocation: []
         };
     }
 
     componentWillMount() {
-        console.log(this.state.allLocations);
-        const distance = geolib.getDistance(
-            {
-                latitude: 106.674055,
-                longitude: 11.084508
-            },
-            {
-                latitude: 11.084326,
-                longitude: 106.673041
-            }
-        );
-        console.log(distance);
-        const listDefaultItemTemp = [
-            {
-                title: 'Vạn Phúc',
-                address: 'Thủ Dầu Một',
-                url: 'https://nmc.ae/Uploads/HospitalBannerImage/Thumb1/HospitalMainBannerImage143674.jpg',
-                rating: '1.0'
-            },
-            {
-                title: 'Hạnh Phúc',
-                address: 'Thành Phố Mới',
-                url: 'https://www.srilankanewslive.com/media/k2/items/cache/42e19da95401f7ea26c18a84f93b00ef_XL.jpg',
-                rating: '6.0'
-            },
-            {
-                title: 'Becamex',
-                address: 'Thành Phố Hồ Chí Minh dddddddddddddddddddddd',
-                url: 'https://images.adsttc.com/media/images/594a/2a4a/b22e/38e9/2900/00a6/large_jpg/Cherry_Hospital-1.jpg?1498032701',
-                rating: '10.0'
-            }
-        ]
-        this.setState({
-            listAllItems: listDefaultItemTemp
-        })
+        this.getCurrentLocation();
     }
 
-    componentDidMount() {
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchID);
+    }
+
+    getCurrentLocation() {
         navigator.geolocation.getCurrentPosition(
             position => {
                 this.setState({
@@ -93,28 +63,34 @@ export default class NearBy extends Component {
                     }
                     )
                 });
+                this.calculateDistance();
             },
             error => console.log(error.message),
         );
-        this.watchID = navigator.geolocation.watchPosition(position => {
-            this.setState({
-                region: new MapView.AnimatedRegion({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA
+    }
+
+    calculateDistance() {
+        const allLocations = this.state.allLocations;
+        let listLocationAdded = [];
+        for (let i = 0; i < allLocations.length; i++) {
+            const distance = geolib.getDistance(
+                {
+                    latitude: this.state.region.latitude._value,
+                    longitude: this.state.region.longitude._value
+                },
+                {
+                    latitude: allLocations[i].coordinates.latitude,
+                    longitude: allLocations[i].coordinates.longitude
                 }
-                )
-            });
-        });
-    }
-
-    componentWillUnmount() {
-        navigator.geolocation.clearWatch(this.watchID);
-    }
-
-    onRegionChange(region) {
-        this.setState({ region });
+            );
+            console.log(distance);
+            if (distance < 500) {
+                listLocationAdded.push(allLocations[i]);
+            }
+        }
+        this.setState({
+            listLocation: listLocationAdded
+        })
     }
 
     render() {
@@ -124,7 +100,7 @@ export default class NearBy extends Component {
                     style={styles.map}
                     region={this.state.region}
                 >
-                    {this.state.allLocations.map(marker => (
+                    {this.state.listLocation.map(marker => (
                         <MapView.Marker
                             coordinate={marker.coordinates}
                             title={marker.title}
@@ -141,10 +117,10 @@ export default class NearBy extends Component {
                         strokeColor="hotpink"
                     />
                 </MapView.Animated>
-                <ScrollView style={{ width: width, height: height / 2 }}>
+                <ScrollView style={{ width: width, height: height / 2.3 }}>
                     <List>
                         {
-                            this.state.listAllItems.map((l, i) => (
+                            this.state.listLocation.map((l, i) => (
                                 <ListItem
                                     style={{ marginLeft: 0, marginTop: 0 }}
                                     key={i}>
@@ -161,17 +137,17 @@ export default class NearBy extends Component {
                                                 <View style={{ flex: 2 }}>
                                                     <Text>100m</Text>
                                                     <View style={[styles.rowView, { justifyContent: 'space-between' }]}>
-                                                        <View style={styles.rowView}>
+                                                        <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                                             <Icon name={'eye'} size={15} color={'gray'} />
-                                                            <Text>10</Text>
+                                                            <Text style={{ marginLeft: '3%' }}>10</Text>
                                                         </View>
-                                                        <View style={styles.rowView}>
+                                                        <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                                             <Icon name={'comment'} size={15} color={'gray'} />
-                                                            <Text>0</Text>
+                                                            <Text style={{ marginLeft: '3%' }}>0</Text>
                                                         </View>
-                                                        <View style={styles.rowView}>
+                                                        <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                                             <Icon name={'camera'} size={15} color={'gray'} />
-                                                            <Text>1</Text>
+                                                            <Text style={{ marginLeft: '3%' }}>1</Text>
                                                         </View>
                                                     </View>
                                                 </View>
@@ -197,7 +173,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     map: {
-        height: height / 2,
+        height: height / 1.7,
         width: width,
         zIndex: -1
     },
