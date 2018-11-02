@@ -8,8 +8,10 @@ import {
     ImageBackground,
     Platform,
     ScrollView,
-    Animated
+    Animated,
+    Modal
 } from "react-native";
+import ImageViewer from 'react-native-image-zoom-viewer';
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Button, Header } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
@@ -26,9 +28,15 @@ const options = {
     }
 };
 
-
-
-// define your styles
+class MyComponent extends Component {
+  render() {
+    return (
+      <View style={{alignItems:"center",paddingVertical:"4%"}}>
+        <Text>{this.props.name}</Text>
+      </View>
+    );
+  }
+}
 
 
 export default class componentName extends Component {
@@ -43,7 +51,8 @@ export default class componentName extends Component {
           follows:[],
           avatar:"",
           slideAnim:new Animated.Value(-200),
-          a:1
+          zIndex:1,
+          visible: false
         };
         
     }
@@ -63,7 +72,7 @@ export default class componentName extends Component {
             phoneNumber,
             email,
             follows,
-            avatar
+            avatar,
           })
       }).catch(err => {
         console.log(err)
@@ -71,60 +80,74 @@ export default class componentName extends Component {
     }
 
     changeAvatar = () => {
-    //   ImagePicker.showImagePicker(options, response => {
-    //     if (response.didCancel) {
-    //         console.log("User cancelled image picker");
-    //     } else if (response.error) {
-    //         console.log("ImagePicker Error: ", response.error);
-    //     } else if (response.customButton) {
-    //         console.log("User tapped custom button: ", response.customButton);
-    //     } else {
-    //         this.setState({
-    //           avatar: response.uri
-    //         })
-    //         const body = new FormData();
-    //         body.append('avatar', {
-    //           uri: response.uri,
-    //           type: 'image/jpg',
-    //           name: 'image.jpg'
-    //         })
-    //         axios.patch(IPServer.ip + '/user', body, {
-    //           headers: {
-    //               'Content-Type': 'application/json',
-    //               'Authorization': `Bearer ${global.token}`
-    //           }
-    //       })
-    //     }
-    // });
+        ImagePicker.showImagePicker(options, response => {
+        if (response.didCancel) {
+            console.log("User cancelled image picker");
+        } else if (response.error) {
+            console.log("ImagePicker Error: ", response.error);
+        } else if (response.customButton) {
+            console.log("User tapped custom button: ", response.customButton);
+        } else {
+            this.setState({
+              avatar: response.uri
+            })
+            const body = new FormData();
+            body.append('avatar', {
+              uri: response.uri,
+              type: 'image/jpg',
+              name: 'image.jpg'
+            })
+            axios.patch(IPServer.ip + '/user', body, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${global.token}`
+              }
+          })
+        }
+    });
+    }
+
+    viewAvatar = () => {
       this.setState({
-        a:3
+        avatar:true
+      })
+    }
+
+    selectOptions = () => {
+      this.setState({
+        zIndex:3
       })
       Animated.timing(this.state.slideAnim, {
         toValue: 0,
-        duration: 1000
+        duration: 500
       }).start();
 
       console.log('aaa')
     }
 
-    slideDownAnim() {
-      this.setState({
-        a:1
-      })
+    slideDownAnim =()=> {
       Animated.timing(this.state.slideAnim, {
         toValue:-200,
         duration:1000
       }).start();
+      this.setState({
+        zIndex:1
+      })
     }
 
     render() {
         const { navigate, goBack } = this.props.navigation;
         let bottom = this.state.slideAnim;
 
-        console.log(this.state.a)
+        console.log(this.state.avatar)
+        const a = [this.state.avatar]
         return (
             <View style={styles.container}>
-                
+                <Modal visible={this.state.visible} transparent={true} onRequestClose={() => this.setState({ visible: false })}>
+                  <ImageViewer
+                    imageUrls={a} 
+                    index={0}/>
+                </Modal>
                 <View style={{height:"100%", zIndex: 2, backgroundColor:"#80DEEA"}}>
                   <Header
                     backgroundColor={AppColors.color}
@@ -139,7 +162,7 @@ export default class componentName extends Component {
                         
                         <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
                         <View style={styles.containerTextImage}>
-                            <TouchableOpacity onPress={() => this.changeAvatar()}>
+                            <TouchableOpacity onPress={this.selectOptions}>
                                 <Image
                                     source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':change_url_image(this.state.avatar)}}
                                     style={styles.avatar}
@@ -191,13 +214,10 @@ export default class componentName extends Component {
                   </View>
 
                 </View>
-                <TouchableOpacity style={{position:"absolute",zIndex:this.state.a,backgroundColor:"#00000050", height:"100%", width:"100%",marginTop:"17%"}}>
-                  <View onPress={this.slideDownAnim()}>
-
+                <TouchableOpacity onPress={this.slideDownAnim} style={{position:"absolute",zIndex:this.state.zIndex,backgroundColor:"#00000050", height:"100%", width:"100%",marginTop:"17%"}}>
+                  <View >
                   </View>
                 </TouchableOpacity>
-                
-
                 
                 <Animated.View style={{
                   backgroundColor:"#ffffff",
@@ -206,8 +226,13 @@ export default class componentName extends Component {
                   position:"absolute",
                   width:"100%"
                 }}> 
-                  <Text name="Thay đổi ảnh đại diện">Thay đổi ảnh đại diện</Text>
-                  <Text name="Xem hình ảnh">Thay đổi ảnh đại diện</Text>
+                  <TouchableOpacity onPress={this.changeAvatar}>
+                    <MyComponent name="Thay đổi ảnh đại diện"/>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.viewAvatar}>
+                    <MyComponent name="Xem hình ảnh" color="#ffffcc"/>
+                  </TouchableOpacity>
+                  
                 </Animated.View>
                 <Toast ref="toast"/>
             </View>

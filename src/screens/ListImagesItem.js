@@ -26,7 +26,7 @@ export default class ListImagesItem extends Component {
                 <Modal visible={this.state.visible} transparent={true} onRequestClose={() => this.setState({ visible: false })}>
                     <ImageViewer
                         imageUrls={images}
-                        style={styles.image}
+                        
                         index={this.state.index} />
                 </Modal>
                 <View>
