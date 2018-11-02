@@ -46,7 +46,7 @@ export default class AllItems extends Component {
         <Header
           backgroundColor={AppColors.color}
           leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
-          centerComponent={{ text: 'Lưu trữ', style: { color: '#fff', fontSize: 20 } }}
+          centerComponent={{ text: 'Địa điểm', style: { color: '#fff', fontSize: 20 } }}
         />
         <List>
           {
