@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native';
-import { Text } from 'react-native-elements';
+import { Text, Button } from 'react-native-elements';
 import { List, ListItem } from 'native-base';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -39,7 +39,8 @@ export default class NearBy extends Component {
                 latitude: 11.086520,
                 longitude: 106.672086
             },
-            listLocation: []
+            listLocation: [],
+            distanceExpand: 1000
         };
     }
 
@@ -85,7 +86,7 @@ export default class NearBy extends Component {
                 }
             );
             console.log(distance);
-            if (distance < 500) {
+            if (this.state.distanceExpand < 500) {
                 listLocationAdded.push(allLocations[i]);
                 if (distance + "".length == 4) {
                     distance = distance / 100 + 'km';
@@ -109,6 +110,7 @@ export default class NearBy extends Component {
                     style={styles.map}
                     region={this.state.region}
                     showsUserLocation={true}
+                    loadingEnabled={true}
                 >
                     {this.state.listLocation.map(marker => (
                         <MapView.Marker
@@ -127,8 +129,26 @@ export default class NearBy extends Component {
                         strokeColor="hotpink"
                     /> */}
                 </MapView>
+
                 <TouchableOpacity style={styles.backButtonContainer} onPress={() => goBack()}>
                     <IconEntypo name={'arrow-long-left'} size={27} color={'black'} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.expandButton}>
+                    <Button
+                        title={'Mở rộng'}
+                        buttonStyle={{
+                            backgroundColor: AppColors.color,
+                            width: 90,
+                            height: 30,
+                            borderColor: "transparent",
+                            borderWidth: 0,
+                            borderRadius: 5,
+
+                        }}
+                        onPress={() => this.login()}
+                    />
+                    <Text>{this.state.distanceExpand / 1000 + 'km'}</Text>
                 </TouchableOpacity>
                 <ScrollView style={{ width: width, height: height / 2.3 }}>
                     <List>
@@ -217,9 +237,13 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         position: 'absolute',
-        width: 20,
-        height: 20,
         top: 10,
         left: 10
     },
+    expandButton: {
+        position: 'absolute',
+        top: 10,
+        alignSelf: 'flex-end',
+        alignItems: 'center'
+    }
 });
