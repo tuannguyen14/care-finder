@@ -86,7 +86,7 @@ export default class NearBy extends Component {
                 }
             );
             console.log(distance);
-            if (this.state.distanceExpand < 500) {
+            if (distance < this.state.distanceExpand) {
                 listLocationAdded.push(allLocations[i]);
                 if (distance + "".length == 4) {
                     distance = distance / 100 + 'km';
