@@ -65,13 +65,17 @@ export default class NearBy extends Component {
                     )
                 });
                 this.calculateDistance();
-                console.log(this.state.listLocation)
             },
             error => console.log(error.message),
         );
     }
 
-    calculateDistance() {
+    calculateDistance(boolean) {
+        let distanceExpand = this.state.distanceExpand;
+        if (boolean == true) {
+            this.setState({ distanceExpand: this.state.distanceExpand + 1000 })
+            distanceExpand += 1000;
+        }
         const allLocations = this.state.allLocations;
         let listLocationAdded = [];
         for (let i = 0; i < allLocations.length; i++) {
@@ -85,15 +89,9 @@ export default class NearBy extends Component {
                     longitude: allLocations[i].coordinates.longitude
                 }
             );
-            console.log(distance);
-            if (distance < this.state.distanceExpand) {
+            if (distance <= distanceExpand) {
                 listLocationAdded.push(allLocations[i]);
-                if (distance + "".length == 4) {
-                    distance = distance / 100 + 'km';
-                } else {
-                    distance += 'm'
-                }
-                listLocationAdded[i].distance = distance + "";
+                listLocationAdded[listLocationAdded.length - 1].distance = distance + "";
             }
         }
         listLocationAdded.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
@@ -103,7 +101,8 @@ export default class NearBy extends Component {
     }
 
     onExpand() {
-        this.state.distanceExpand += 1000;
+        let boolean = true;
+        this.calculateDistance(boolean);
     }
 
     render() {
@@ -135,23 +134,13 @@ export default class NearBy extends Component {
                 </MapView>
 
                 <TouchableOpacity style={styles.backButtonContainer} onPress={() => goBack()}>
-                    <IconEntypo name={'arrow-long-left'} size={27} color={'black'} />
+                    <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.expandButton}>
-                    <Button
-                        title={'Mở rộng'}
-                        buttonStyle={{
-                            backgroundColor: AppColors.color,
-                            width: 90,
-                            height: 30,
-                            borderColor: "transparent",
-                            borderWidth: 0,
-                            borderRadius: 5,
-
-                        }}
-                        onPress={() => this.onExpand()}
-                    />
+                <TouchableOpacity style={styles.expandButton} onPress={() => this.onExpand()}>
+                    <Image
+                        source={require('../img/Expand.png')}
+                        style={{ height: 36, width: 36 }} />
                     <Text>{this.state.distanceExpand / 1000 + 'km'}</Text>
                 </TouchableOpacity>
                 <ScrollView style={{ width: width, height: height / 2.3 }}>
@@ -172,7 +161,7 @@ export default class NearBy extends Component {
                                                     <Text>{l.address}</Text>
                                                 </View>
                                                 <View style={{ flex: 3 }}>
-                                                    <Text>{l.distance}</Text>
+                                                    <Text>{l.distance.toString().length > 3 ? l.distance / 1000 + 'km' : l.distance + 'm'}</Text>
                                                     <View style={[styles.rowView, { justifyContent: 'space-between' }]}>
                                                         <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                                             <Icon name={'eye'} size={15} color={'gray'} />
@@ -241,12 +230,13 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         position: 'absolute',
-        top: 10,
-        left: 10
+        top: '3%',
+        left: '5%'
     },
     expandButton: {
         position: 'absolute',
-        top: 10,
+        top: '3%',
+        right: '5%',
         alignSelf: 'flex-end',
         alignItems: 'center'
     }
