@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Entypo';
 import { InputGroup, Input } from 'native-base';
-import { CheckBox } from 'react-native-elements';
-import { Button } from 'react-native-elements';
+import { CheckBox, Button } from 'react-native-elements';
 import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
@@ -13,7 +12,7 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "tuan12311@gmail.com",
+            email: "tuan123@gmail.com",
             password: "admin123",
             checkedDoctor: false,
             checkedUser: true

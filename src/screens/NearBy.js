@@ -102,6 +102,10 @@ export default class NearBy extends Component {
         })
     }
 
+    onExpand() {
+        this.state.distanceExpand += 1000;
+    }
+
     render() {
         const { goBack } = this.props.navigation;
         return (
@@ -146,7 +150,7 @@ export default class NearBy extends Component {
                             borderRadius: 5,
 
                         }}
-                        onPress={() => this.login()}
+                        onPress={() => this.onExpand()}
                     />
                     <Text>{this.state.distanceExpand / 1000 + 'km'}</Text>
                 </TouchableOpacity>

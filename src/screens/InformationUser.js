@@ -15,7 +15,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Button, Header } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
-import {change_url_image} from '../utils/Utils';
+import { change_url_image } from '../utils/Utils';
 import axios from 'axios';
 const ImagePicker = require("react-native-image-picker");
 import { IPServer } from "../Server/IPServer.js";
@@ -29,13 +29,13 @@ const options = {
 };
 
 class MyComponent extends Component {
-  render() {
-    return (
-      <View style={{alignItems:"center",paddingVertical:"4%"}}>
-        <Text>{this.props.name}</Text>
-      </View>
-    );
-  }
+    render() {
+        return (
+            <View style={{ alignItems: "center", paddingVertical: "4%" }}>
+                <Text>{this.props.name}</Text>
+            </View>
+        );
+    }
 }
 
 
@@ -43,96 +43,96 @@ export default class componentName extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          firstName:"",
-          lastName:"",
-          gender: "",
-          phoneNumber: "",
-          email:"",
-          follows:[],
-          avatar:"",
-          slideAnim:new Animated.Value(-200),
-          zIndex:1,
-          visible: false
+            firstName: "",
+            lastName: "",
+            gender: "",
+            phoneNumber: "",
+            email: "",
+            follows: [],
+            avatar: "",
+            slideAnim: new Animated.Value(-200),
+            zIndex: 1,
+            visible: false
         };
-        
+
     }
 
     componentWillMount() {
-      axios.get(IPServer.ip +'/me',{
-        headers: {
-          "Authorization":`Bearer ${global.token}`
-        },
-      },).then(response => {
-          const {firstName, phoneNumber,lastName, gender,follows,email,avatar} = response.data;
-          console.log(response.data)
-          this.setState({
-            firstName,
-            lastName,
-            gender,
-            phoneNumber,
-            email,
-            follows,
-            avatar,
-          })
-      }).catch(err => {
-        console.log(err)
-      })
+        axios.get(IPServer.ip + '/me', {
+            headers: {
+                "Authorization": `Bearer ${global.token}`
+            },
+        }).then(response => {
+            const { firstName, phoneNumber, lastName, gender, follows, email, avatar } = response.data;
+            console.log(response.data)
+            this.setState({
+                firstName,
+                lastName,
+                gender,
+                phoneNumber,
+                email,
+                follows,
+                avatar: avatar.includes('localhost') ? avatar.replace('http://localhost:3000', IPServer.ip) : avatar,
+            })
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     changeAvatar = () => {
         ImagePicker.showImagePicker(options, response => {
-        if (response.didCancel) {
-            console.log("User cancelled image picker");
-        } else if (response.error) {
-            console.log("ImagePicker Error: ", response.error);
-        } else if (response.customButton) {
-            console.log("User tapped custom button: ", response.customButton);
-        } else {
-            this.setState({
-              avatar: response.uri
-            })
-            const body = new FormData();
-            body.append('avatar', {
-              uri: response.uri,
-              type: 'image/jpg',
-              name: 'image.jpg'
-            })
-            axios.patch(IPServer.ip + '/user', body, {
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${global.token}`
-              }
-          })
-        }
-    });
+            if (response.didCancel) {
+                console.log("User cancelled image picker");
+            } else if (response.error) {
+                console.log("ImagePicker Error: ", response.error);
+            } else if (response.customButton) {
+                console.log("User tapped custom button: ", response.customButton);
+            } else {
+                this.setState({
+                    avatar: response.uri
+                })
+                const body = new FormData();
+                body.append('avatar', {
+                    uri: response.uri,
+                    type: 'image/jpg',
+                    name: 'image.jpg'
+                })
+                axios.patch(IPServer.ip + '/user', body, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${global.token}`
+                    }
+                })
+            }
+        });
     }
 
     viewAvatar = () => {
-      this.setState({
-        avatar:true
-      })
+        this.setState({
+            visible: true
+        })
     }
 
     selectOptions = () => {
-      this.setState({
-        zIndex:3
-      })
-      Animated.timing(this.state.slideAnim, {
-        toValue: 0,
-        duration: 500
-      }).start();
+        this.setState({
+            zIndex: 3
+        })
+        Animated.timing(this.state.slideAnim, {
+            toValue: 0,
+            duration: 500
+        }).start();
 
-      console.log('aaa')
+        console.log('aaa')
     }
 
-    slideDownAnim =()=> {
-      Animated.timing(this.state.slideAnim, {
-        toValue:-200,
-        duration:1000
-      }).start();
-      this.setState({
-        zIndex:1
-      })
+    slideDownAnim = () => {
+        Animated.timing(this.state.slideAnim, {
+            toValue: -200,
+            duration: 1000
+        }).start();
+        this.setState({
+            zIndex: 1
+        })
     }
 
     render() {
@@ -140,111 +140,109 @@ export default class componentName extends Component {
         let bottom = this.state.slideAnim;
 
         console.log(this.state.avatar)
-        const a = [this.state.avatar]
         return (
             <View style={styles.container}>
                 <Modal visible={this.state.visible} transparent={true} onRequestClose={() => this.setState({ visible: false })}>
-                  <ImageViewer
-                    imageUrls={a} 
-                    index={0}/>
+                    <ImageViewer
+                        imageUrls={[{ url: this.state.avatar }]}
+                        index={this.state.index} />
                 </Modal>
-                <View style={{height:"100%", zIndex: 2, backgroundColor:"#80DEEA"}}>
-                  <Header
-                    backgroundColor={AppColors.color}
-                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
-                    centerComponent={{ text: 'Thông tin người dùng', style: { color: '#fff', fontSize: 20 } }}
-                  />
-                  <TouchableOpacity >
-                      <ImageBackground
-                          source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
-                          style={styles.coverPhoto}
-                      >
-                        
-                        <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
-                        <View style={styles.containerTextImage}>
-                            <TouchableOpacity onPress={this.selectOptions}>
-                                <Image
-                                    source={{ uri: !this.state.avatar?'https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/27073235_1979315985729409_2921398959634109576_n.jpg?_nc_cat=108&_nc_ht=scontent.fsgn5-5.fna&oh=b316788eaf32322fc78fccbdca94c1e8&oe=5C484D2D':change_url_image(this.state.avatar)}}
-                                    style={styles.avatar}
-                                >
-                                </Image>
-                            </TouchableOpacity>
-                        </View>
-                      </ImageBackground>
-                  </TouchableOpacity>
-                  <View style={{flex:1}}>
-                      
-                      <View style={styles.containerText}>
-                          <Text style={styles.textHeader}> Email </Text>
-                          <Text style={styles.textState}>{this.state.email}</Text>
-                      </View>
-                      <View
-                          style={styles.line}
-                      />
-                      <View style={styles.containerText}>
-                          <Text style={styles.textHeader}> Điện thoại </Text>
-                          <Text style={styles.textState}>{this.state.phoneNumber}</Text>
-                      </View>
-                      <View
-                          style={styles.line}
-                      />
-                      <View style={styles.containerText}>
-                          <Text style={styles.textHeader}> Giới tính </Text>
-                          <Text style={styles.textState}>{this.state.gender}</Text>
-                      </View>
-                      <View style={styles.containerText}>
-                          <Text style={styles.textHeader}> Lượt theo dõi </Text>
-                          <Text style={styles.textState}>{this.state.follows.length}</Text>
-                      </View>
+                <View style={{ height: "100%", zIndex: 2, backgroundColor: "#80DEEA" }}>
+                    <Header
+                        backgroundColor={AppColors.color}
+                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
+                        centerComponent={{ text: 'Thông tin người dùng', style: { color: '#fff', fontSize: 20 } }}
+                    />
+                    <TouchableOpacity >
+                        <ImageBackground
+                            source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
+                            style={styles.coverPhoto}
+                        >
+                            <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
+                            <View style={styles.containerTextImage}>
+                                <TouchableOpacity onPress={this.selectOptions}>
+                                    <Image
+                                        source={{ uri: this.state.avatar }}
+                                        style={styles.avatar}
+                                    >
+                                    </Image>
+                                </TouchableOpacity>
+                            </View>
+                        </ImageBackground>
+                    </TouchableOpacity>
+                    <View style={{ flex: 1 }}>
 
-                      <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
-                          <Button
-                              title='Đổi thông tin'
-                              buttonStyle={{
-                                  backgroundColor: AppColors.color,
-                                  width: 300,
-                                  height: 45,
-                                  borderColor: "transparent",
-                                  borderWidth: 0,
-                                  borderRadius: 5
-                              }}
-                              onPress={() => navigate("ChangeInformationUserScreen")}
-                          />
-                      </View>
-                  </View>
+                        <View style={styles.containerText}>
+                            <Text style={styles.textHeader}> Email </Text>
+                            <Text style={styles.textState}>{this.state.email}</Text>
+                        </View>
+                        <View
+                            style={styles.line}
+                        />
+                        <View style={styles.containerText}>
+                            <Text style={styles.textHeader}> Điện thoại </Text>
+                            <Text style={styles.textState}>{this.state.phoneNumber}</Text>
+                        </View>
+                        <View
+                            style={styles.line}
+                        />
+                        <View style={styles.containerText}>
+                            <Text style={styles.textHeader}> Giới tính </Text>
+                            <Text style={styles.textState}>{this.state.gender}</Text>
+                        </View>
+                        <View style={styles.containerText}>
+                            <Text style={styles.textHeader}> Lượt theo dõi </Text>
+                            <Text style={styles.textState}>{this.state.follows.length}</Text>
+                        </View>
+
+                        <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                            <Button
+                                title='Đổi thông tin'
+                                buttonStyle={{
+                                    backgroundColor: AppColors.color,
+                                    width: 300,
+                                    height: 45,
+                                    borderColor: "transparent",
+                                    borderWidth: 0,
+                                    borderRadius: 5
+                                }}
+                                onPress={() => navigate("ChangeInformationUserScreen")}
+                            />
+                        </View>
+                    </View>
 
                 </View>
-                <TouchableOpacity onPress={this.slideDownAnim} style={{position:"absolute",zIndex:this.state.zIndex,backgroundColor:"#00000050", height:"100%", width:"100%",marginTop:"17%"}}>
-                  <View >
-                  </View>
+                <TouchableOpacity onPress={this.slideDownAnim} style={{ position: "absolute", zIndex: this.state.zIndex, backgroundColor: "#00000050", height: "100%", width: "100%", marginTop: "17%" }}>
+                    <View >
+                    </View>
                 </TouchableOpacity>
-                
+
                 <Animated.View style={{
-                  backgroundColor:"#ffffff",
-                  zIndex:4,
-                  bottom,
-                  position:"absolute",
-                  width:"100%"
-                }}> 
-                  <TouchableOpacity onPress={this.changeAvatar}>
-                    <MyComponent name="Thay đổi ảnh đại diện"/>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={this.viewAvatar}>
-                    <MyComponent name="Xem hình ảnh" color="#ffffcc"/>
-                  </TouchableOpacity>
-                  
+                    backgroundColor: "#ffffff",
+                    zIndex: 4,
+                    bottom,
+                    position: "absolute",
+                    width: "100%"
+                }}>
+                    <TouchableOpacity onPress={this.changeAvatar}>
+                        <MyComponent name="Thay đổi ảnh đại diện" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.viewAvatar}>
+                        <MyComponent name="Xem hình ảnh" color="#ffffcc" />
+                    </TouchableOpacity>
+
                 </Animated.View>
-                <Toast ref="toast"/>
+                <Toast ref="toast" />
             </View>
         );
     }
-}     
+}
 
 const styles = StyleSheet.create({
     container: {
-    
+
         backgroundColor: "red",
-        position:"relative"
+        position: "relative"
     },
     line: {
         borderColor: "#E0E0E0",
@@ -273,7 +271,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     containerTextImage: {
-      alignItems:"center"
+        alignItems: "center"
 
     },
     editImage: {
@@ -286,7 +284,7 @@ const styles = StyleSheet.create({
     },
     textEditCoverPhoto: {
         position: "absolute",
-        alignSelf:"center",
+        alignSelf: "center",
         bottom: 0,
         marginBottom: "3%",
         fontSize: 18,
@@ -304,7 +302,7 @@ const styles = StyleSheet.create({
     textHeader: {
         fontWeight: "bold",
         fontSize: 16,
-        width:110
+        width: 110
     },
     textState: {
         fontSize: 16
