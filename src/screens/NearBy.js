@@ -112,8 +112,8 @@ export default class NearBy extends Component {
                 <MapView
                     style={styles.map}
                     region={this.state.region}
-                    showsUserLocation={true}
-                    loadingEnabled={true}
+                // showsUserLocation={true}
+                // loadingEnabled={true}
                 >
                     {this.state.listLocation.map(marker => (
                         <MapView.Marker
@@ -141,7 +141,11 @@ export default class NearBy extends Component {
                     <Image
                         source={require('../img/Expand.png')}
                         style={{ height: 36, width: 36 }} />
-                    <Text>{this.state.distanceExpand / 1000 + 'km'}</Text>
+                    <ImageBackground
+                        source={require('../img/square.png')}
+                        style={{ height: 26, width: 36, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text>{this.state.distanceExpand / 1000 + 'km'}</Text>
+                    </ImageBackground>
                 </TouchableOpacity>
                 <ScrollView style={{ width: width, height: height / 2.3 }}>
                     <List>
