@@ -20,15 +20,15 @@ export default class Home extends Component {
   componentWillMount() {
     axios({
       method: 'get',
-      url: IPServer.ip + '/clinic',
+      url: IPServer.ip + '/location',
       responseType: 'stream'
     })
       .then((response) => {
         this.setState({
-          nearByData: response.data.all
+          nearByData: response.data.doc
         })
-        global.allLocations = response.data.all;
-        console.log(response.data.all)
+        global.allLocations = response.data.doc;
+        console.log(response.data.doc)
       });
   }
 
