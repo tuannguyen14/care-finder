@@ -30,6 +30,7 @@ export default class ChangeInformationUser extends Component {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAwareScrollView style={styles.container}>
                     <Header
+                        outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
                         centerComponent={{ text: 'Đổi thông tin', style: { color: '#fff', fontSize: 20 } }}

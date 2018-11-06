@@ -3,7 +3,7 @@ import { Dimensions, View, StyleSheet, FlatList, TouchableOpacity, ScrollView, B
 import { Header, SearchBar, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
-import {change_url_image} from '../utils/Utils'
+import { change_url_image } from '../utils/Utils'
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 
@@ -45,6 +45,12 @@ export default class Home extends Component {
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    this.props.navigation.addListener(
+      'didFocus',
+      payload => {
+        this.componentWillMount();
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -60,6 +66,7 @@ export default class Home extends Component {
     return (
       <ScrollView style={styles.container}>
         <Header
+          outerContainerStyles={{ borderBottomWidth: 0 }}
           backgroundColor={AppColors.color}
           leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
           centerComponent={{ text: 'Trang Chính', style: { color: '#fff', fontSize: 20 } }}

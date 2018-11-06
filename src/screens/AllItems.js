@@ -44,6 +44,7 @@ export default class AllItems extends Component {
     return (
       <ScrollView>
         <Header
+          outerContainerStyles={{ borderBottomWidth: 0 }}
           backgroundColor={AppColors.color}
           leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
           centerComponent={{ text: 'Địa điểm', style: { color: '#fff', fontSize: 20 } }}

@@ -94,19 +94,19 @@ export default class CreateNewLocation extends Component {
             }, body
         }).then(response => {
             this.refs.toast.show('Thành công');
+            global.allLocations.push()
         }).catch(err => {
             this.refs.toast.show('Thất bại');
             console.log(err)
         });
     }
 
-
     render() {
-        const { goBack } = this.props.navigation;
+        const { navigate } = this.props.navigation;
         return (
             <ScrollView style={styles.container}>
                 <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}>
-                    <TouchableOpacity onPress={() => goBack()}>
+                    <TouchableOpacity onPress={() => navigate("RootDrawer")}>
                         <View style={styles.backButtonContainer}>
                             <Icon name={'arrow-long-left'} size={27} color={'white'} />
                         </View>
@@ -175,54 +175,25 @@ export default class CreateNewLocation extends Component {
                                 />
                             </InputGroup>
 
-                            </View>
+                        </View>
 
-                            <View style={{ marginTop: '3%' }}>
-                                <FlatList
-                                    data={this.state.listUploadImage}
-                                    horizontal={true}
-                                    renderItem={({ item: rowData }) => {
-                                        return (
-                                            <View style={styles.rowView}>
-                                                <Image
-                                                    style={styles.imageUpload}
-                                                    source={rowData.uri} />
-                                                <View style={styles.lineVertical} />
-                                            </View>
-                                        );
-                                    }}
-                                    keyExtractor={(item, index) => index.toString()}
-                                />
+                        <View style={{ marginTop: '3%' }}>
+                            <FlatList
+                                data={this.state.listUploadImage}
+                                horizontal={true}
+                                renderItem={({ item: rowData }) => {
+                                    return (
+                                        <View style={styles.rowView}>
+                                            <Image
+                                                style={styles.imageUpload}
+                                                source={rowData.uri} />
+                                            <View style={styles.lineVertical} />
+                                        </View>
+                                    );
+                                }}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
 
-                            </View>
-                            <View style={[styles.containerLogo]} >
-                                <Button
-                                    onPress={() => this.uploadPhoto()}
-                                    title='Thêm hình'
-                                    buttonStyle={{
-                                        backgroundColor: "#E57373",
-                                        width: 150,
-                                        height: 30,
-                                        borderColor: "transparent",
-                                        borderWidth: 0,
-                                        borderRadius: 5,
-                                    }}
-                                />
-                            </View>
-                            <View style={styles.buttonGroup}>
-                                <Button
-                                    onPress={() => this.createLocation()}
-                                    title='Thêm địa điểm'
-                                    buttonStyle={{
-                                        backgroundColor: "#E57373",
-                                        width: 300,
-                                        height: 45,
-                                        borderColor: "transparent",
-                                        borderWidth: 0,
-                                        borderRadius: 5,
-                                    }}
-                                />
-                            </View>
                         </View>
                         <View style={[styles.containerLogo]} >
                             <Button
@@ -252,7 +223,36 @@ export default class CreateNewLocation extends Component {
                                 }}
                             />
                         </View>
-                    
+                    </View>
+                    <View style={[styles.containerLogo]} >
+                        <Button
+                            onPress={() => this.uploadPhoto()}
+                            title='Thêm hình'
+                            buttonStyle={{
+                                backgroundColor: "#E57373",
+                                width: 150,
+                                height: 30,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5,
+                            }}
+                        />
+                    </View>
+                    <View style={styles.buttonGroup}>
+                        <Button
+                            onPress={() => this.createLocation()}
+                            title='Thêm địa điểm'
+                            buttonStyle={{
+                                backgroundColor: "#E57373",
+                                width: 300,
+                                height: 45,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5,
+                            }}
+                        />
+                    </View>
+
                     <Toast ref="toast" />
                 </ImageBackground >
             </ScrollView>

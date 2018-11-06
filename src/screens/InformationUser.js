@@ -149,6 +149,7 @@ export default class componentName extends Component {
                 </Modal>
                 <View style={{ height: "100%", zIndex: 2, backgroundColor: "#80DEEA" }}>
                     <Header
+                        outerContainerStyles={{ borderBottomWidth:0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
                         centerComponent={{ text: 'Thông tin người dùng', style: { color: '#fff', fontSize: 20 } }}
@@ -176,16 +177,10 @@ export default class componentName extends Component {
                             <Text style={styles.textHeader}> Email </Text>
                             <Text style={styles.textState}>{this.state.email}</Text>
                         </View>
-                        <View
-                            style={styles.line}
-                        />
                         <View style={styles.containerText}>
                             <Text style={styles.textHeader}> Điện thoại </Text>
                             <Text style={styles.textState}>{this.state.phoneNumber}</Text>
                         </View>
-                        <View
-                            style={styles.line}
-                        />
                         <View style={styles.containerText}>
                             <Text style={styles.textHeader}> Giới tính </Text>
                             <Text style={styles.textState}>{this.state.gender}</Text>

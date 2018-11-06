@@ -45,6 +45,7 @@ export default class BookMark extends Component {
         return (
             <ScrollView>
                 <Header
+                    outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
                     centerComponent={{ text: 'Lưu trữ', style: { color: '#fff', fontSize: 20 } }}

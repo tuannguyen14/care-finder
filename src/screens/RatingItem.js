@@ -62,42 +62,42 @@ export default class RatingItem extends Component {
                 subtitle: 'Bệnh viện như shit',
                 ratingCount: 1
             },
-            // {
-            //     name: 'Amy Farha',
-            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-            //     subtitle: 'ngon',
-            //     ratingCount: 5
-            // },
-            // {
-            //     name: 'Chris Jackson',
-            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-            //     subtitle: 'Bệnh viện như shit',
-            //     ratingCount: 1
-            // },
-            // {
-            //     name: 'Amy Farha',
-            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-            //     subtitle: 'ngon',
-            //     ratingCount: 5
-            // },
-            // {
-            //     name: 'Chris Jackson',
-            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-            //     subtitle: 'Bệnh viện như shit',
-            //     ratingCount: 1
-            // },
-            // {
-            //     name: 'Amy Farha',
-            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-            //     subtitle: 'ngon',
-            //     ratingCount: 5
-            // },
-            // {
-            //     name: 'Chris Jackson',
-            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-            //     subtitle: 'Bệnh viện như shit',
-            //     ratingCount: 1
-            // }
+            {
+                name: 'Amy Farha',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                subtitle: 'ngon',
+                ratingCount: 5
+            },
+            {
+                name: 'Chris Jackson',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                subtitle: 'Bệnh viện như shit',
+                ratingCount: 1
+            },
+            {
+                name: 'Amy Farha',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                subtitle: 'ngon',
+                ratingCount: 5
+            },
+            {
+                name: 'Chris Jackson',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                subtitle: 'Bệnh viện như shit',
+                ratingCount: 1
+            },
+            {
+                name: 'Amy Farha',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                subtitle: 'ngon',
+                ratingCount: 5
+            },
+            {
+                name: 'Chris Jackson',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                subtitle: 'Bệnh viện như shit12',
+                ratingCount: 1
+            }
         ]
         this.setState({
             listComments: list
@@ -272,7 +272,7 @@ export default class RatingItem extends Component {
                     <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
                 </View>
 
-                <View style={{ height: height * this.state.listComments.length / 6 }}>
+                <View style={{}}>
                     {
                         this.state.listComments.map((l, i) => (
                             <ListItem

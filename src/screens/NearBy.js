@@ -40,7 +40,10 @@ export default class NearBy extends Component {
                 longitude: 106.672086
             },
             listLocation: [],
-            distanceExpand: 0
+            distanceExpand: 0,
+            slideAnimationScrollView: new Animated.Value(10),
+            slideAnimationExpandIcon: new Animated.Value(275),
+            isHideScrollView: false
         };
     }
 
@@ -61,7 +64,11 @@ export default class NearBy extends Component {
                         longitude: position.coords.longitude,
                         latitudeDelta: ((this.state.distanceExpand / 1000) * 1.6) / 50.0,
                         longitudeDelta: (((this.state.distanceExpand / 1000) * 1.6) / 50.0) * ASPECT_RATIO
-                    })
+                    }),
+                    origin: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    }
                 }, () => {
                     this.calculateDistance();
                 },
@@ -119,8 +126,45 @@ export default class NearBy extends Component {
         this.calculateDistance();
     }
 
+    onShowHideScrollView() {
+        this.setState({
+            isHideScrollView: !this.state.isHideScrollView
+        }, () => {
+            if (this.state.isHideScrollView) {
+                Animated.timing(this.state.slideAnimationScrollView, {
+                    toValue: -300,
+                    duration: 500
+                }).start();
+                Animated.timing(this.state.slideAnimationExpandIcon, {
+                    toValue: 10,
+                    duration: 500
+                }).start();
+            } else {
+                Animated.timing(this.state.slideAnimationScrollView, {
+                    toValue: 10,
+                    duration: 500
+                }).start();
+                Animated.timing(this.state.slideAnimationExpandIcon, {
+                    toValue: 275,
+                    duration: 500
+                }).start();
+            }
+        })
+    }
+
+    onDirection(destinationCoordinate) {
+        this.setState({
+            destination: {
+                latitude: destinationCoordinate.latitude,
+                longitude: destinationCoordinate.longitude,
+            }
+        })
+    }
+
     render() {
         const { goBack, navigate } = this.props.navigation;
+        let scrollView = this.state.slideAnimationScrollView;
+        let expandIcon = this.state.slideAnimationExpandIcon;
         return (
             <View style={styles.container}>
                 <MapView
@@ -133,10 +177,26 @@ export default class NearBy extends Component {
                     {this.state.listLocation.map(marker => (
                         <MapView.Marker
                             coordinate={marker.coordinates}
-                            title={marker.name}
-                            description={marker.address}
                             image={require('../img/hospitalMarker.png')}
-                        />
+                        >
+                            <MapView.Callout onPress={() => this.onDirection(marker.coordinates)}>
+                                <View style={{ alignItems: 'center' }}>
+                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
+                                    <Text>{marker.address}</Text>
+                                    <Button
+                                        title='Dẫn đường'
+                                        buttonStyle={{
+                                            backgroundColor: AppColors.color,
+                                            width: 130,
+                                            height: 25,
+                                            borderColor: "transparent",
+                                            borderWidth: 0,
+                                            borderRadius: 5
+                                        }}
+                                    />
+                                </View>
+                            </MapView.Callout>
+                        </MapView.Marker>
                     ))}
                     <MapView.Circle
                         center={this.state.region}
@@ -145,17 +205,17 @@ export default class NearBy extends Component {
                         strokeColor={AppColors.color}
                         fillColor={'rgba(192,192,192,0.3)'}
                     />
-                    {/* <MapView.Marker coordinate={this.state.destination} />
+                    <MapView.Marker coordinate={this.state.destination} />
                     <MapViewDirections
                         origin={this.state.origin}
                         destination={this.state.destination}
                         apikey={GOOGLE_MAPS_APIKEY}
                         strokeWidth={3}
                         strokeColor="hotpink"
-                    /> */}
+                    />
                 </MapView>
 
-                <TouchableOpacity style={styles.backButtonContainer} onPress={() => goBack()}>
+                <TouchableOpacity style={[styles.backButtonContainer, {}]} onPress={() => goBack()}>
                     <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
                 </TouchableOpacity>
 
@@ -169,13 +229,22 @@ export default class NearBy extends Component {
                         <Text>{this.state.distanceExpand / 1000 + 'km'}</Text>
                     </ImageBackground>
                 </TouchableOpacity>
+
+                <Animated.View style={[styles.containerShowHideScrollView, { bottom: expandIcon }]}>
+                    {
+                        this.state.isHideScrollView ?
+                            <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
+                                <Icon name={'caret-up'} size={30} color={'gray'} />
+                            </TouchableOpacity>
+                            : <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
+                                <Icon name={'caret-down'} size={30} color={'gray'} />
+                            </TouchableOpacity>
+                    }
+                </Animated.View>
+
                 <Animated.ScrollView
                     horizontal
-                    scrollEventThrottle={1}
-                    showsHorizontalScrollIndicator={false}
-                    snapToInterval={CARD_WIDTH}
-                    style={styles.scrollView}
-                    contentContainerStyle={styles.endPadding}
+                    style={[styles.scrollView, { bottom: scrollView }]}
                 >
                     {this.state.listLocation.map((listLocation, index) => (
                         <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: listLocation })}>
@@ -265,7 +334,6 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         position: "absolute",
-        bottom: 7,
         left: 0,
         right: 0,
         paddingVertical: 10,
@@ -289,5 +357,11 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         alignSelf: "center"
+    },
+    containerShowHideScrollView: {
+        position: "absolute",
+        bottom: '41%',
+        left: '3%',
+        right: 0,
     }
 });
