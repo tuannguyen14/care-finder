@@ -87,7 +87,7 @@ export default class CreateNewLocation extends Component {
             })
         })
         console.log(body)
-        fetch(IPServer.ip + '/clinic', {
+        fetch(IPServer.ip + '/location', {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data'
