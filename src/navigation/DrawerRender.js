@@ -46,18 +46,20 @@ class MainDrawer extends Component {
                 name: 'Địa điểm gần đây',
                 navigation: 'NearByScreen'
             }
-            ,
-            {
-                icon: 'assistant-photo',
-                name: 'Tạo địa điểm',
-                navigation: 'CreateNewLocationScreen'
-            },
-            {
-                icon: 'edit-location',
-                name: 'Quản lý địa điểm',
-                navigation: 'LocationManagerScreen'
-            }
-        ]
+        ];
+        if (global.doctor) {
+            listUtilitiesItem.push(
+                {
+                    icon: 'assistant-photo',
+                    name: 'Tạo địa điểm',
+                    navigation: 'CreateNewLocationScreen'
+                },
+                {
+                    icon: 'edit-location',
+                    name: 'Quản lý địa điểm',
+                    navigation: 'LocationManagerScreen'
+                });
+        }
         this.setState({
             listSettingsItem: listDefaultItemTemp,
             listUtilitiesItem: listUtilitiesItem

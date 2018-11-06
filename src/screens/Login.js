@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { InputGroup, Input } from 'native-base';
 import { CheckBox, Button } from 'react-native-elements';
 import axios from 'axios';
+import Toast from 'react-native-easy-toast'
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 
@@ -31,6 +32,9 @@ export default class Login extends Component {
         })
             .then(response => {
                 global.token = response.data.token;
+                if (this.state.checkedDoctor) {
+                    global.doctor = true;
+                }
                 this.props.navigation.navigate("RootDrawer");
             }).catch(err => {
                 this.refs.toast.show('Đăng nhập thất bại');
@@ -125,6 +129,7 @@ export default class Login extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <Toast ref="toast" />
             </View>
             // </ImageBackground >
         );

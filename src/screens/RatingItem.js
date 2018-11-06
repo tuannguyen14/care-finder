@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
-import { Text, Rating, Avatar } from 'react-native-elements';
-import { ListItem, List } from 'react-native-elements'
+import { View, StyleSheet, Dimensions, ScrollView, Modal, FlatList, TouchableOpacity, Image } from "react-native";
+import { Text, Rating, Avatar, ListItem, List, Button, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
+import { InputGroup, Input } from 'native-base';
+import Toast from 'react-native-easy-toast'
+import { AppColors } from '../styles/AppColors.js';
+import { IPServer } from '../Server/IPServer.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -13,7 +16,11 @@ export default class RatingItem extends Component {
         super(props);
         this.state = {
             item: this.props.item,
-            listComments: []
+            listComments: [],
+            modalVisible: false,
+            startingValueRating: 0,
+            errorContentInput: false,
+            item: this.props.item
         };
     }
 
@@ -30,109 +37,184 @@ export default class RatingItem extends Component {
                 avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
                 subtitle: 'Bệnh viện như shit',
                 ratingCount: 1
-            }
+            },
+            {
+                name: 'Amy Farha',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                subtitle: 'ngon',
+                ratingCount: 5
+            },
+            {
+                name: 'Chris Jackson',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                subtitle: 'Bệnh viện như shit',
+                ratingCount: 1
+            },
+            {
+                name: 'Amy Farha',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                subtitle: 'ngon',
+                ratingCount: 5
+            },
+            {
+                name: 'Chris Jackson',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                subtitle: 'Bệnh viện như shit',
+                ratingCount: 1
+            },
+            // {
+            //     name: 'Amy Farha',
+            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+            //     subtitle: 'ngon',
+            //     ratingCount: 5
+            // },
+            // {
+            //     name: 'Chris Jackson',
+            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+            //     subtitle: 'Bệnh viện như shit',
+            //     ratingCount: 1
+            // },
+            // {
+            //     name: 'Amy Farha',
+            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+            //     subtitle: 'ngon',
+            //     ratingCount: 5
+            // },
+            // {
+            //     name: 'Chris Jackson',
+            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+            //     subtitle: 'Bệnh viện như shit',
+            //     ratingCount: 1
+            // },
+            // {
+            //     name: 'Amy Farha',
+            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+            //     subtitle: 'ngon',
+            //     ratingCount: 5
+            // },
+            // {
+            //     name: 'Chris Jackson',
+            //     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+            //     subtitle: 'Bệnh viện như shit',
+            //     ratingCount: 1
+            // }
         ]
         this.setState({
             listComments: list
         })
     }
 
+    ratingCompleted = async (rating) => {
+        this.setState({ startingValueRating: rating })
+    }
+
+    onPostComment = async () => {
+        if (this.state.contentPost == undefined || this.state.contentPost.length < 6) {
+            this.setState({ errorContentInput: true });
+        } else {
+            const body = {
+                content: this.state.contentPost,
+                rating: this.state.startingValueRating
+            }
+            axios.post(IPServer.ip + '/comment', body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => {
+                    this.refs.toast.show('Đánh giá thành công');
+                    this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false });
+                }).catch(err => {
+                    console.log(err)
+                });
+        }
+    }
+
+    createRatingoneToFive = () => {
+        let array = []
+        for (let i = 1; i <= 5; i++) {
+            array.push(
+                < View style={[styles.rowView]}>
+                    <View style={[styles.rowView, { marginLeft: '3%' }]}>
+                        <Text h4 style={{ marginLeft: '3%' }}>{i}</Text>
+                        <View style={{ marginTop: '10%', marginLeft: '3%' }} >
+                            <Icon name={'heart'} size={26} color={'#F44336'} />
+                        </View>
+                    </View>
+                    <Rating
+                        type="custom"
+                        ratingImage={square}
+                        ratingCount={i}
+                        fractions={0}
+                        startingValue={0}
+                        imageSize={30.5}
+                        style={{ marginLeft: '1%', marginTop: '1.5%' }}
+                    />
+                </View>
+            )
+        }
+        return array;
+    }
+
     render() {
-        const ratingCount = this.state.item.ratingCount == undefined ? '0.0' : item.ratingCount;
+        const images = [];
+        this.state.item.imageUrls.forEach(element => {
+            images.push({ url: element.replace('http://localhost:3000', IPServer.ip) });
+        });
         return (
-            <ScrollView>
+            <ScrollView style={{ flex: 1 }}>
+                <Modal animationType="slide" transparent={false} visible={this.state.modalVisible} onRequestClose={() => this.setState({ modalVisible: !this.state.modalVisible })}>
+                    <View style={{ flex: 1 }}>
+                        <Header
+                            backgroundColor={AppColors.color}
+                            leftComponent={{ icon: 'clear', color: '#fff', size: 31, onPress: () => this.setState({ modalVisible: !this.state.modalVisible }) }}
+                            centerComponent={{ text: 'Bệnh viện Becamex', style: { color: '#fff', fontSize: 20 } }}
+                            rightComponent={{ icon: 'send', color: '#fff', size: 31, onPress: () => this.onPostComment() }}
+                        />
+                        <View style={{ alignItems: 'center' }}>
+                            <Avatar
+                                large
+                                rounded
+                                source={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
+                                onPress={() => console.log("Works!")}
+                                activeOpacity={0.7}
+                            />
+                            <Text h3 style={{ color: 'black' }}>Nguyễn Đức Tuấn</Text>
+                            <Rating
+                                type="heart"
+                                ratingCount={5}
+                                fractions={0}
+                                startingValue={this.state.startingValueRating}
+                                imageSize={40}
+                                showRating
+                                style={{ paddingVertical: 10 }}
+                            />
+                            <InputGroup borderColor={AppColors.color}>
+                                <Icon name={'text-document'} size={27} />
+                                <Input
+                                    style={{ color: "black", marginLeft: "3%" }}
+                                    placeholder="Chia sẽ trải nghiệm của bạn về địa điểm này"
+                                    value={this.state.contentPost}
+                                    autoCorrect={false}
+                                    multiline={true}
+                                    keyboardType="email-address"
+                                    onChangeText={contentPost => this.setState({ contentPost })} />
+                            </InputGroup>
+                            {
+                                this.state.errorContentInput ?
+                                    <Text style={{ color: 'red' }}>Bình luận ít nhất phải có 5 ký tự!</Text> :
+                                    <Text></Text>
+                            }
+                        </View>
+                        <Toast ref="toast" />
+                    </View>
+                </Modal>
+
                 <View style={[styles.rowView]}>
                     <View style={{ width: width * 0.6 }}>
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>5</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={5}
-                                fractions={2}
-                                startingValue={ratingCount}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>4</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={4}
-                                fractions={2}
-                                startingValue={4}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>3</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={3}
-                                fractions={2}
-                                startingValue={4}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>2</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={2}
-                                fractions={2}
-                                startingValue={2}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
-                        <View style={[styles.rowView]}>
-                            <View style={[styles.rowView, { marginLeft: '3%' }]}>
-                                <Text h4 style={{ marginLeft: '3%' }}>1</Text>
-                                <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                                    <Icon name={'heart'} size={26} color={'#F44336'} />
-                                </View>
-                            </View>
-                            <Rating
-                                type="custom"
-                                ratingImage={square}
-                                ratingCount={1}
-                                fractions={2}
-                                startingValue={4}
-                                imageSize={30.5}
-                                style={{ marginLeft: '1%', marginTop: '1.5%' }}
-                            />
-                        </View>
-
+                        {
+                            this.createRatingoneToFive()
+                        }
                     </View>
                     <View style={styles.centerContainer}>
                         <Text h1>{this.state.countRating}</Text>
@@ -141,8 +223,8 @@ export default class RatingItem extends Component {
                             readonly
                             ratingCount={5}
                             fractions={2}
-                            startingValue={ratingCount}
-                            imageSize={27}
+                            startingValue={0}
+                            imageSize={31}
                             style={{ marginLeft: '1%' }}
                         />
                     </View>
@@ -163,46 +245,60 @@ export default class RatingItem extends Component {
                     <Rating
                         type="heart"
                         ratingCount={5}
-                        fractions={1}
-                        startingValue={0}
+                        fractions={0}
+                        startingValue={this.state.startingValueRating}
+                        onFinishRating={this.ratingCompleted}
                         imageSize={40}
                         style={{ marginLeft: '1%' }}
                     />
+                    <View style={{ marginTop: '3%' }}>
+                        <Button
+                            title='Đánh giá'
+                            buttonStyle={{
+                                backgroundColor: AppColors.color,
+                                width: 300,
+                                height: 45,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5
+                            }}
+                            onPress={() => this.setState({ modalVisible: !this.state.modalVisible })} />
+                    </View>
                 </View>
 
                 <View style={[styles.line, { marginTop: '3%' }]} />
 
-                <View style={{ height: height }}>
-                    <View style={[styles.centerContainer, { marginTop: '1%' }]}>
-                        <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
-                    </View>
-                    <List>
-                        {
-                            this.state.listComments.map((l, i) => (
-                                <ListItem
-                                    roundAvatar
-                                    hideChevron={true}
-                                    key={i}
-                                    leftAvatar={{ source: { uri: l.avatar_url } }}
-                                    title={l.name}
-                                    subtitle={
-                                        <View>
-                                            <Rating
-                                                type="heart"
-                                                ratingCount={5}
-                                                fractions={2}
-                                                startingValue={l.ratingCount}
-                                                imageSize={21}
-                                                style={{ marginLeft: '3%' }}
-                                            />
-                                            <Text style={{ marginLeft: '3%' }}>{l.subtitle}</Text>
-                                        </View>
-                                    }
-                                    avatar={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
-                                />
-                            ))
-                        }
-                    </List>
+                <View style={[styles.centerContainer, { marginTop: '1%' }]}>
+                    <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
+                </View>
+
+                <View style={{ height: height * this.state.listComments.length / 6 }}>
+                    {
+                        this.state.listComments.map((l, i) => (
+                            <ListItem
+                                roundAvatar
+                                hideChevron={true}
+                                key={i}
+                                leftAvatar={{ source: { uri: l.avatar_url } }}
+                                title={l.name}
+                                subtitle={
+                                    <View>
+                                        <Rating
+                                            type="heart"
+                                            readonly
+                                            ratingCount={5}
+                                            fractions={2}
+                                            startingValue={l.ratingCount}
+                                            imageSize={21}
+                                            style={{ marginLeft: '3%' }}
+                                        />
+                                        <Text style={{ marginLeft: '3%' }}>{l.subtitle}</Text>
+                                    </View>
+                                }
+                                avatar={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
+                            />
+                        ))
+                    }
                 </View>
             </ScrollView >
         );

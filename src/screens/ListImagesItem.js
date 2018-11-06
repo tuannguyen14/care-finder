@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Modal, TouchableOpacity, FlatList, Image } from "react-native";
+import { View, StyleSheet, Dimensions, Modal, TouchableOpacity, FlatList, Image, ScrollView } from "react-native";
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 import { IPServer } from '../Server/IPServer.js';
@@ -20,32 +20,29 @@ export default class ListImagesItem extends Component {
         this.state.item.imageUrls.forEach(element => {
             images.push({ url: element.replace('http://localhost:3000', IPServer.ip) });
         });
-        console.log(images)
         return (
-            <View>
+            <ScrollView>
                 <Modal visible={this.state.visible} transparent={true} onRequestClose={() => this.setState({ visible: false })}>
                     <ImageViewer
                         imageUrls={images}
                         index={this.state.index} />
                 </Modal>
-                <View>
-                    <FlatList
-                        data={this.state.item.imageUrls}
-                        removeClippedSubviews={false}
-                        renderItem={({ item: rowData, index }) => {
-                            return (
-                                <TouchableOpacity onPress={() => this.setState({ visible: true, index: index })}>
-                                    <Image
-                                        source={{ uri: rowData.replace('http://localhost:3000', IPServer.ip) }}
-                                        style={styles.image}
-                                    />
-                                    <View style={[styles.line, { marginTop: '1%', marginBottom: '1%' }]} />
-                                </TouchableOpacity>
-                            );
-                        }}
-                    />
-                </View>
-            </View>
+                <FlatList
+                    data={this.state.item.imageUrls}
+                    removeClippedSubviews={false}
+                    renderItem={({ item: rowData, index }) => {
+                        return (
+                            <TouchableOpacity onPress={() => this.setState({ visible: true, index: index })}>
+                                <Image
+                                    source={{ uri: rowData.replace('http://localhost:3000', IPServer.ip) }}
+                                    style={styles.image}
+                                />
+                                <View style={[styles.line, { marginTop: '1%', marginBottom: '1%' }]} />
+                            </TouchableOpacity>
+                        );
+                    }}
+                />
+            </ScrollView>
         );
     }
 }

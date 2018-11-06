@@ -68,21 +68,19 @@ export default class Item extends Component {
 
                     <View style={[styles.line, { marginTop: '1%' }]} />
 
-                    <Container>
-                        <Container>
-                            <Tabs>
-                                <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
-                                    <InformationItem item={this.state.item} />
-                                </Tab>
-                                <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                    <RatingItem item={this.state.item} />
-                                </Tab>
-                                <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                    <ListImagesItem item={this.state.item} />
-                                </Tab>
-                            </Tabs>
-                        </Container>
-                    </Container>
+                    <ScrollView>
+                        <Tabs>
+                            <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
+                                <InformationItem item={this.state.item} />
+                            </Tab>
+                            <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                                <RatingItem item={this.state.item} />
+                            </Tab>
+                            <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                                <ListImagesItem item={this.state.item} />
+                            </Tab>
+                        </Tabs>
+                    </ScrollView>
                 </ScrollView>
             </Container>
         );

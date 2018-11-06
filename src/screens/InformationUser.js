@@ -230,7 +230,6 @@ export default class componentName extends Component {
                     <TouchableOpacity onPress={this.viewAvatar}>
                         <MyComponent name="Xem hình ảnh" color="#ffffcc" />
                     </TouchableOpacity>
-
                 </Animated.View>
                 <Toast ref="toast" />
             </View>

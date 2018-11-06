@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity, Image, ImageBackground, Animated } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import { List, ListItem } from 'native-base';
 import MapView from 'react-native-maps';
@@ -16,9 +16,9 @@ const geolib = require('geolib');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 0;
 const LONGITUDE = 0;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+const CARD_HEIGHT = (height / 2.7);
+const CARD_WIDTH = CARD_HEIGHT - 65;
 
 export default class NearBy extends Component {
     constructor(props) {
@@ -28,8 +28,8 @@ export default class NearBy extends Component {
             region: new MapView.AnimatedRegion({
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
+                latitudeDelta: (1 * 1.6) / 50.0,
+                longitudeDelta: (1 * 1.6) / 50.0 * ASPECT_RATIO,
             }),
             origin: {
                 latitude: 11.291436,
@@ -40,7 +40,7 @@ export default class NearBy extends Component {
                 longitude: 106.672086
             },
             listLocation: [],
-            distanceExpand: 1000
+            distanceExpand: 0
         };
     }
 
@@ -59,61 +59,76 @@ export default class NearBy extends Component {
                     region: new MapView.AnimatedRegion({
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA
-                    }
-                    )
-                });
-                this.calculateDistance();
-            },
-            error => console.log(error.message),
-        );
+                        latitudeDelta: ((this.state.distanceExpand / 1000) * 1.6) / 50.0,
+                        longitudeDelta: (((this.state.distanceExpand / 1000) * 1.6) / 50.0) * ASPECT_RATIO
+                    })
+                }, () => {
+                    this.calculateDistance();
+                },
+                    error => console.log(error.message),
+                );
+            });
     }
 
-    calculateDistance(boolean) {
-        let distanceExpand = this.state.distanceExpand;
-        if (boolean == true) {
-            this.setState({ distanceExpand: this.state.distanceExpand + 1000 })
-            distanceExpand += 1000;
-        }
-        const allLocations = this.state.allLocations;
-        let listLocationAdded = [];
-        for (let i = 0; i < allLocations.length; i++) {
-            const distance = geolib.getDistance(
-                {
-                    latitude: this.state.region.latitude._value,
-                    longitude: this.state.region.longitude._value
-                },
-                {
-                    latitude: allLocations[i].coordinates.latitude,
-                    longitude: allLocations[i].coordinates.longitude
-                }
-            );
-            if (distance <= distanceExpand) {
-                listLocationAdded.push(allLocations[i]);
-                listLocationAdded[listLocationAdded.length - 1].distance = distance + "";
-            }
-        }
-        listLocationAdded.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+    onMapReady() {
+    }
+
+    calculateDistance() {
         this.setState({
-            listLocation: listLocationAdded
-        })
+            distanceExpand: this.state.distanceExpand + 1000
+        }, () => {
+            const allLocations = this.state.allLocations;
+            let listLocationAdded = [];
+            for (let i = 0; i < allLocations.length; i++) {
+                const distance = geolib.getDistance(
+                    {
+                        latitude: this.state.region.latitude._value,
+                        longitude: this.state.region.longitude._value
+                    },
+                    {
+                        latitude: allLocations[i].coordinates.latitude,
+                        longitude: allLocations[i].coordinates.longitude
+                    }
+                );
+                if (distance <= this.state.distanceExpand) {
+                    listLocationAdded.push(allLocations[i]);
+                    listLocationAdded[listLocationAdded.length - 1].distance = distance + "";
+                }
+            }
+            listLocationAdded.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+            this.setState({
+                listLocation: listLocationAdded,
+                region: new MapView.AnimatedRegion({
+                    latitude: this.state.region.latitude._value,
+                    longitude: this.state.region.longitude._value,
+                    latitudeDelta: ((this.state.distanceExpand / 1000) * 1.6) / 50.0,
+                    longitudeDelta: (((this.state.distanceExpand / 1000) * 1.6) / 50.0) * ASPECT_RATIO
+                })
+            }, () => {
+                this.map.animateToRegion(new MapView.AnimatedRegion({
+                    latitude: this.state.region.latitude._value - 0.001 - (this.state.distanceExpand / 1000000 * 6) - 0.0001,
+                    longitude: this.state.region.longitude._value,
+                    latitudeDelta: ((this.state.distanceExpand / 1000) * 1.6) / 50.0,
+                    longitudeDelta: (((this.state.distanceExpand / 1000) * 1.6) / 50.0) * ASPECT_RATIO
+                }), 1000);
+            });
+        });
     }
 
     onExpand() {
-        let boolean = true;
-        this.calculateDistance(boolean);
+        this.calculateDistance();
     }
 
     render() {
-        const { goBack } = this.props.navigation;
+        const { goBack, navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
                 <MapView
+                    ref={(el) => (this.map = el)}
+                    onMapReady={e => this.onMapReady()}
                     style={styles.map}
-                    region={this.state.region}
-                // showsUserLocation={true}
-                // loadingEnabled={true}
+                    showsUserLocation={true}
+                    loadingEnabled={true}
                 >
                     {this.state.listLocation.map(marker => (
                         <MapView.Marker
@@ -123,6 +138,13 @@ export default class NearBy extends Component {
                             image={require('../img/hospitalMarker.png')}
                         />
                     ))}
+                    <MapView.Circle
+                        center={this.state.region}
+                        radius={this.state.distanceExpand}
+                        strokeWidth={1}
+                        strokeColor={AppColors.color}
+                        fillColor={'rgba(192,192,192,0.3)'}
+                    />
                     {/* <MapView.Marker coordinate={this.state.destination} />
                     <MapViewDirections
                         origin={this.state.origin}
@@ -147,56 +169,54 @@ export default class NearBy extends Component {
                         <Text>{this.state.distanceExpand / 1000 + 'km'}</Text>
                     </ImageBackground>
                 </TouchableOpacity>
-                <ScrollView style={{ width: width, height: height / 2.3 }}>
-                    <List>
-                        {
-                            this.state.listLocation.map((l, i) => (
-                                <ListItem
-                                    style={{ marginLeft: 0, marginTop: 0 }}
-                                    key={i}>
-                                    <View style={{ flex: 1 }}>
-                                        <View style={[styles.rowView, { marginLeft: '3%', marginBottom: '1%' }]}>
-                                            <ImageBackground style={[styles.imageRating]}>
-                                                <Text style={{ color: 'white' }}>{(l.rating + "").includes('.') ? l.rating : l.rating + '.0'}</Text>
-                                            </ImageBackground>
-                                            <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', flex: 1 }]}>
-                                                <View style={{ flex: 4 }}>
-                                                    <Text style={{ color: 'black' }}>{l.title}</Text>
-                                                    <Text>{l.address}</Text>
-                                                </View>
-                                                <View style={{ flex: 3 }}>
-                                                    <Text>{l.distance.toString().length > 3 ? l.distance / 1000 + 'km' : l.distance + 'm'}</Text>
-                                                    <View style={[styles.rowView, { justifyContent: 'space-between' }]}>
-                                                        <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                                            <Icon name={'eye'} size={15} color={'gray'} />
-                                                            <Text style={{ marginLeft: '3%' }}>10</Text>
-                                                        </View>
-                                                        <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                                            <Icon name={'comment'} size={15} color={'gray'} />
-                                                            <Text style={{ marginLeft: '3%' }}>{l.reviews.length}</Text>
-                                                        </View>
-                                                        <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                                            <Icon name={'camera'} size={15} color={'gray'} />
-                                                            <Text style={{ marginLeft: '3%' }}>{l.imageUrls.length}</Text>
-                                                        </View>
-                                                        <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                                            <Icon name={'star'} size={15} color={'gray'} />
-                                                            <Text style={{ marginLeft: '3%' }}>{l.numberOfFollows}</Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <Image
-                                            source={{ uri: l.imageUrls[0].replace('http://localhost:3000', IPServer.ip) }}
-                                            style={{ width: width, height: height / 3.3 }} />
+                <Animated.ScrollView
+                    horizontal
+                    scrollEventThrottle={1}
+                    showsHorizontalScrollIndicator={false}
+                    snapToInterval={CARD_WIDTH}
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.endPadding}
+                >
+                    {this.state.listLocation.map((listLocation, index) => (
+                        <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: listLocation })}>
+                            <View style={[styles.rowView]}>
+                                <ImageBackground style={[styles.imageRating]}>
+                                    <Text style={{ color: 'white' }}>{(listLocation.rating + "").includes('.') ? listLocation.rating : listLocation.rating + '.0'}</Text>
+                                </ImageBackground>
+                                <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', flex: 1 }]}>
+                                    <View style={{ flex: 4 }}>
+                                        <Text style={{ color: 'black' }}>{listLocation.name}</Text>
+                                        <Text>{listLocation.address}</Text>
                                     </View>
-                                </ListItem>
-                            ))
-                        }
-                    </List>
-                </ScrollView>
-            </View>
+                                </View>
+                            </View>
+                            <Image
+                                source={{ uri: listLocation.imageUrls[0].replace('http://localhost:3000', IPServer.ip) }}
+                                style={styles.cardImage}
+                                resizeMode="cover"
+                            />
+                            <View style={[styles.rowView, { justifyContent: 'space-between' }]}>
+                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                    <Icon name={'eye'} size={15} color={'gray'} />
+                                    <Text style={{ marginLeft: '3%' }}>10</Text>
+                                </View>
+                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                    <Icon name={'comment'} size={15} color={'gray'} />
+                                    <Text style={{ marginLeft: '3%' }}>{listLocation.reviews.length}</Text>
+                                </View>
+                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                    <Icon name={'camera'} size={15} color={'gray'} />
+                                    <Text style={{ marginLeft: '3%' }}>{listLocation.imageUrls.length}</Text>
+                                </View>
+                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                    <Icon name={'star'} size={15} color={'gray'} />
+                                    <Text style={{ marginLeft: '3%' }}>{listLocation.numberOfFollows}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </Animated.ScrollView>
+            </View >
 
         );
     }
@@ -207,9 +227,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     map: {
-        height: height / 1.7,
-        width: width,
-        zIndex: -1
+        height: height,
+        width: width
     },
     image: {
         width: width,
@@ -243,5 +262,32 @@ const styles = StyleSheet.create({
         right: '5%',
         alignSelf: 'flex-end',
         alignItems: 'center'
+    },
+    scrollView: {
+        position: "absolute",
+        bottom: 7,
+        left: 0,
+        right: 0,
+        paddingVertical: 10,
+    },
+    card: {
+        padding: 10,
+        elevation: 2,
+        backgroundColor: "#FFF",
+        marginHorizontal: 10,
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: { x: 2, y: -2 },
+        height: CARD_HEIGHT,
+        width: CARD_WIDTH,
+        overflow: "hidden",
+    },
+    cardImage: {
+        marginTop: '1%',
+        flex: 3,
+        width: '100%',
+        height: '100%',
+        alignSelf: "center"
     }
 });

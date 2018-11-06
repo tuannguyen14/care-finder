@@ -55,7 +55,7 @@ export default class InformationItem extends Component {
 
     render() {
         return (
-            <ScrollView>
+            <View style={{ flex: 1 }}>
                 <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
                     <View style={[styles.centerContainer, { width: width * 0.5 }]}>
                         <IconFontAwesome5 name={'directions'} size={50} color={AppColors.color} />
@@ -89,7 +89,7 @@ export default class InformationItem extends Component {
                         ))
                     }
                 </View>
-            </ScrollView >
+            </View >
         );
     }
 }
