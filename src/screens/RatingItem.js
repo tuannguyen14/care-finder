@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, ScrollView, Modal, FlatList, TouchableOpacity, Image } from "react-native";
-import { Text, Rating, Avatar, ListItem, List, Button, Header } from 'react-native-elements';
+import { Text, Rating, Avatar, ListItem, Button, Header, Slider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import { InputGroup, Input } from 'native-base';
-import Toast from 'react-native-easy-toast'
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 
@@ -20,7 +19,11 @@ export default class RatingItem extends Component {
             modalVisible: false,
             startingValueRating: 0,
             errorContentInput: false,
-            item: this.props.item
+            item: this.props.item,
+            ratingLocation: 1,
+            ratingPrice: 1,
+            ratingQuality: 1,
+            ratingAttitude: 1
         };
     }
 
@@ -122,7 +125,6 @@ export default class RatingItem extends Component {
                 }
             })
                 .then(response => {
-                    this.refs.toast.show('Đánh giá thành công');
                     this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false });
                 }).catch(err => {
                     console.log(err)
@@ -171,7 +173,7 @@ export default class RatingItem extends Component {
                             centerComponent={{ text: 'Bệnh viện Becamex', style: { color: '#fff', fontSize: 20 } }}
                             rightComponent={{ icon: 'send', color: '#fff', size: 31, onPress: () => this.onPostComment() }}
                         />
-                        <View style={{ alignItems: 'center' }}>
+                        <View style={{ alignItems: 'center', marginLeft: '1%', marginRight: '1%' }}>
                             <Avatar
                                 large
                                 rounded
@@ -180,16 +182,55 @@ export default class RatingItem extends Component {
                                 activeOpacity={0.7}
                             />
                             <Text h3 style={{ color: 'black' }}>Nguyễn Đức Tuấn</Text>
-                            <Rating
-                                type="heart"
-                                ratingCount={5}
-                                fractions={0}
-                                startingValue={this.state.startingValueRating}
-                                imageSize={40}
-                                showRating
-                                style={{ paddingVertical: 10 }}
-                            />
-                            <InputGroup borderColor={AppColors.color}>
+                            <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{this.state.ratingLocation}</Text>
+                                <Slider
+                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
+                                    value={this.state.ratingLocation}
+                                    step={1}
+                                    onValueChange={(ratingLocation) => this.setState({ ratingLocation })}
+                                    minimumValue={1}
+                                    maximumValue={5}
+                                    thumbTintColor={AppColors.color} />
+                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Vị trí</Text>
+                            </View>
+                            <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: '2.6%' }}>{this.state.ratingPrice}</Text>
+                                <Slider
+                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
+                                    value={this.state.ratingPrice}
+                                    step={1}
+                                    onValueChange={(ratingPrice) => this.setState({ ratingPrice })}
+                                    minimumValue={1}
+                                    maximumValue={5}
+                                    thumbTintColor={AppColors.color} />
+                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Giá cả</Text>
+                            </View>
+                            <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: '4.8%' }}>{this.state.ratingAttitude}</Text>
+                                <Slider
+                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
+                                    value={this.state.ratingAttitude}
+                                    step={1}
+                                    onValueChange={(ratingAttitude) => this.setState({ ratingAttitude })}
+                                    minimumValue={1}
+                                    maximumValue={5}
+                                    thumbTintColor={AppColors.color} />
+                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Thái độ</Text>
+                            </View>
+                            <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: '4.6%' }}>{this.state.ratingQuality}</Text>
+                                <Slider
+                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
+                                    value={this.state.ratingQuality}
+                                    step={1}
+                                    onValueChange={(ratingQuality) => this.setState({ ratingQuality })}
+                                    minimumValue={1}
+                                    maximumValue={5}
+                                    thumbTintColor={AppColors.color} />
+                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Dịch vụ</Text>
+                            </View>
+                            <InputGroup borderColor={AppColors.color} style={{ marginTop: '3%' }}>
                                 <Icon name={'text-document'} size={27} />
                                 <Input
                                     style={{ color: "black", marginLeft: "3%" }}
@@ -206,7 +247,6 @@ export default class RatingItem extends Component {
                                     <Text></Text>
                             }
                         </View>
-                        <Toast ref="toast" />
                     </View>
                 </Modal>
 

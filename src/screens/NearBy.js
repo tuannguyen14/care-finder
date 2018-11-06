@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity, Image, ImageBackground, Animated } from 'react-native';
 import { Text, Button } from 'react-native-elements';
-import { List, ListItem } from 'native-base';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,7 +10,7 @@ import { AppColors } from '../styles/AppColors.js';
 
 let { width, height } = Dimensions.get("window");
 
-const GOOGLE_MAPS_APIKEY = 'AIzaSyB3CDl-ZZwQ_jhkLFR4UR2y90d-YN_z6Kk';
+const GOOGLE_MAPS_APIKEY = 'AIzaSyDqZFsw9dShNF6QROftqbN6o4dsDUDcHtw';
 const geolib = require('geolib');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 0;
@@ -32,18 +31,19 @@ export default class NearBy extends Component {
                 longitudeDelta: (1 * 1.6) / 50.0 * ASPECT_RATIO,
             }),
             origin: {
-                latitude: 11.291436,
-                longitude: 106.791873
+                latitude: 0,
+                longitude: 0
             },
             destination: {
-                latitude: 11.086520,
-                longitude: 106.672086
+                latitude: 0,
+                longitude: 0
             },
             listLocation: [],
             distanceExpand: 0,
             slideAnimationScrollView: new Animated.Value(10),
             slideAnimationExpandIcon: new Animated.Value(275),
-            isHideScrollView: false
+            isHideScrollView: false,
+            visibleIconExpand: true
         };
     }
 
@@ -118,6 +118,11 @@ export default class NearBy extends Component {
                     latitudeDelta: ((this.state.distanceExpand / 1000) * 1.6) / 50.0,
                     longitudeDelta: (((this.state.distanceExpand / 1000) * 1.6) / 50.0) * ASPECT_RATIO
                 }), 1000);
+                if (this.state.listLocation.length == 0) {
+                    this.setState({
+                        visibleIconExpand: false
+                    });
+                }
             });
         });
     }
@@ -205,17 +210,19 @@ export default class NearBy extends Component {
                         strokeColor={AppColors.color}
                         fillColor={'rgba(192,192,192,0.3)'}
                     />
-                    <MapView.Marker coordinate={this.state.destination} />
                     <MapViewDirections
                         origin={this.state.origin}
                         destination={this.state.destination}
                         apikey={GOOGLE_MAPS_APIKEY}
                         strokeWidth={3}
                         strokeColor="hotpink"
+                        onError={(errorMessage) => {
+                            console.log(errorMessage);
+                        }}
                     />
                 </MapView>
 
-                <TouchableOpacity style={[styles.backButtonContainer, {}]} onPress={() => goBack()}>
+                <TouchableOpacity style={[styles.backButtonContainer]} onPress={() => goBack()}>
                     <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
                 </TouchableOpacity>
 
@@ -232,13 +239,16 @@ export default class NearBy extends Component {
 
                 <Animated.View style={[styles.containerShowHideScrollView, { bottom: expandIcon }]}>
                     {
-                        this.state.isHideScrollView ?
-                            <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
-                                <Icon name={'caret-up'} size={30} color={'gray'} />
-                            </TouchableOpacity>
-                            : <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
-                                <Icon name={'caret-down'} size={30} color={'gray'} />
-                            </TouchableOpacity>
+                        this.state.visibleIconExpand ?
+                            (this.state.isHideScrollView ?
+                                <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
+                                    <Icon name={'caret-up'} size={30} color={'gray'} />
+                                </TouchableOpacity>
+                                : <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
+                                    <Icon name={'caret-down'} size={30} color={'gray'} />
+                                </TouchableOpacity>
+                            )
+                            : <View />
                     }
                 </Animated.View>
 
@@ -363,5 +373,7 @@ const styles = StyleSheet.create({
         bottom: '41%',
         left: '3%',
         right: 0,
+        height: 30,
+        width: 30
     }
 });

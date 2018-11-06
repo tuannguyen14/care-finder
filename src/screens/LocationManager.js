@@ -23,6 +23,7 @@ export default class LocationManager extends Component {
         return (
             <ScrollView style={styles.container}>
                 <Header
+                    outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
                     centerComponent={{ text: 'Quản lý địa điểm', style: { color: '#fff', fontSize: 20 } }}

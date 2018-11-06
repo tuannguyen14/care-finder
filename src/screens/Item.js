@@ -26,6 +26,7 @@ export default class Item extends Component {
             <Container>
                 <ScrollView>
                     <Header
+                        outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
                         centerComponent={{ text: this.state.item.name, style: { color: '#fff', fontSize: 20 } }}
