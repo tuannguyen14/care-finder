@@ -17,91 +17,26 @@ export default class RatingItem extends Component {
             item: this.props.item,
             listComments: [],
             modalVisible: false,
-            startingValueRating: 0,
+            startingValueRating: 1,
             errorContentInput: false,
             item: this.props.item,
-            ratingLocation: 1,
-            ratingPrice: 1,
-            ratingQuality: 1,
-            ratingAttitude: 1
+            ratingLocation: 0,
+            ratingPrice: 0,
+            ratingQuality: 0,
+            ratingAttitude: 0
         };
     }
 
     componentWillMount() {
-        const list = [
-            {
+        const list = [];
+        for (let i = 0; i < 17; i++) {
+            list.push({
                 name: 'Amy Farha',
                 avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon',
+                subtitle: 'ngon' + i,
                 ratingCount: 5
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Bệnh viện như shit',
-                ratingCount: 1
-            },
-            {
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon',
-                ratingCount: 5
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Bệnh viện như shit',
-                ratingCount: 1
-            },
-            {
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon',
-                ratingCount: 5
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Bệnh viện như shit',
-                ratingCount: 1
-            },
-            {
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon',
-                ratingCount: 5
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Bệnh viện như shit',
-                ratingCount: 1
-            },
-            {
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon',
-                ratingCount: 5
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Bệnh viện như shit',
-                ratingCount: 1
-            },
-            {
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon',
-                ratingCount: 5
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Bệnh viện như shit12',
-                ratingCount: 1
-            }
-        ]
+            });
+        }
         this.setState({
             listComments: list
         })
@@ -134,10 +69,11 @@ export default class RatingItem extends Component {
 
     createRatingoneToFive = () => {
         let array = []
-        for (let i = 1; i <= 5; i++) {
+        let arrayString = ['Vị trí', 'Giá cả', 'Thái độ', 'Dịch vụ']
+        for (let i = 1; i <= arrayString.length; i++) {
             array.push(
-                < View style={[styles.rowView]}>
-                    <View style={[styles.rowView, { marginLeft: '3%' }]}>
+                < View style={[styles.rowView, { flex: 1 }]}>
+                    <View style={[styles.rowView, { marginLeft: '3%', flex: 1 }]}>
                         <Text h4 style={{ marginLeft: '3%' }}>{i}</Text>
                         <View style={{ marginTop: '10%', marginLeft: '3%' }} >
                             <Icon name={'heart'} size={26} color={'#F44336'} />
@@ -146,12 +82,13 @@ export default class RatingItem extends Component {
                     <Rating
                         type="custom"
                         ratingImage={square}
-                        ratingCount={i}
+                        ratingCount={i * 2}
                         fractions={0}
-                        startingValue={0}
-                        imageSize={30.5}
-                        style={{ marginLeft: '1%', marginTop: '1.5%' }}
+                        startingValue={10}
+                        imageSize={26}
+                        style={{ marginLeft: '1%', marginTop: '1.5%', flex: 3 }}
                     />
+                    <Text h4 style={{ fontWeight: 'bold', fontSize: 16, marginLeft: '3%', marginTop: '1.6%', flex: 1 }}>{arrayString[i - 1]}</Text>
                 </View>
             )
         }
@@ -173,7 +110,7 @@ export default class RatingItem extends Component {
                             centerComponent={{ text: 'Bệnh viện Becamex', style: { color: '#fff', fontSize: 20 } }}
                             rightComponent={{ icon: 'send', color: '#fff', size: 31, onPress: () => this.onPostComment() }}
                         />
-                        <View style={{ alignItems: 'center', marginLeft: '1%', marginRight: '1%' }}>
+                        <View style={{ alignItems: 'center', marginLeft: '3%', marginRight: '1%' }}>
                             <Avatar
                                 large
                                 rounded
@@ -183,54 +120,54 @@ export default class RatingItem extends Component {
                             />
                             <Text h3 style={{ color: 'black' }}>Nguyễn Đức Tuấn</Text>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{this.state.ratingLocation}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingLocation == 0 ? this.state.startingValueRating : this.state.ratingLocation}</Text>
                                 <Slider
-                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
-                                    value={this.state.ratingLocation}
+                                    style={styles.sliderRating}
+                                    value={this.state.ratingLocation == 0 ? this.state.startingValueRating : this.state.ratingLocation}
                                     step={1}
                                     onValueChange={(ratingLocation) => this.setState({ ratingLocation })}
                                     minimumValue={1}
                                     maximumValue={5}
                                     thumbTintColor={AppColors.color} />
-                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Vị trí</Text>
+                                <Text style={styles.nameTextSliderRating}>Vị trí</Text>
                             </View>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: '2.6%' }}>{this.state.ratingPrice}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingPrice == 0 ? this.state.startingValueRating : this.state.ratingPrice}</Text>
                                 <Slider
-                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
-                                    value={this.state.ratingPrice}
+                                    style={styles.sliderRating}
+                                    value={this.state.ratingPrice == 0 ? this.state.startingValueRating : this.state.ratingPrice}
                                     step={1}
                                     onValueChange={(ratingPrice) => this.setState({ ratingPrice })}
                                     minimumValue={1}
                                     maximumValue={5}
                                     thumbTintColor={AppColors.color} />
-                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Giá cả</Text>
+                                <Text style={styles.nameTextSliderRating}>Giá cả</Text>
                             </View>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: '4.8%' }}>{this.state.ratingAttitude}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingAttitude == 0 ? this.state.startingValueRating : this.state.ratingAttitude}</Text>
                                 <Slider
-                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
-                                    value={this.state.ratingAttitude}
+                                    style={styles.sliderRating}
+                                    value={this.state.ratingAttitude == 0 ? this.state.startingValueRating : this.state.ratingAttitude}
                                     step={1}
                                     onValueChange={(ratingAttitude) => this.setState({ ratingAttitude })}
                                     minimumValue={1}
                                     maximumValue={5}
                                     thumbTintColor={AppColors.color} />
-                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Thái độ</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thái độ</Text>
                             </View>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: '4.6%' }}>{this.state.ratingQuality}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingQuality == 0 ? this.state.startingValueRating : this.state.ratingQuality}</Text>
                                 <Slider
-                                    style={{ width: width - 121, marginLeft: '3%', marginRight: '3%' }}
-                                    value={this.state.ratingQuality}
+                                    style={styles.sliderRating}
+                                    value={this.state.ratingQuality == 0 ? this.state.startingValueRating : this.state.ratingQuality}
                                     step={1}
                                     onValueChange={(ratingQuality) => this.setState({ ratingQuality })}
                                     minimumValue={1}
                                     maximumValue={5}
                                     thumbTintColor={AppColors.color} />
-                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Dịch vụ</Text>
+                                <Text style={styles.nameTextSliderRating}> Dịch vụ</Text>
                             </View>
-                            <InputGroup borderColor={AppColors.color} style={{ marginTop: '3%' }}>
+                            <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]} borderColor={AppColors.color}>
                                 <Icon name={'text-document'} size={27} />
                                 <Input
                                     style={{ color: "black", marginLeft: "3%" }}
@@ -250,29 +187,15 @@ export default class RatingItem extends Component {
                     </View>
                 </Modal>
 
-                <View style={[styles.rowView]}>
-                    <View style={{ width: width * 0.6 }}>
-                        {
-                            this.createRatingoneToFive()
-                        }
-                    </View>
-                    <View style={styles.centerContainer}>
-                        <Text h1>{this.state.countRating}</Text>
-                        <Rating
-                            type="heart"
-                            readonly
-                            ratingCount={5}
-                            fractions={2}
-                            startingValue={0}
-                            imageSize={31}
-                            style={{ marginLeft: '1%' }}
-                        />
-                    </View>
+                <View>
+                    {
+                        this.createRatingoneToFive()
+                    }
                 </View>
 
                 <View style={[styles.line, { marginTop: '3%' }]} />
 
-                <View style={[styles.centerContainer, { marginTop: '1%' }]}>
+                <View style={[styles.centerContainer]}>
                     <Avatar
                         large
                         rounded
@@ -311,35 +234,38 @@ export default class RatingItem extends Component {
                 <View style={[styles.centerContainer, { marginTop: '1%' }]}>
                     <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
                 </View>
-
-                <View style={{}}>
-                    {
-                        this.state.listComments.map((l, i) => (
-                            <ListItem
-                                roundAvatar
-                                hideChevron={true}
-                                key={i}
-                                leftAvatar={{ source: { uri: l.avatar_url } }}
-                                title={l.name}
-                                subtitle={
-                                    <View>
-                                        <Rating
-                                            type="heart"
-                                            readonly
-                                            ratingCount={5}
-                                            fractions={2}
-                                            startingValue={l.ratingCount}
-                                            imageSize={21}
-                                            style={{ marginLeft: '3%' }}
-                                        />
-                                        <Text style={{ marginLeft: '3%' }}>{l.subtitle}</Text>
-                                    </View>
-                                }
-                                avatar={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
-                            />
-                        ))
-                    }
-                </View>
+                <FlatList
+                    style={{ marginBottom: '1%' }}
+                    data={this.state.listComments}
+                    removeClippedSubviews={false}
+                    renderItem={({ item: rowData, index }) => {
+                        return (
+                            <View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1 }]}>
+                                <View style={{ marginLeft: '3%' }}>
+                                    <Avatar
+                                        medium
+                                        rounded
+                                        source={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
+                                        onPress={() => console.log("Works!")}
+                                        activeOpacity={0.7}
+                                    />
+                                </View>
+                                <View style={{ marginLeft: '3%' }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{rowData.name}</Text>
+                                    <Rating
+                                        type="heart"
+                                        readonly
+                                        ratingCount={5}
+                                        fractions={2}
+                                        startingValue={rowData.ratingCount}
+                                        imageSize={21}
+                                    />
+                                    <Text>{rowData.subtitle}</Text>
+                                </View>
+                            </View>
+                        );
+                    }}
+                />
             </ScrollView >
         );
     }
@@ -374,5 +300,24 @@ const styles = StyleSheet.create({
     ratingText: {
         paddingLeft: 10,
         color: 'grey'
+    },
+    inputGroup: {
+        borderColor: AppColors.color,
+        borderBottomWidth: 3
+    },
+    valueTextSliderRating: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        flex: 1
+    },
+    sliderRating: {
+        width: width - 70,
+        marginRight: '10%',
+        flex: 5
+    },
+    nameTextSliderRating: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        flex: 1
     }
 })

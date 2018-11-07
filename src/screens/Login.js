@@ -78,9 +78,9 @@ export default class Login extends Component {
                         />
                     </View>
                 </View>
-                <View style={styles.inputGroup}>
-                    <InputGroup borderColor={AppColors.color}>
-                        <Icon name={'mail'} size={27} color={AppColors.color} />
+                <View style={styles.inputGroupContainer}>
+                    <InputGroup rounded style={styles.inputGroup}>
+                        <Icon name={'mail'} size={27} color={AppColors.color} style={styles.icon} />
                         <Input
                             style={{ color: "black", marginLeft: "3%" }}
                             placeholder="Email"
@@ -90,11 +90,12 @@ export default class Login extends Component {
                             keyboardType="email-address"
                             onChangeText={email => this.setState({ email })}
                             onSubmitEditing={() => { this.passWordInput._root.focus() }}
-                            returnKeyType={"next"} />
+                            returnKeyType={"next"}
+                        />
                     </InputGroup>
 
-                    <InputGroup borderColor={AppColors.color}>
-                        <Icon name={'lock'} size={27} color={AppColors.color} />
+                    <InputGroup rounded style={[styles.inputGroup, { marginTop: '3%' }]}>
+                        <Icon name={'lock'} size={27} color={AppColors.color} style={styles.icon} />
                         <Input
                             style={{ color: "black", marginLeft: "3%" }}
                             placeholder="Mật khẩu"
@@ -130,7 +131,7 @@ export default class Login extends Component {
                     </View>
                 </View>
                 <Toast ref="toast" />
-            </View>
+            </View >
             // </ImageBackground >
         );
     }
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: '15%'
     },
-    inputGroup: {
+    inputGroupContainer: {
         marginLeft: "15%",
         marginRight: "15%",
         marginTop: '10%'
@@ -174,5 +175,15 @@ const styles = StyleSheet.create({
         color: "white",
         marginLeft: "6%",
         marginTop: "3%"
+    },
+    inputGroup: {
+        borderColor: AppColors.color,
+        borderBottomWidth: 1.5,
+        borderTopWidth: 1.5,
+        borderLeftWidth: 1.5,
+        borderRightWidth: 1.5
+    },
+    icon: {
+        marginLeft: '5%'
     }
 });

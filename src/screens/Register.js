@@ -71,9 +71,9 @@ export default class Register extends Component {
                             style={styles.logo}
                         />
                     </View> */}
-                    <View style={styles.inputGroup}>
-                        <InputGroup borderColor={AppColors.color}>
-                            <Icon name={'user'} size={27} color={AppColors.color} />
+                    <View style={styles.inputGroupContainer}>
+                        <InputGroup style={[styles.inputGroup]}>
+                            <Icon name={'user'} size={27} color={AppColors.color} style={styles.icon} />
                             <Input
                                 style={{ color: "black", marginLeft: "3%" }}
                                 placeholder="Họ"
@@ -84,8 +84,8 @@ export default class Register extends Component {
                                 returnKeyType={"next"}
                                 onSubmitEditing={() => { this.emailInput._root.focus() }} />
                         </InputGroup>
-                        <InputGroup borderColor={AppColors.color}>
-                            <Icon name={'user'} size={27} color={AppColors.color} />
+                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
+                            <Icon name={'user'} size={27} color={AppColors.color} style={styles.icon} />
                             <Input
                                 style={{ color: "black", marginLeft: "3%" }}
                                 placeholder="Tên"
@@ -97,8 +97,8 @@ export default class Register extends Component {
                                 onSubmitEditing={() => { this.emailInput._root.focus() }} />
                         </InputGroup>
 
-                        <InputGroup borderColor={AppColors.color}>
-                            <Icon name={'mail'} size={27} color={AppColors.color} />
+                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
+                            <Icon name={'mail'} size={27} color={AppColors.color} style={styles.icon} />
                             <Input
                                 style={{ color: "black", marginLeft: "3%" }}
                                 placeholder="Email"
@@ -112,8 +112,8 @@ export default class Register extends Component {
                                 onSubmitEditing={() => { this.passwordInput._root.focus() }} />
                         </InputGroup>
 
-                        <InputGroup borderColor={AppColors.color}>
-                            <Icon name={'lock'} size={27} color={AppColors.color} />
+                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
+                            <Icon name={'lock'} size={27} color={AppColors.color} style={styles.icon} />
                             <Input
                                 style={{ color: "black", marginLeft: "3%" }}
                                 placeholder="Mật khẩu"
@@ -127,8 +127,8 @@ export default class Register extends Component {
                                 onSubmitEditing={() => { this.submitPasswordInput._root.focus() }} />
                         </InputGroup>
 
-                        <InputGroup borderColor={AppColors.color}>
-                            <Icon name={'lock'} size={27} color={AppColors.color} />
+                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
+                            <Icon name={'lock'} size={27} color={AppColors.color} style={styles.icon} />
                             <Input
                                 style={{ color: "black", marginLeft: "3%" }}
                                 placeholder="Xác nhận mật khẩu"
@@ -142,8 +142,8 @@ export default class Register extends Component {
                                 onSubmitEditing={() => { this.phoneNumberInput._root.focus() }} />
                         </InputGroup>
 
-                        <InputGroup borderColor={AppColors.color}>
-                            <Icon name={'phone'} size={27} color={AppColors.color} />
+                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
+                            <Icon name={'phone'} size={27} color={AppColors.color} style={styles.icon} />
                             <Input
                                 style={{ color: "black", marginLeft: "3%" }}
                                 placeholder="Số điện thoại"
@@ -214,10 +214,9 @@ const styles = StyleSheet.create({
     backButtonContainer: {
         margin: "5%"
     },
-    inputGroup: {
+    inputGroupContainer: {
         marginLeft: "15%",
-        marginRight: "15%",
-
+        marginRight: "15%"
     },
     containerLogo: {
         flex: 1,
@@ -241,5 +240,12 @@ const styles = StyleSheet.create({
     containerGender: {
         marginLeft: "10%",
         marginRight: "15%"
+    },
+    inputGroup: {
+        borderColor: AppColors.color,
+        borderBottomWidth: 1.5
+    },
+    icon: {
+        marginLeft: '5%'
     }
 });
