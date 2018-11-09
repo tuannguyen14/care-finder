@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     backButtonContainer: {
-        margin: "5%"
+        marginTop: "70%"
     },
     inputGroupContainer: {
         marginLeft: "15%",
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
         marginRight: "15%"
     },
     inputGroup: {
-        borderColor: AppColors.color,
+        borderColor: '#BDBDBD',
         borderBottomWidth: 1.5
     },
     icon: {

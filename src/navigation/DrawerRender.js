@@ -102,6 +102,7 @@ class MainDrawer extends Component {
                             {
                                 this.state.listUtilitiesItem.map((l, i) => (
                                     <ListItem
+                                        containerStyle={{ borderBottomWidth: 1.5 }}
                                         key={i}
                                         hideChevron={true}
                                         title={l.name}
@@ -119,6 +120,7 @@ class MainDrawer extends Component {
                             {
                                 this.state.listSettingsItem.map((l, i) => (
                                     <ListItem
+                                        containerStyle={{ borderBottomWidth: 1.5 }}
                                         key={i}
                                         hideChevron={true}
                                         title={l.name}

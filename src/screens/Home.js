@@ -84,15 +84,13 @@ export default class Home extends Component {
 
         <View style={styles.line} />
 
-        <View style={{ width: width, height: height * 0.45 }}>
+        <View style={{ flex: 1 }}>
 
-          <View style={styles.rowView}>
-            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', }}>Gần đây</Text>
-            <TouchableOpacity onPress={() => navigate("AllItemsScreen")}>
-              <View style={[styles.childRowView, { marginLeft: width * 0.68, }]}>
-                <Text h5 style={{ marginRight: '4%' }}>Thêm</Text>
-                <Icon name={'expand-more'} size={27} color={'black'} />
-              </View>
+          <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
+            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Mới đây</Text>
+            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => navigate("AllItemsScreen")}>
+              <Text h5>Thêm</Text>
+              <Icon name={'expand-more'} size={27} color={'black'} />
             </TouchableOpacity>
           </View>
 
@@ -102,16 +100,16 @@ export default class Home extends Component {
             renderItem={({ item: rowData }) => {
               return (
                 <TouchableOpacity onPress={() => this.openDetailItem(rowData)}>
-                  <View>
-                    <Card
-                      title={rowData.name}
-                      image={{ uri: change_url_image(rowData.imageUrls[0]) }}
-                      imageStyle={styles.cardContainer}>
-                      <Text>
-                        {rowData.address}
-                      </Text>
-                    </Card>
-                  </View>
+                  <Card
+                    wrapperStyle={styles.cardWrapperStyle}
+                    containerStyle={{ padding: 0, backgroundColor: '#E0E0E0' }}
+                    title={rowData.name}
+                    image={{ uri: change_url_image(rowData.imageUrls[0]) }}
+                    imageStyle={styles.cardContainer}>
+                    <Text>
+                      {rowData.address}
+                    </Text>
+                  </Card>
                 </TouchableOpacity>
               );
             }}
@@ -119,15 +117,15 @@ export default class Home extends Component {
           />
         </View>
 
-        <View style={{ width: width, height: height * 0.5 }}>
+        <View style={{ width: width, height: 3, backgroundColor: '#BDBDBD', marginTop: '3%' }} />
 
-          <View style={styles.rowView}>
-            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', }}>Gần đây</Text>
-            <TouchableOpacity onPress={() => this.moreNearBy()}>
-              <View style={[styles.childRowView, { marginLeft: width * 0.68, }]}>
-                <Text h5 style={{ marginRight: '4%' }}>Thêm</Text>
-                <Icon name={'expand-more'} size={27} color={'black'} />
-              </View>
+        <View style={{ width: width, height: height * 0.7, marginBottom: '10%' }}>
+
+          <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
+            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Đánh giá cao</Text>
+            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => navigate("AllItemsScreen")}>
+              <Text h5>Thêm</Text>
+              <Icon name={'expand-more'} size={27} color={'black'} />
             </TouchableOpacity>
           </View>
 
@@ -136,31 +134,32 @@ export default class Home extends Component {
             horizontal={true}
             renderItem={({ item: rowData }) => {
               return (
-                <TouchableOpacity onPress={() => this.detailItem()}>
-                  <View>
-                    <Card
-                      title={rowData.name}
-                      image={{ uri: rowData.imageUrls[0].replace('http://localhost:3000', IPServer.ip) }}
-                      imageStyle={styles.cardContainer}>
-                      <Text>
-                        {rowData.address}
-                      </Text>
-                    </Card>
-                  </View>
+                <TouchableOpacity onPress={() => this.openDetailItem(rowData)}>
+                  <Card
+                    wrapperStyle={styles.cardWrapperStyle}
+                    containerStyle={{ padding: 0, backgroundColor: '#E0E0E0' }}
+                    title={rowData.name}
+                    image={{ uri: change_url_image(rowData.imageUrls[0]) }}
+                    imageStyle={styles.cardContainer}>
+                    <Text>
+                      {rowData.address}
+                    </Text>
+                  </Card>
                 </TouchableOpacity>
               );
             }}
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
-      </ScrollView>
+      </ScrollView >
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   searchBarContainer: {
     margin: '3%',
@@ -168,17 +167,31 @@ const styles = StyleSheet.create({
   line: {
     backgroundColor: '#BDBDBD',
     width: width,
-    height: height * 0.02
+    height: height * 0.01
   },
   cardContainer: {
-    width: width * 0.35,
-    height: height * 0.2,
+    width: width * 0.5,
+    height: height * 0.3
   },
   rowView: {
     flexDirection: 'row',
     marginTop: '3%'
   },
   childRowView: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  cardWrapperStyle: {
+    borderTopWidth: 0.5,
+    borderBottomWidth: 0.2,
+    borderLeftWidth: 0.2,
+    borderRightWidth: 0.2,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
   }
 })

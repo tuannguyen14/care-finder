@@ -237,7 +237,6 @@ export default class RatingItem extends Component {
                 <FlatList
                     style={{ marginBottom: '1%' }}
                     data={this.state.listComments}
-                    removeClippedSubviews={false}
                     renderItem={({ item: rowData, index }) => {
                         return (
                             <View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1 }]}>

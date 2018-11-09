@@ -15,8 +15,8 @@ export default class Login extends Component {
         this.state = {
             email: "tuan123@gmail.com",
             password: "admin123",
-            checkedDoctor: false,
-            checkedUser: true
+            checkedDoctor: true,
+            checkedUser: false
         }
     }
 
