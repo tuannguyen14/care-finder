@@ -234,11 +234,12 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         marginLeft: "5%",
-        marginTop: "1%"
+        marginTop: "5%",
+        marginBottom: "5%"
     },
     containerInputGroup: {
         marginLeft: "6%",
-        marginRight: "6%",
+        marginRight: "6%"
     },
     containerLogo: {
         alignItems: 'center',
