@@ -3,6 +3,7 @@ import { View, StyleSheet, Dimensions, ScrollView, Modal, FlatList, TouchableOpa
 import { Text, Rating, Avatar, ListItem, Button, Header, Slider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import { InputGroup, Input } from 'native-base';
+import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 
@@ -14,32 +15,34 @@ export default class RatingItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            user: global.user,
             item: this.props.item,
-            listComments: [],
             modalVisible: false,
             startingValueRating: 1,
             errorContentInput: false,
             item: this.props.item,
-            ratingLocation: 0,
-            ratingPrice: 0,
-            ratingQuality: 0,
-            ratingAttitude: 0
+            ratingLocation: 1,
+            ratingPrice: 1,
+            ratingQuality: 1,
+            ratingAttitude: 1,
+            contentPost: 'Ngonnnn!',
+            informationUserComment: []
         };
     }
 
     componentWillMount() {
-        const list = [];
-        for (let i = 0; i < 17; i++) {
-            list.push({
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'ngon' + i,
-                ratingCount: 5
-            });
-        }
-        this.setState({
-            listComments: list
-        })
+        // const list = [];
+        // for (let i = 0; i < 17; i++) {
+        //     list.push({
+        //         name: 'Amy Farha',
+        //         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        //         subtitle: 'ngon' + i,
+        //         ratingCount: 5
+        //     });
+        // }
+        // this.setState({
+        //     listComments: list
+        // })
     }
 
     ratingCompleted = async (rating) => {
@@ -51,10 +54,16 @@ export default class RatingItem extends Component {
             this.setState({ errorContentInput: true });
         } else {
             const body = {
+                _idUser: this.state.user.userId,
                 content: this.state.contentPost,
-                rating: this.state.startingValueRating
+                rating: {
+                    'location': this.state.ratingLocation == 0 ? 1 : this.state.ratingLocation,
+                    'price': this.state.ratingPrice == 0 ? 1 : this.state.ratingPrice,
+                    'quality': this.state.ratingQuality == 0 ? 1 : this.state.ratingQuality,
+                    'attitude': this.state.ratingAttitude == 0 ? 1 : this.state.ratingAttitude
+                }
             }
-            axios.post(IPServer.ip + '/comment', body, {
+            axios.patch(IPServer.ip + '/location/comment/' + this.state.item._id, body, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -72,7 +81,7 @@ export default class RatingItem extends Component {
         let arrayString = ['Vị trí', 'Giá cả', 'Thái độ', 'Dịch vụ']
         for (let i = 1; i <= arrayString.length; i++) {
             array.push(
-                < View style={[styles.rowView, { flex: 1 }]}>
+                < View style={[styles.rowView]}>
                     <View style={[styles.rowView, { marginLeft: '3%', flex: 1 }]}>
                         <Text h4 style={{ marginLeft: '3%' }}>{i}</Text>
                         <View style={{ marginTop: '10%', marginLeft: '3%' }} >
@@ -93,6 +102,19 @@ export default class RatingItem extends Component {
             )
         }
         return array;
+    }
+
+    getInformationUser(userId) {
+        return axios.get(IPServer.ip + '/user/' + userId, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                this.setState({ informationUserComment: response.data.user });
+            }).catch(err => {
+                console.log(err)
+            });
     }
 
     render() {
@@ -181,7 +203,7 @@ export default class RatingItem extends Component {
                             {
                                 this.state.errorContentInput ?
                                     <Text style={{ color: 'red' }}>Bình luận ít nhất phải có 5 ký tự!</Text> :
-                                    <Text></Text>
+                                    <View />
                             }
                         </View>
                     </View>
@@ -193,28 +215,28 @@ export default class RatingItem extends Component {
                     }
                 </View>
 
-                <View style={[styles.line, { marginTop: '3%' }]} />
+                <View>
+                    <View style={[styles.line]} />
 
-                <View style={[styles.centerContainer]}>
-                    <Avatar
-                        large
-                        rounded
-                        source={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
-                        onPress={() => console.log("Works!")}
-                        activeOpacity={0.7}
-                    />
-                    <Text style={{ color: 'black' }}>Xếp hạng và đánh giá</Text>
-                    <Text>Chia sẽ trải nghiệm của bạn để giúp đỡ người khác</Text>
-                    <Rating
-                        type="heart"
-                        ratingCount={5}
-                        fractions={0}
-                        startingValue={this.state.startingValueRating}
-                        onFinishRating={this.ratingCompleted}
-                        imageSize={40}
-                        style={{ marginLeft: '1%' }}
-                    />
-                    <View style={{ marginTop: '3%' }}>
+                    <View style={[styles.centerContainer]}>
+                        <Avatar
+                            large
+                            rounded
+                            source={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
+                            onPress={() => console.log("Works!")}
+                            activeOpacity={0.7}
+                        />
+                        <Text style={{ color: 'black' }}>Xếp hạng và đánh giá</Text>
+                        <Text>Chia sẽ trải nghiệm của bạn để giúp đỡ người khác</Text>
+                        <Rating
+                            type="heart"
+                            ratingCount={5}
+                            fractions={0}
+                            startingValue={this.state.startingValueRating}
+                            onFinishRating={this.ratingCompleted}
+                            imageSize={40}
+                            style={{ marginLeft: '1%' }}
+                        />
                         <Button
                             title='Đánh giá'
                             buttonStyle={{
@@ -227,44 +249,57 @@ export default class RatingItem extends Component {
                             }}
                             onPress={() => this.setState({ modalVisible: !this.state.modalVisible })} />
                     </View>
+                    <View style={[styles.line, { marginTop: '3%' }]} />
                 </View>
 
-                <View style={[styles.line, { marginTop: '3%' }]} />
-
-                <View style={[styles.centerContainer, { marginTop: '1%' }]}>
-                    <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
-                </View>
-                <FlatList
-                    style={{ marginBottom: '1%' }}
-                    data={this.state.listComments}
-                    renderItem={({ item: rowData, index }) => {
-                        return (
-                            <View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1 }]}>
-                                <View style={{ marginLeft: '3%' }}>
-                                    <Avatar
-                                        medium
-                                        rounded
-                                        source={{ uri: "https://image.flaticon.com/icons/png/128/145/145867.png" }}
-                                        onPress={() => console.log("Works!")}
-                                        activeOpacity={0.7}
-                                    />
-                                </View>
-                                <View style={{ marginLeft: '3%' }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{rowData.name}</Text>
-                                    <Rating
-                                        type="heart"
-                                        readonly
-                                        ratingCount={5}
-                                        fractions={2}
-                                        startingValue={rowData.ratingCount}
-                                        imageSize={21}
-                                    />
-                                    <Text>{rowData.subtitle}</Text>
-                                </View>
+                <View>
+                    <View style={[styles.centerContainer]}>
+                        <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
+                    </View>
+                    {
+                        this.state.item.reviews.length == 0
+                            ?
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <Text>Chưa có bình luận!</Text>
                             </View>
-                        );
-                    }}
-                />
+                            :
+                            <FlatList
+                                style={{ marginBottom: '1%' }}
+                                data={this.state.item.reviews}
+                                renderItem={({ item: rowData, index }) => {
+                                    this.getInformationUser(rowData._idUser);
+                                    return (
+                                        this.state.informationUserComment.avatar != undefined ?
+                                            <View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1, padding: '1%' }]}>
+                                                <View style={{ marginLeft: '3%' }}>
+                                                    <Avatar
+                                                        medium
+                                                        rounded
+                                                        source={{ uri: this.state.informationUserComment.avatar.includes('localhost') ? this.state.informationUserComment.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.informationUserComment.avatar }}
+                                                        onPress={() => console.log("Works!")}
+                                                        activeOpacity={0.7}
+                                                    />
+                                                </View>
+                                                <View style={{ marginLeft: '3%' }}>
+                                                    <Text style={{ fontWeight: 'bold' }}>{this.state.informationUserComment.firstName + ' ' + this.state.informationUserComment.lastName}</Text>
+                                                    < Rating
+                                                        type="heart"
+                                                        readonly
+                                                        ratingCount={5}
+                                                        fractions={2}
+                                                        startingValue={(rowData.rating.location + rowData.rating.price + rowData.rating.quality + rowData.rating.attitude) / 4}
+                                                        imageSize={21}
+                                                    />
+                                                    <Text>{rowData.content}</Text>
+                                                </View>
+                                            </View>
+                                            :
+                                            <View />
+                                    );
+                                }}
+                            />
+                    }
+                </View>
             </ScrollView >
         );
     }

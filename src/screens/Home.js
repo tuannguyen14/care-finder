@@ -28,7 +28,6 @@ export default class Home extends Component {
           nearByData: response.data.doc
         })
         global.allLocations = response.data.doc;
-        console.log(response.data.doc)
       });
   }
 

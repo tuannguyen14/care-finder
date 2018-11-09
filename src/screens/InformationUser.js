@@ -43,40 +43,11 @@ export default class componentName extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: "",
-            lastName: "",
-            gender: "",
-            phoneNumber: "",
-            email: "",
-            follows: [],
-            avatar: "",
+            user: global.user,
             slideAnim: new Animated.Value(-200),
             zIndex: 1,
             visible: false
         };
-
-    }
-
-    componentWillMount() {
-        axios.get(IPServer.ip + '/me', {
-            headers: {
-                "Authorization": `Bearer ${global.token}`
-            },
-        }).then(response => {
-            const { firstName, phoneNumber, lastName, gender, follows, email, avatar } = response.data;
-            console.log(response.data)
-            this.setState({
-                firstName,
-                lastName,
-                gender,
-                phoneNumber,
-                email,
-                follows,
-                avatar: avatar.includes('localhost') ? avatar.replace('http://localhost:3000', IPServer.ip) : avatar,
-            })
-        }).catch(err => {
-            console.log(err)
-        })
     }
 
     changeAvatar = () => {
@@ -139,7 +110,7 @@ export default class componentName extends Component {
         const { navigate, goBack } = this.props.navigation;
         let bottom = this.state.slideAnim;
 
-        console.log(this.state.avatar)
+        console.log(this.state.user.avatar)
         return (
             <View style={styles.container}>
                 <Modal visible={this.state.visible} transparent={true} onRequestClose={() => this.setState({ visible: false })}>
@@ -149,7 +120,7 @@ export default class componentName extends Component {
                 </Modal>
                 <View style={{ height: "100%", zIndex: 2, backgroundColor: "#80DEEA" }}>
                     <Header
-                        outerContainerStyles={{ borderBottomWidth:0 }}
+                        outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
                         centerComponent={{ text: 'Thông tin người dùng', style: { color: '#fff', fontSize: 20 } }}
@@ -159,11 +130,11 @@ export default class componentName extends Component {
                             source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
                             style={styles.coverPhoto}
                         >
-                            <Text style={styles.textEditCoverPhoto}>{this.state.firstName} {this.state.lastName}</Text>
+                            <Text style={styles.textEditCoverPhoto}>{this.state.user.firstName} {this.state.user.lastName}</Text>
                             <View style={styles.containerTextImage}>
                                 <TouchableOpacity onPress={this.selectOptions}>
                                     <Image
-                                        source={{ uri: this.state.avatar }}
+                                        source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
                                         style={styles.avatar}
                                     >
                                     </Image>
@@ -175,19 +146,19 @@ export default class componentName extends Component {
 
                         <View style={styles.containerText}>
                             <Text style={styles.textHeader}> Email </Text>
-                            <Text style={styles.textState}>{this.state.email}</Text>
+                            <Text style={styles.textState}>{this.state.user.email}</Text>
                         </View>
                         <View style={styles.containerText}>
                             <Text style={styles.textHeader}> Điện thoại </Text>
-                            <Text style={styles.textState}>{this.state.phoneNumber}</Text>
+                            <Text style={styles.textState}>{this.state.user.phoneNumber}</Text>
                         </View>
                         <View style={styles.containerText}>
                             <Text style={styles.textHeader}> Giới tính </Text>
-                            <Text style={styles.textState}>{this.state.gender}</Text>
+                            <Text style={styles.textState}>{this.state.user.gender}</Text>
                         </View>
                         <View style={styles.containerText}>
                             <Text style={styles.textHeader}> Lượt theo dõi </Text>
-                            <Text style={styles.textState}>{this.state.follows.length}</Text>
+                            <Text style={styles.textState}>{this.state.user.follows.length}</Text>
                         </View>
 
                         <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>

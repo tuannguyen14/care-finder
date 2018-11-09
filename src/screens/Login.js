@@ -8,6 +8,7 @@ import Toast from 'react-native-easy-toast'
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 
+var jwtDecode = require('jwt-decode');
 
 export default class Login extends Component {
     constructor(props) {
@@ -35,6 +36,19 @@ export default class Login extends Component {
                 if (this.state.checkedDoctor) {
                     global.doctor = true;
                 }
+
+                axios.get(IPServer.ip + '/me', {
+                    headers: {
+                        "Authorization": `Bearer ${global.token}`
+                    },
+                }).then(response => {
+                    let objectUser = response.data;
+                    objectUser.userId = jwtDecode(global.token).userId;
+                    global.user = objectUser;
+                }).catch(err => {
+                    console.log(err)
+                })
+
                 this.props.navigation.navigate("RootDrawer");
             }).catch(err => {
                 this.refs.toast.show('Đăng nhập thất bại');
