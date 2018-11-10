@@ -103,7 +103,7 @@ export default class Home extends Component {
                   <View>
                     <Card
                       title={rowData.name}
-                      image={{ uri: rowData.imageUrls.replace('http://localhost:3000', IPServer.ip) }}
+                      image={{ uri: change_url_image(rowData.imageUrls[0]) }}
                       imageStyle={styles.cardContainer}>
                       <Text>
                         {rowData.address}

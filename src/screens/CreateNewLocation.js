@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Dimensions, ScrollView, FlatList } from "react-native";
+import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Dimensions, ScrollView, FlatList, Picker } from "react-native";
 import { InputGroup, Input } from 'native-base';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -8,8 +8,10 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-easy-toast'
 import { IPServer } from '../Server/IPServer.js';
 import { Sae } from 'react-native-textinput-effects';
-
+import axios from 'axios';
 let { width, height } = Dimensions.get("window");
+import { Dropdown } from 'react-native-material-dropdown';
+import { AppColors } from '../styles/AppColors.js';
 
 const ASPECT_RATIO = width / height;
 const LATITUDE = 0;
@@ -43,20 +45,27 @@ export default class CreateNewLocation extends Component {
             }, {
                 uri: require('../img/NoImageAvailable.png')
             }],
-            dataCities: []
+            dataCities: [],
+            dataDistricts:[],
+            dataWards:[],
+            city: "",
+            district: "",
+            ward: "",
+            indexCity:0,
+            indexDistricts:0,
+            ready:false,
+            street:""
         };
     }
 
-    componentWillMount() {
-      fetch(IPServer.ip + '/city', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-      }).then(docs => {
-        console.log(docs[2])
-        this.setState({dataCities: docs})
-      }).catch(err => console.log(err))
+     componentDidMount() {
+       this.fetchData();
+    }
+
+    fetchData = async () => {
+      const response = await fetch(IPServer.ip + '/city');
+      const json = await response.json();
+      this.setState({dataCities:json.doc, ready:true})
     }
 
     uploadPhoto() {
@@ -89,9 +98,14 @@ export default class CreateNewLocation extends Component {
 
     createLocation = async () => {
         const body = new FormData();
+        let address ={};
+        address.street = this.state.street;
+        address.ward = this.state.ward;
+        address.district = this.state.district;
+        address.city = this.state.city;
         body.append('_idDoctor', '5b94ce2b6b34ae003a557c33')
         body.append('name', this.state.name);
-        body.append('address', this.state.address);
+        body.append('address', address);
         body.append('department', this.state.website);
         body.append('phoneNumber', this.state.phoneNumber);
         this.state.listUploadImage.map(e => {
@@ -116,10 +130,18 @@ export default class CreateNewLocation extends Component {
         });
     }
 
+    getAllCities = () => {
+      const a = this.state.dataCities.map((e,i) => {
+        conso
+        return {value : e.name}
+      })
+    }
+
     render() {
         const { navigate } = this.props.navigation;
+        console.log("aaa", this.state.dataCities[this.state.indexCity])
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView >
                 <View style={styles.backgroundImage}>
                     <TouchableOpacity onPress={() => navigate("RootDrawer")}>
                         <View style={styles.backButtonContainer}>
@@ -132,7 +154,6 @@ export default class CreateNewLocation extends Component {
                             style={styles.logo}
                         />
                     </View>
-                </TouchableOpacity>
 
                     <View style={styles.inputGroup}>
                         <View>
@@ -145,52 +166,70 @@ export default class CreateNewLocation extends Component {
                               iconName={'pencil'}
                               iconColor={'#2979FF'}
                               returnKeyType={"next"}
-                              onSubmitEditing={() => { this.addressInput._root.focus() }}
                               onChangeText={name => this.setState({ name })}
                             />
-                            
-                            <InputGroup>
-                                <Icon name={'address'} size={27} color={'white'} />
-                                <Input
-                                    style={{ color: "white", marginLeft: "3%" }}
-                                    placeholder="Địa chỉ"
-                                    placeholderTextColor="rgba(255,255,255,255)"
-                                    autoCorrect={false}
-                                    onChangeText={address => this.setState({ address })}
-                                    value={this.state.address}
-                                    ref={(input) => { this.addressInput = input; }}
-                                    returnKeyType={"next"}
-                                    onSubmitEditing={() => { this.phoneNumberInput._root.focus() }} />
-                            </InputGroup>
-
-                            <InputGroup>
-                                <Icon name={'phone'} size={27} color={'white'} />
-                                <Input
-                                    style={{ color: "white", marginLeft: "3%" }}
-                                    placeholder="Số điện thoại"
-                                    placeholderTextColor="rgba(255,255,255,255)"
-                                    onChangeText={phoneNumber => this.setState({ phoneNumber })}
-                                    value={this.state.phoneNumber}
-                                    keyboardType="numeric"
-                                    autoCorrect={false}
-                                    ref={(input) => { this.phoneNumberInput = input; }}
-                                    onSubmitEditing={() => { this.websiteInput._root.focus() }}
-                                />
-                            </InputGroup>
-
-                            <InputGroup>
-                                <IconMaterialIcons name={'public'} size={27} color={'white'} />
-                                <Input
-                                    style={{ color: "white", marginLeft: "3%" }}
-                                    placeholder="Website"
-                                    placeholderTextColor="rgba(255,255,255,255)"
-                                    onChangeText={website => this.setState({ website })}
-                                    value={this.state.website}
-                                    autoCorrect={false}
-                                    ref={(input) => { this.websiteInput = input; }}
-                                />
-                            </InputGroup>
-
+                            <Sae
+                              label={'Số điện thoại'}
+                              labelStyle={{color: "#757575",fontWeight: ""}}
+                              inputStyle={{color: "#424242"}}
+                              autoCorrect={false}
+                              iconClass={FontAwesomeIcon}
+                              iconName={'pencil'}
+                              iconColor={'#2979FF'}
+                              keyboardType="numeric"
+                              returnKeyType={"next"}
+                              onChangeText={phoneNumber => this.setState({ phoneNumber })}
+                            />
+                            <Sae
+                              label={'Website'}
+                              labelStyle={{color: "#757575",fontWeight: ""}}
+                              inputStyle={{color: "#424242"}}
+                              autoCorrect={false}
+                              iconClass={FontAwesomeIcon}
+                              iconName={'pencil'}
+                              iconColor={'#2979FF'}
+                              returnKeyType={"next"}
+                              onChangeText={website => this.setState({ website })}
+                            />
+                            <Sae
+                              label={'Số nhà + Tên đường'}
+                              labelStyle={{color: "#757575",fontWeight: ""}}
+                              inputStyle={{color: "#424242"}}
+                              autoCorrect={false}
+                              iconClass={FontAwesomeIcon}
+                              iconName={'pencil'}
+                              iconColor={'#2979FF'}
+                              returnKeyType={"next"}
+                              onChangeText={street => this.setState({ street })}
+                            />
+                            {!this.state.ready?null:
+                            <View>
+                              <Picker
+                                selectedValue={this.state.city}
+                                style={styles.pickerStyle}
+                                onValueChange={(itemValue, itemIndex) => this.setState({city: itemValue,indexCity: itemIndex})}>
+                                {this.state.dataCities.map((e,i)=> {
+                                  return <Picker.Item label={e.name} value={e.name} />
+                                })}
+                              </Picker>
+                              <Picker
+                                selectedValue={this.state.district}
+                                style={styles.pickerStyle}
+                                onValueChange={(itemValue, itemIndex) => this.setState({district: itemValue, indexDistricts:itemIndex})}>
+                                {this.state.dataCities[this.state.indexCity].districts.map((e,i)=> {
+                                  return <Picker.Item label={e.name} value={e.name} />
+                                })}
+                              </Picker>
+                              <Picker
+                                selectedValue={this.state.ward}
+                                style={styles.pickerStyle}
+                                onValueChange={(itemValue, itemIndex) => this.setState({ward: itemValue})}>
+                                {this.state.dataCities[this.state.indexCity].districts[this.state.indexDistricts].wards.map((e,i)=> {
+                                  return <Picker.Item label={e.name} value={e.name} />
+                                })}
+                              </Picker>
+                            </View>
+                          }
                         </View>
 
                         <View style={{ marginTop: '3%' }}>
@@ -209,44 +248,43 @@ export default class CreateNewLocation extends Component {
                                 }}
                                 keyExtractor={(item, index) => index.toString()}
                             />
-                        </InputGroup>
 
-                        <InputGroup style={styles.inputGroup}>
-                            <IconMaterialIcons name={'public'} size={27} color={AppColors.color} />
-                            <Input
-                                style={styles.input}
-                                placeholder="Website"
-                                placeholderTextColor={AppColors.color}
-                                onChangeText={website => this.setState({ website })}
-                                value={this.state.website}
-                                autoCorrect={false}
-                                ref={(input) => { this.websiteInput = input; }}
+                        </View>
+                        <View style={[styles.containerLogo]} >
+                            <Button
+                                onPress={() => this.uploadPhoto()}
+                                title='Thêm hình'
+                                buttonStyle={{
+                                    backgroundColor: AppColors.color,
+                                    width: 150,
+                                    height: 30,
+                                    borderColor: "transparent",
+                                    borderWidth: 0,
+                                    borderRadius: 5,
+                                }}
                             />
-                        </InputGroup>
+                        </View>
+                        <View style={styles.buttonGroup}>
+                            <Button
+                                onPress={() => this.createLocation()}
+                                title='Thêm địa điểm'
+                                buttonStyle={{
+                                    backgroundColor: AppColors.color,
+                                    width: 300,
+                                    height: 45,
+                                    borderColor: "transparent",
+                                    borderWidth: 0,
+                                    borderRadius: 5,
+                                }}
+                            />
+                        </View>
                     </View>
-
-                    <FlatList
-                        style={{ marginTop: '3%', height: height * 0.33 }}
-                        data={this.state.listUploadImage}
-                        horizontal={true}
-                        renderItem={({ item: rowData }) => {
-                            return (
-                                <View style={[styles.rowView, { borderWidth: 1 }]}>
-                                    <Image
-                                        style={styles.imageUpload}
-                                        source={rowData.uri} />
-                                </View>
-                            );
-                        }}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-
-                    <View style={[styles.containerLogo, { marginTop: '3%' }]} >
+                    <View style={[styles.containerLogo]} >
                         <Button
                             onPress={() => this.uploadPhoto()}
                             title='Thêm hình'
                             buttonStyle={{
-                                backgroundColor: AppColors.color,
+                                backgroundColor: "#E57373",
                                 width: 150,
                                 height: 30,
                                 borderColor: "transparent",
@@ -260,7 +298,7 @@ export default class CreateNewLocation extends Component {
                             onPress={() => this.createLocation()}
                             title='Thêm địa điểm'
                             buttonStyle={{
-                                backgroundColor: AppColors.color,
+                                backgroundColor: "#E57373",
                                 width: 300,
                                 height: 45,
                                 borderColor: "transparent",
@@ -269,7 +307,6 @@ export default class CreateNewLocation extends Component {
                             }}
                         />
                     </View>
-                </View>
 
                     <Toast ref="toast" />
                 </View >
@@ -279,21 +316,17 @@ export default class CreateNewLocation extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white'
-    },
+  
     rowView: {
         flexDirection: 'row'
     },
     backButtonContainer: {
         marginLeft: "5%",
-        marginTop: "5%",
-        marginBottom: "5%"
+        marginTop: "1%"
     },
-    containerInputGroup: {
-        marginLeft: "6%",
-        marginRight: "6%"
+    inputGroup: {
+        marginLeft: "6.2%",
+        marginRight: "6.2%",
     },
     containerLogo: {
         alignItems: 'center',
@@ -311,8 +344,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         width: width,
-        height: height,
-        backgroundColor:"black"
+        backgroundColor:"white"
     },
     text: {
         color: 'white',
@@ -328,15 +360,13 @@ const styles = StyleSheet.create({
         width: height * 0.005
     },
     imageUpload: {
-        width: width * 0.5,
-        height: height * 0.3
+        width: width * 0.35,
+        height: height * 0.2
     },
-    input: {
-        color: 'black',
-        marginLeft: "3%"
-    },
-    inputGroup: {
-        borderColor: '#BDBDBD',
-        borderBottomWidth: 1.5
-    },
+    pickerStyle: { 
+      height: 50, 
+      width: (width*90)/100, 
+      color:"#424242", 
+      alignSelf: "center", 
+    }
 });
