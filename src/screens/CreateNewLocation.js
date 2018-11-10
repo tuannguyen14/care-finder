@@ -35,7 +35,6 @@ export default class CreateNewLocation extends Component {
         super(props);
         this.state = {
             name: "Test",
-            address: "Test address",
             phoneNumber: "09020309",
             website: "muahaha.com",
             listUploadImage: [{
@@ -98,14 +97,12 @@ export default class CreateNewLocation extends Component {
 
     createLocation = async () => {
         const body = new FormData();
-        let address ={};
-        address.street = this.state.street;
-        address.ward = this.state.ward;
-        address.district = this.state.district;
-        address.city = this.state.city;
         body.append('_idDoctor', '5b94ce2b6b34ae003a557c33')
         body.append('name', this.state.name);
-        body.append('address', address);
+        body.append('street', this.state.street);
+        body.append('ward', this.state.ward);
+        body.append('district', this.state.district);
+        body.append('city', this.state.city);
         body.append('department', this.state.website);
         body.append('phoneNumber', this.state.phoneNumber);
         this.state.listUploadImage.map(e => {
