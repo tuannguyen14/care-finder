@@ -24,8 +24,17 @@ export default class Home extends Component {
       responseType: 'stream'
     })
       .then((response) => {
+        
+        let nearByData = response.data.doc.map((e,i) => {
+          let {street, ward, district, city} = e.address;
+          console.log(i, e)
+          let address = `${street}, ${ward}, ${district}, ${city}`
+          e.address =address
+          return e
+        })
+        console.log(nearByData)
         this.setState({
-          nearByData: response.data.doc
+          nearByData
         })
         global.allLocations = response.data.doc;
       });
