@@ -62,6 +62,7 @@ export default class Home extends Component {
 
   render() {
     const { navigate } = this.props.navigation
+    console.log(this.state.nearByData)
     return (
       <ScrollView style={styles.container}>
         <Header
@@ -99,16 +100,16 @@ export default class Home extends Component {
             renderItem={({ item: rowData }) => {
               return (
                 <TouchableOpacity onPress={() => this.openDetailItem(rowData)}>
-                  <Card
-                    wrapperStyle={styles.cardWrapperStyle}
-                    containerStyle={{ padding: 0, backgroundColor: '#E0E0E0' }}
-                    title={rowData.name}
-                    image={{ uri: change_url_image(rowData.imageUrls[0]) }}
-                    imageStyle={styles.cardContainer}>
-                    <Text>
-                      {rowData.address}
-                    </Text>
-                  </Card>
+                  <View>
+                    <Card
+                      title={rowData.name}
+                      image={{ uri: rowData.imageUrls.replace('http://localhost:3000', IPServer.ip) }}
+                      imageStyle={styles.cardContainer}>
+                      <Text>
+                        {rowData.address}
+                      </Text>
+                    </Card>
+                  </View>
                 </TouchableOpacity>
               );
             }}

@@ -4,9 +4,10 @@ import { InputGroup, Input } from 'native-base';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-easy-toast'
 import { IPServer } from '../Server/IPServer.js';
-import { AppColors } from '../styles/AppColors.js';
+import { Sae } from 'react-native-textinput-effects';
 
 let { width, height } = Dimensions.get("window");
 
@@ -42,7 +43,20 @@ export default class CreateNewLocation extends Component {
             }, {
                 uri: require('../img/NoImageAvailable.png')
             }],
+            dataCities: []
         };
+    }
+
+    componentWillMount() {
+      fetch(IPServer.ip + '/city', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      }).then(docs => {
+        console.log(docs[2])
+        this.setState({dataCities: docs})
+      }).catch(err => console.log(err))
     }
 
     uploadPhoto() {
@@ -106,54 +120,94 @@ export default class CreateNewLocation extends Component {
         const { navigate } = this.props.navigation;
         return (
             <ScrollView style={styles.container}>
-                {/* <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}> */}
-                <TouchableOpacity onPress={() => navigate("RootDrawer")}>
-                    <View style={styles.backButtonContainer}>
-                        <Icon name={'arrow-long-left'} size={27} color={'grey'} />
+                <View style={styles.backgroundImage}>
+                    <TouchableOpacity onPress={() => navigate("RootDrawer")}>
+                        <View style={styles.backButtonContainer}>
+                            <Icon name={'arrow-long-left'} size={27} color={'white'} />
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.containerLogo}>
+                        <Image
+                            source={require("../img/hospitalLogo.png")}
+                            style={styles.logo}
+                        />
                     </View>
                 </TouchableOpacity>
 
-                <View style={styles.containerInputGroup}>
-                    <View>
-                        <InputGroup style={styles.inputGroup}>
-                            <Icon name={'user'} size={27} color={AppColors.color} />
-                            <Input
-                                style={styles.input}
-                                placeholder="Tên địa điểm"
-                                placeholderTextColor={AppColors.color}
-                                autoCorrect={false}
-                                onChangeText={name => this.setState({ name })}
-                                value={this.state.name}
-                                returnKeyType={"next"}
-                                onSubmitEditing={() => { this.addressInput._root.focus() }} />
-                        </InputGroup>
+                    <View style={styles.inputGroup}>
+                        <View>
+                            <Sae
+                              label={'Tên địa điểm'}
+                              labelStyle={{color: "#757575",fontWeight: ""}}
+                              inputStyle={{color: "#424242"}}
+                              autoCorrect={false}
+                              iconClass={FontAwesomeIcon}
+                              iconName={'pencil'}
+                              iconColor={'#2979FF'}
+                              returnKeyType={"next"}
+                              onSubmitEditing={() => { this.addressInput._root.focus() }}
+                              onChangeText={name => this.setState({ name })}
+                            />
+                            
+                            <InputGroup>
+                                <Icon name={'address'} size={27} color={'white'} />
+                                <Input
+                                    style={{ color: "white", marginLeft: "3%" }}
+                                    placeholder="Địa chỉ"
+                                    placeholderTextColor="rgba(255,255,255,255)"
+                                    autoCorrect={false}
+                                    onChangeText={address => this.setState({ address })}
+                                    value={this.state.address}
+                                    ref={(input) => { this.addressInput = input; }}
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={() => { this.phoneNumberInput._root.focus() }} />
+                            </InputGroup>
 
-                        <InputGroup style={styles.inputGroup}>
-                            <Icon name={'address'} size={27} color={AppColors.color} />
-                            <Input
-                                style={styles.input}
-                                placeholder="Địa chỉ"
-                                placeholderTextColor={AppColors.color}
-                                autoCorrect={false}
-                                onChangeText={address => this.setState({ address })}
-                                value={this.state.address}
-                                ref={(input) => { this.addressInput = input; }}
-                                returnKeyType={"next"}
-                                onSubmitEditing={() => { this.phoneNumberInput._root.focus() }} />
-                        </InputGroup>
+                            <InputGroup>
+                                <Icon name={'phone'} size={27} color={'white'} />
+                                <Input
+                                    style={{ color: "white", marginLeft: "3%" }}
+                                    placeholder="Số điện thoại"
+                                    placeholderTextColor="rgba(255,255,255,255)"
+                                    onChangeText={phoneNumber => this.setState({ phoneNumber })}
+                                    value={this.state.phoneNumber}
+                                    keyboardType="numeric"
+                                    autoCorrect={false}
+                                    ref={(input) => { this.phoneNumberInput = input; }}
+                                    onSubmitEditing={() => { this.websiteInput._root.focus() }}
+                                />
+                            </InputGroup>
 
-                        <InputGroup style={styles.inputGroup}>
-                            <Icon name={'phone'} size={27} color={AppColors.color} />
-                            <Input
-                                style={styles.input}
-                                placeholder="Số điện thoại"
-                                placeholderTextColor={AppColors.color}
-                                onChangeText={phoneNumber => this.setState({ phoneNumber })}
-                                value={this.state.phoneNumber}
-                                keyboardType="numeric"
-                                autoCorrect={false}
-                                ref={(input) => { this.phoneNumberInput = input; }}
-                                onSubmitEditing={() => { this.emailInput._root.focus() }}
+                            <InputGroup>
+                                <IconMaterialIcons name={'public'} size={27} color={'white'} />
+                                <Input
+                                    style={{ color: "white", marginLeft: "3%" }}
+                                    placeholder="Website"
+                                    placeholderTextColor="rgba(255,255,255,255)"
+                                    onChangeText={website => this.setState({ website })}
+                                    value={this.state.website}
+                                    autoCorrect={false}
+                                    ref={(input) => { this.websiteInput = input; }}
+                                />
+                            </InputGroup>
+
+                        </View>
+
+                        <View style={{ marginTop: '3%' }}>
+                            <FlatList
+                                data={this.state.listUploadImage}
+                                horizontal={true}
+                                renderItem={({ item: rowData }) => {
+                                    return (
+                                        <View style={styles.rowView}>
+                                            <Image
+                                                style={styles.imageUpload}
+                                                source={rowData.uri} />
+                                            <View style={styles.lineVertical} />
+                                        </View>
+                                    );
+                                }}
+                                keyExtractor={(item, index) => index.toString()}
                             />
                         </InputGroup>
 
@@ -217,9 +271,9 @@ export default class CreateNewLocation extends Component {
                     </View>
                 </View>
 
-                <Toast ref="toast" />
-                {/* </ImageBackground > */}
-            </ScrollView >
+                    <Toast ref="toast" />
+                </View >
+            </ScrollView>
         );
     }
 }
@@ -257,7 +311,8 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         width: width,
-        height: height
+        height: height,
+        backgroundColor:"black"
     },
     text: {
         color: 'white',
