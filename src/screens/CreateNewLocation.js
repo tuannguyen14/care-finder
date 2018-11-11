@@ -46,26 +46,26 @@ export default class CreateNewLocation extends Component {
                 uri: require('../img/NoImageAvailable.png')
             }],
             dataCities: [],
-            dataDistricts:[],
-            dataWards:[],
+            dataDistricts: [],
+            dataWards: [],
             city: "",
             district: "",
             ward: "",
-            indexCity:0,
-            indexDistricts:0,
-            ready:false,
-            street:""
+            indexCity: 0,
+            indexDistricts: 0,
+            ready: false,
+            street: ""
         };
     }
 
-     componentDidMount() {
-       this.fetchData();
+    componentDidMount() {
+        this.fetchData();
     }
 
     fetchData = async () => {
-      const response = await fetch(IPServer.ip + '/city');
-      const json = await response.json();
-      this.setState({dataCities:json.doc, ready:true})
+        const response = await fetch(IPServer.ip + '/city');
+        const json = await response.json();
+        this.setState({ dataCities: json.doc, ready: true })
     }
 
     uploadPhoto() {
@@ -98,7 +98,7 @@ export default class CreateNewLocation extends Component {
 
     createLocation = async () => {
         const body = new FormData();
-        let address ={};
+        let address = {};
         address.street = this.state.street;
         address.ward = this.state.ward;
         address.district = this.state.district;
@@ -131,10 +131,10 @@ export default class CreateNewLocation extends Component {
     }
 
     getAllCities = () => {
-      const a = this.state.dataCities.map((e,i) => {
-        conso
-        return {value : e.name}
-      })
+        const a = this.state.dataCities.map((e, i) => {
+            conso
+            return { value: e.name }
+        })
     }
 
     render() {
@@ -145,7 +145,7 @@ export default class CreateNewLocation extends Component {
                 <View style={styles.backgroundImage}>
                     <TouchableOpacity onPress={() => navigate("RootDrawer")}>
                         <View style={styles.backButtonContainer}>
-                            <Icon name={'arrow-long-left'} size={27} color={'white'} />
+                            <Icon name={'arrow-long-left'} size={27} color={'#BDBDBD'} />
                         </View>
                     </TouchableOpacity>
                     <View style={styles.containerLogo}>
@@ -158,91 +158,90 @@ export default class CreateNewLocation extends Component {
                     <View style={styles.inputGroup}>
                         <View>
                             <Sae
-                              label={'Tên địa điểm'}
-                              labelStyle={{color: "#757575",fontWeight: ""}}
-                              inputStyle={{color: "#424242"}}
-                              autoCorrect={false}
-                              iconClass={FontAwesomeIcon}
-                              iconName={'pencil'}
-                              iconColor={'#2979FF'}
-                              returnKeyType={"next"}
-                              onChangeText={name => this.setState({ name })}
+                                label={'Tên địa điểm'}
+                                labelStyle={{ color: "#757575", fontWeight: "" }}
+                                inputStyle={{ color: "#424242" }}
+                                autoCorrect={false}
+                                iconClass={FontAwesomeIcon}
+                                iconName={'pencil'}
+                                iconColor={'#2979FF'}
+                                returnKeyType={"next"}
+                                onChangeText={name => this.setState({ name })}
                             />
                             <Sae
-                              label={'Số điện thoại'}
-                              labelStyle={{color: "#757575",fontWeight: ""}}
-                              inputStyle={{color: "#424242"}}
-                              autoCorrect={false}
-                              iconClass={FontAwesomeIcon}
-                              iconName={'pencil'}
-                              iconColor={'#2979FF'}
-                              keyboardType="numeric"
-                              returnKeyType={"next"}
-                              onChangeText={phoneNumber => this.setState({ phoneNumber })}
+                                label={'Số điện thoại'}
+                                labelStyle={{ color: "#757575", fontWeight: "" }}
+                                inputStyle={{ color: "#424242" }}
+                                autoCorrect={false}
+                                iconClass={FontAwesomeIcon}
+                                iconName={'pencil'}
+                                iconColor={'#2979FF'}
+                                keyboardType="numeric"
+                                returnKeyType={"next"}
+                                onChangeText={phoneNumber => this.setState({ phoneNumber })}
                             />
                             <Sae
-                              label={'Website'}
-                              labelStyle={{color: "#757575",fontWeight: ""}}
-                              inputStyle={{color: "#424242"}}
-                              autoCorrect={false}
-                              iconClass={FontAwesomeIcon}
-                              iconName={'pencil'}
-                              iconColor={'#2979FF'}
-                              returnKeyType={"next"}
-                              onChangeText={website => this.setState({ website })}
+                                label={'Website'}
+                                labelStyle={{ color: "#757575", fontWeight: "" }}
+                                inputStyle={{ color: "#424242" }}
+                                autoCorrect={false}
+                                iconClass={FontAwesomeIcon}
+                                iconName={'pencil'}
+                                iconColor={'#2979FF'}
+                                returnKeyType={"next"}
+                                onChangeText={website => this.setState({ website })}
                             />
                             <Sae
-                              label={'Số nhà + Tên đường'}
-                              labelStyle={{color: "#757575",fontWeight: ""}}
-                              inputStyle={{color: "#424242"}}
-                              autoCorrect={false}
-                              iconClass={FontAwesomeIcon}
-                              iconName={'pencil'}
-                              iconColor={'#2979FF'}
-                              returnKeyType={"next"}
-                              onChangeText={street => this.setState({ street })}
+                                label={'Số nhà + Tên đường'}
+                                labelStyle={{ color: "#757575", fontWeight: "" }}
+                                inputStyle={{ color: "#424242" }}
+                                autoCorrect={false}
+                                iconClass={FontAwesomeIcon}
+                                iconName={'pencil'}
+                                iconColor={'#2979FF'}
+                                returnKeyType={"next"}
+                                onChangeText={street => this.setState({ street })}
                             />
-                            {!this.state.ready?null:
-                            <View>
-                              <Picker
-                                selectedValue={this.state.city}
-                                style={styles.pickerStyle}
-                                onValueChange={(itemValue, itemIndex) => this.setState({city: itemValue,indexCity: itemIndex})}>
-                                {this.state.dataCities.map((e,i)=> {
-                                  return <Picker.Item label={e.name} value={e.name} />
-                                })}
-                              </Picker>
-                              <Picker
-                                selectedValue={this.state.district}
-                                style={styles.pickerStyle}
-                                onValueChange={(itemValue, itemIndex) => this.setState({district: itemValue, indexDistricts:itemIndex})}>
-                                {this.state.dataCities[this.state.indexCity].districts.map((e,i)=> {
-                                  return <Picker.Item label={e.name} value={e.name} />
-                                })}
-                              </Picker>
-                              <Picker
-                                selectedValue={this.state.ward}
-                                style={styles.pickerStyle}
-                                onValueChange={(itemValue, itemIndex) => this.setState({ward: itemValue})}>
-                                {this.state.dataCities[this.state.indexCity].districts[this.state.indexDistricts].wards.map((e,i)=> {
-                                  return <Picker.Item label={e.name} value={e.name} />
-                                })}
-                              </Picker>
-                            </View>
-                          }
+                            {!this.state.ready ? null :
+                                <View>
+                                    <Picker
+                                        selectedValue={this.state.city}
+                                        style={styles.pickerStyle}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ city: itemValue, indexCity: itemIndex })}>
+                                        {this.state.dataCities.map((e, i) => {
+                                            return <Picker.Item label={e.name} value={e.name} />
+                                        })}
+                                    </Picker>
+                                    <Picker
+                                        selectedValue={this.state.district}
+                                        style={styles.pickerStyle}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ district: itemValue, indexDistricts: itemIndex })}>
+                                        {this.state.dataCities[this.state.indexCity].districts.map((e, i) => {
+                                            return <Picker.Item label={e.name} value={e.name} />
+                                        })}
+                                    </Picker>
+                                    <Picker
+                                        selectedValue={this.state.ward}
+                                        style={styles.pickerStyle}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ ward: itemValue })}>
+                                        {this.state.dataCities[this.state.indexCity].districts[this.state.indexDistricts].wards.map((e, i) => {
+                                            return <Picker.Item label={e.name} value={e.name} />
+                                        })}
+                                    </Picker>
+                                </View>
+                            }
                         </View>
 
-                        <View style={{ marginTop: '3%' }}>
+                        <View>
                             <FlatList
                                 data={this.state.listUploadImage}
                                 horizontal={true}
                                 renderItem={({ item: rowData }) => {
                                     return (
-                                        <View style={styles.rowView}>
+                                        <View style={[styles.rowView, { borderWidth: 1 }]}>
                                             <Image
                                                 style={styles.imageUpload}
                                                 source={rowData.uri} />
-                                            <View style={styles.lineVertical} />
                                         </View>
                                     );
                                 }}
@@ -250,7 +249,7 @@ export default class CreateNewLocation extends Component {
                             />
 
                         </View>
-                        <View style={[styles.containerLogo]} >
+                        <View style={[styles.containerLogo, { marginTop: '3%' }]} >
                             <Button
                                 onPress={() => this.uploadPhoto()}
                                 title='Thêm hình'
@@ -316,7 +315,7 @@ export default class CreateNewLocation extends Component {
 }
 
 const styles = StyleSheet.create({
-  
+
     rowView: {
         flexDirection: 'row'
     },
@@ -344,7 +343,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         width: width,
-        backgroundColor:"white"
+        backgroundColor: "white"
     },
     text: {
         color: 'white',
@@ -355,18 +354,14 @@ const styles = StyleSheet.create({
         height: height * 0.001,
         marginTop: '3%'
     },
-    lineVertical: {
-        backgroundColor: 'black',
-        width: height * 0.005
-    },
     imageUpload: {
-        width: width * 0.35,
-        height: height * 0.2
+        width: width * 0.5,
+        height: height * 0.3
     },
-    pickerStyle: { 
-      height: 50, 
-      width: (width*90)/100, 
-      color:"#424242", 
-      alignSelf: "center", 
+    pickerStyle: {
+        height: 50,
+        width: (width * 90) / 100,
+        color: "#424242",
+        alignSelf: "center",
     }
 });
