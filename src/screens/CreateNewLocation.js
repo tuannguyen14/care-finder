@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Dimensions, ScrollView, FlatList, Picker } from "react-native";
-import { InputGroup, Input } from 'native-base';
-import { Button } from 'react-native-elements';
+import { Button, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
-import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import materialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-easy-toast'
 import { IPServer } from '../Server/IPServer.js';
-import { Sae } from 'react-native-textinput-effects';
-import axios from 'axios';
+import { Fumi } from 'react-native-textinput-effects';
+import Spinner from 'react-native-loading-spinner-overlay';
 let { width, height } = Dimensions.get("window");
-import { Dropdown } from 'react-native-material-dropdown';
 import { AppColors } from '../styles/AppColors.js';
 
 const ASPECT_RATIO = width / height;
@@ -36,7 +33,7 @@ export default class CreateNewLocation extends Component {
         this.state = {
             name: "Test",
             phoneNumber: "09020309",
-            website: "muahaha.com",
+            department: "muahaha.com",
             listUploadImage: [{
                 uri: require('../img/NoImageAvailable.png')
             }, {
@@ -53,18 +50,23 @@ export default class CreateNewLocation extends Component {
             indexCity: 0,
             indexDistricts: 0,
             ready: false,
-            street: ""
+            street: "",
+            spinner: false
         };
     }
 
     componentDidMount() {
-        this.fetchData();
+        this.setState({
+            spinner: !this.state.spinner
+        }, () => {
+            this.fetchData();
+        });
     }
 
     fetchData = async () => {
         const response = await fetch(IPServer.ip + '/city');
         const json = await response.json();
-        this.setState({ dataCities: json.doc, ready: true })
+        this.setState({ dataCities: json.doc, ready: true, spinner: !this.state.spinner });
     }
 
     uploadPhoto() {
@@ -97,14 +99,12 @@ export default class CreateNewLocation extends Component {
 
     createLocation = async () => {
         const body = new FormData();
-<<<<<<< HEAD
         let address = {};
         address.street = this.state.street;
         address.ward = this.state.ward;
         address.district = this.state.district;
         address.city = this.state.city;
-=======
->>>>>>> aa05cfa9cb6eefec412a941c0f61451003f1fb8c
+
         body.append('_idDoctor', '5b94ce2b6b34ae003a557c33')
         body.append('name', this.state.name);
         body.append('street', this.state.street);
@@ -144,106 +144,112 @@ export default class CreateNewLocation extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
-        console.log("aaa", this.state.dataCities[this.state.indexCity])
+
         return (
-            <ScrollView >
-                <View style={styles.backgroundImage}>
+            <ScrollView style={{ flex: 1, backgroundColor: AppColors.color }}>
+                <View style={styles.container}>
+                    <Spinner
+                        visible={this.state.spinner}
+                        textContent={'Đang xử lý'}
+                        textStyle={{ color: 'white' }}
+                    />
                     <TouchableOpacity onPress={() => navigate("RootDrawer")}>
                         <View style={styles.backButtonContainer}>
-                            <Icon name={'arrow-long-left'} size={27} color={'#BDBDBD'} />
+                            <Icon name={'arrow-long-left'} size={27} color={'white'} />
                         </View>
                     </TouchableOpacity>
-                    <View style={styles.containerLogo}>
-                        <Image
-                            source={require("../img/hospitalLogo.png")}
-                            style={styles.logo}
-                        />
-                    </View>
 
-                    <View style={styles.inputGroup}>
-                        <View>
-                            <Sae
+                    <View>
+                        <Text h4>Thông tin cơ bản</Text>
+                        <View style={{ alignItems: 'center' }}>
+                            <Fumi
+                                style={styles.fumi}
                                 label={'Tên địa điểm'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
                                 inputStyle={{ color: "#424242" }}
                                 autoCorrect={false}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'pencil'}
-                                iconColor={'#2979FF'}
+                                iconClass={materialCommunityIconsIcon}
+                                iconName={'hospital-building'}
+                                iconColor={AppColors.color}
                                 returnKeyType={"next"}
                                 onChangeText={name => this.setState({ name })}
                             />
-                            <Sae
+                            <Fumi
+                                style={styles.fumi}
                                 label={'Số điện thoại'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
                                 inputStyle={{ color: "#424242" }}
                                 autoCorrect={false}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'pencil'}
-                                iconColor={'#2979FF'}
+                                iconClass={materialCommunityIconsIcon}
+                                iconName={'phone'}
+                                iconColor={AppColors.color}
                                 keyboardType="numeric"
                                 returnKeyType={"next"}
                                 onChangeText={phoneNumber => this.setState({ phoneNumber })}
                             />
-                            <Sae
+                            <Fumi
+                                style={styles.fumi}
+                                label={'Số nhà + Tên đường'}
+                                labelStyle={{ color: "#757575", fontWeight: "" }}
+                                inputStyle={{ color: "#424242" }}
+                                autoCorrect={false}
+                                iconClass={materialCommunityIconsIcon}
+                                iconName={'map-marker'}
+                                iconColor={AppColors.color}
+                                returnKeyType={"next"}
+                                onChangeText={street => this.setState({ street })}
+                            />
+
+                            <Fumi
+                                style={styles.fumi}
                                 label={'Website'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
                                 inputStyle={{ color: "#424242" }}
                                 autoCorrect={false}
-                                iconClass={FontAwesomeIcon}
+                                iconClass={materialCommunityIconsIcon}
                                 iconName={'pencil'}
                                 iconColor={'#2979FF'}
                                 returnKeyType={"next"}
                                 onChangeText={website => this.setState({ website })}
                             />
-                            <Sae
-                                label={'Số nhà + Tên đường'}
-                                labelStyle={{ color: "#757575", fontWeight: "" }}
-                                inputStyle={{ color: "#424242" }}
-                                autoCorrect={false}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'pencil'}
-                                iconColor={'#2979FF'}
-                                returnKeyType={"next"}
-                                onChangeText={street => this.setState({ street })}
-                            />
-                            {!this.state.ready ? null :
-                                <View>
-                                    <Picker
-                                        selectedValue={this.state.city}
-                                        style={styles.pickerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ city: itemValue, indexCity: itemIndex })}>
-                                        {this.state.dataCities.map((e, i) => {
-                                            return <Picker.Item label={e.name} value={e.name} />
-                                        })}
-                                    </Picker>
-                                    <Picker
-                                        selectedValue={this.state.district}
-                                        style={styles.pickerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ district: itemValue, indexDistricts: itemIndex })}>
-                                        {this.state.dataCities[this.state.indexCity].districts.map((e, i) => {
-                                            return <Picker.Item label={e.name} value={e.name} />
-                                        })}
-                                    </Picker>
-                                    <Picker
-                                        selectedValue={this.state.ward}
-                                        style={styles.pickerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ ward: itemValue })}>
-                                        {this.state.dataCities[this.state.indexCity].districts[this.state.indexDistricts].wards.map((e, i) => {
-                                            return <Picker.Item label={e.name} value={e.name} />
-                                        })}
-                                    </Picker>
-                                </View>
-                            }
                         </View>
+                        {!this.state.ready ? null :
+                            <View style={{ marginTop: '3%' }}>
+                                <Text h4>Địa điểm</Text>
+                                <Picker
+                                    selectedValue={this.state.city}
+                                    style={styles.pickerStyle}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({ city: itemValue, indexCity: itemIndex })}>
+                                    {this.state.dataCities.map((e, i) => {
+                                        return <Picker.Item label={e.name} value={e.name} />
+                                    })}
+                                </Picker>
+                                <Picker
+                                    selectedValue={this.state.district}
+                                    style={styles.pickerStyle}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({ district: itemValue, indexDistricts: itemIndex })}>
+                                    {this.state.dataCities[this.state.indexCity].districts.map((e, i) => {
+                                        return <Picker.Item label={e.name} value={e.name} />
+                                    })}
+                                </Picker>
+                                <Picker
+                                    selectedValue={this.state.ward}
+                                    style={styles.pickerStyle}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({ ward: itemValue })}>
+                                    {this.state.dataCities[this.state.indexCity].districts[this.state.indexDistricts].wards.map((e, i) => {
+                                        return <Picker.Item label={e.name} value={e.name} />
+                                    })}
+                                </Picker>
+                            </View>
+                        }
 
-                        <View>
+                        <View style={{ borderWidth: 1 }}>
                             <FlatList
                                 data={this.state.listUploadImage}
                                 horizontal={true}
                                 renderItem={({ item: rowData }) => {
                                     return (
-                                        <View style={[styles.rowView, { borderWidth: 1 }]}>
+                                        <View style={[styles.rowView]}>
                                             <Image
                                                 style={styles.imageUpload}
                                                 source={rowData.uri} />
@@ -254,110 +260,64 @@ export default class CreateNewLocation extends Component {
                             />
 
                         </View>
-                        <View style={[styles.containerLogo, { marginTop: '3%' }]} >
-                            <Button
-                                onPress={() => this.uploadPhoto()}
-                                title='Thêm hình'
-                                buttonStyle={{
-                                    backgroundColor: AppColors.color,
-                                    width: 150,
-                                    height: 30,
-                                    borderColor: "transparent",
-                                    borderWidth: 0,
-                                    borderRadius: 5,
-                                }}
-                            />
+                        <View style={{ alignItems: 'center' }}>
+                            <View style={[styles.containerLogo, { marginTop: '3%' }]} >
+                                <Button
+                                    onPress={() => this.uploadPhoto()}
+                                    title='Thêm hình'
+                                    textStyle={{ color: AppColors.color }}
+                                    buttonStyle={{
+                                        backgroundColor: 'white',
+                                        width: 150,
+                                        height: 30,
+                                        borderColor: "transparent",
+                                        borderWidth: 0,
+                                        borderRadius: 5,
+                                    }}
+                                />
+                            </View>
+                            <View style={styles.buttonGroup}>
+                                <Button
+                                    onPress={() => this.createLocation()}
+                                    title='Thêm địa điểm'
+                                    textStyle={{ color: AppColors.color }}
+                                    buttonStyle={{
+                                        backgroundColor: 'white',
+                                        width: 300,
+                                        height: 45,
+                                        borderColor: "transparent",
+                                        borderWidth: 0,
+                                        borderRadius: 5,
+                                    }}
+                                />
+                            </View>
                         </View>
-                        <View style={styles.buttonGroup}>
-                            <Button
-                                onPress={() => this.createLocation()}
-                                title='Thêm địa điểm'
-                                buttonStyle={{
-                                    backgroundColor: AppColors.color,
-                                    width: 300,
-                                    height: 45,
-                                    borderColor: "transparent",
-                                    borderWidth: 0,
-                                    borderRadius: 5,
-                                }}
-                            />
-                        </View>
                     </View>
-                    <View style={[styles.containerLogo]} >
-                        <Button
-                            onPress={() => this.uploadPhoto()}
-                            title='Thêm hình'
-                            buttonStyle={{
-                                backgroundColor: "#E57373",
-                                width: 150,
-                                height: 30,
-                                borderColor: "transparent",
-                                borderWidth: 0,
-                                borderRadius: 5,
-                            }}
-                        />
-                    </View>
-                    <View style={styles.buttonGroup}>
-                        <Button
-                            onPress={() => this.createLocation()}
-                            title='Thêm địa điểm'
-                            buttonStyle={{
-                                backgroundColor: "#E57373",
-                                width: 300,
-                                height: 45,
-                                borderColor: "transparent",
-                                borderWidth: 0,
-                                borderRadius: 5,
-                            }}
-                        />
-                    </View>
-
                     <Toast ref="toast" />
                 </View >
-            </ScrollView>
+            </ScrollView >
         );
     }
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        marginLeft: "6.2%",
+        marginRight: "6.2%"
+    },
     rowView: {
         flexDirection: 'row'
     },
     backButtonContainer: {
-        marginLeft: "5%",
-        marginTop: "1%"
-    },
-    inputGroup: {
-        marginLeft: "6.2%",
-        marginRight: "6.2%",
-    },
-    containerLogo: {
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    logo: {
-        width: 100,
-        height: 100,
-        marginBottom: '10%'
+        marginTop: "5%"
     },
     buttonGroup: {
-        marginTop: "7%",
-        marginLeft: "4%",
+        marginTop: '7%',
         marginBottom: '30%'
-    },
-    backgroundImage: {
-        width: width,
-        backgroundColor: "white"
     },
     text: {
         color: 'white',
         fontSize: 18
-    },
-    line: {
-        backgroundColor: '#E0E0E0',
-        height: height * 0.001,
-        marginTop: '3%'
     },
     imageUpload: {
         width: width * 0.5,
@@ -368,5 +328,11 @@ const styles = StyleSheet.create({
         width: (width * 90) / 100,
         color: "#424242",
         alignSelf: "center",
+    },
+    fumi: {
+        width: width * 0.9,
+        height: 70,
+        borderRadius: 100,
+        marginTop: '1%'
     }
 });

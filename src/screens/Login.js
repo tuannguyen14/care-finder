@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity } from "react-native";
+import { Dimensions, View, StyleSheet, ImageBackground, Image, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Entypo';
-import { InputGroup, Input } from 'native-base';
-import { CheckBox, Button } from 'react-native-elements';
+import { Text } from 'react-native-elements';
+import { Fumi } from 'react-native-textinput-effects';
 import axios from 'axios';
 import Toast from 'react-native-easy-toast'
+// import Register from './Register':
+import AwesomeButton from 'react-native-really-awesome-button';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 
 var jwtDecode = require('jwt-decode');
+
+let { width, height } = Dimensions.get("window");
 
 export default class Login extends Component {
     constructor(props) {
@@ -17,43 +22,54 @@ export default class Login extends Component {
             email: "tuan123@gmail.com",
             password: "admin123",
             checkedDoctor: true,
-            checkedUser: false
+            checkedUser: false,
+            tabLogicColor: 'white',
+            tabRegisterColor: AppColors.color,
+            isLoginOrRegister: false,
+            spinner: false
         }
     }
 
     login = async () => {
-        const body = {
-            email: this.state.email,
-            password: this.state.password,
-        }
-        axios.post(IPServer.ip + '/login', body, {
-            headers: {
-                'Content-Type': 'application/json',
+        this.setState({
+            spinner: !this.state.spinner
+        }, () => {
+            const body = {
+                email: this.state.email,
+                password: this.state.password,
             }
-        })
-            .then(response => {
-                global.token = response.data.token;
-                if (this.state.checkedDoctor) {
-                    global.doctor = true;
+            axios.post(IPServer.ip + '/login', body, {
+                headers: {
+                    'Content-Type': 'application/json',
                 }
+            })
+                .then(response => {
+                    global.token = response.data.token;
+                    if (this.state.checkedDoctor) {
+                        global.doctor = true;
+                    }
 
-                axios.get(IPServer.ip + '/me', {
-                    headers: {
-                        "Authorization": `Bearer ${global.token}`
-                    },
-                }).then(response => {
-                    let objectUser = response.data;
-                    objectUser.userId = jwtDecode(global.token).userId;
-                    global.user = objectUser;
+                    axios.get(IPServer.ip + '/me', {
+                        headers: {
+                            "Authorization": `Bearer ${global.token}`
+                        },
+                    }).then(response => {
+                        let objectUser = response.data;
+                        objectUser.userId = jwtDecode(global.token).userId;
+                        global.user = objectUser;
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                    this.setState({
+                        spinner: !this.state.spinner
+                    }, () => {
+                        this.props.navigation.navigate("RootDrawer");
+                    });
                 }).catch(err => {
+                    this.refs.toast.show('Đăng nhập thất bại');
                     console.log(err)
                 })
-
-                this.props.navigation.navigate("RootDrawer");
-            }).catch(err => {
-                this.refs.toast.show('Đăng nhập thất bại');
-                console.log(err)
-            })
+        });
     }
 
     render() {
@@ -61,81 +77,72 @@ export default class Login extends Component {
         return (
             // <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}>
             <View style={styles.container}>
-                <View style={styles.containerTypeUser}>
-                    <View style={styles.childContainerTypeUser}>
-                        <Image
-                            source={require("../img/boy.png")}
-                            style={styles.logo}
-                        />
-
-                        <CheckBox
-                            center
-                            title='Bệnh nhân'
-                            checkedIcon='check-circle-o'
-                            uncheckedIcon='circle-o'
-                            checked={this.state.checkedUser}
-                            onPress={() => this.setState({ checkedUser: !this.state.checkedUser, checkedDoctor: false })}
-                        />
-                    </View>
-                    <View style={styles.childContainerTypeUser}>
-                        <Image
-                            source={require("../img/doctor.png")}
-                            style={styles.logo}
-                        />
-                        <CheckBox
-                            center
-                            title='Bác sĩ'
-                            checkedIcon='check-circle-o'
-                            uncheckedIcon='circle-o'
-                            checked={this.state.checkedDoctor}
-                            onPress={() => this.setState({ checkedDoctor: !this.state.checkedDoctor, checkedUser: false })}
-                        />
-                    </View>
+                <Spinner
+                    visible={this.state.spinner}
+                    textContent={'Đang xử lý'}
+                    textStyle={{ color: 'white' }}
+                />
+                <View style={styles.containerLogo}>
+                    <Text h1 style={styles.logo}>Care Finder</Text>
+                </View>
+                {/* <View style={[styles.rowView]} >
+                    <TouchableOpacity style={[styles.tabContainer, { borderBottomColor: this.state.tabLogicColor }]} onPress={() => this.setState({ tabRegisterColor: AppColors.color, tabLogicColor: 'white' })}>
+                        <Text h5>ĐĂNG NHẬP</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.tabContainer, { borderBottomColor: this.state.tabRegisterColor }]} onPress={() => this.setState({ tabRegisterColor: 'white', tabLogicColor: AppColors.color })}>
+                        <Text h5>ĐĂNG KÝ</Text>
+                    </TouchableOpacity>
+                </View> */}
+                {
+                }
+                <View style={[styles.rowView, { alignItems: 'center', marginBottom: '3%', marginTop: '1%' }]}>
+                    <View style={{ width: height * 0.15, borderBottomWidth: 1, marginRight: '1.5%', borderBottomColor: 'white' }} />
+                    <Text style={{ color: 'white', fontSize: 17 }}>Đăng nhập</Text>
+                    <View style={{ width: height * 0.15, borderBottomWidth: 1, marginLeft: '1.5%', borderBottomColor: 'white' }} />
                 </View>
                 <View style={styles.inputGroupContainer}>
-                    <InputGroup rounded style={styles.inputGroup}>
-                        <Icon name={'mail'} size={27} color={AppColors.color} style={styles.icon} />
-                        <Input
-                            style={{ color: "black", marginLeft: "3%" }}
-                            placeholder="Email"
-                            placeholderTextColor={AppColors.color}
-                            value={this.state.email}
-                            autoCorrect={false}
-                            keyboardType="email-address"
-                            onChangeText={email => this.setState({ email })}
-                            onSubmitEditing={() => { this.passWordInput._root.focus() }}
-                            returnKeyType={"next"}
-                        />
-                    </InputGroup>
-
-                    <InputGroup rounded style={[styles.inputGroup, { marginTop: '3%' }]}>
-                        <Icon name={'lock'} size={27} color={AppColors.color} style={styles.icon} />
-                        <Input
-                            style={{ color: "black", marginLeft: "3%" }}
-                            placeholder="Mật khẩu"
-                            placeholderTextColor={AppColors.color}
-                            value={this.state.password}
-                            secureTextEntry
-                            onChangeText={password => this.setState({ password })}
-                            ref={(input) => { this.passWordInput = input; }}
-                            autoCorrect={false} />
-                    </InputGroup>
+                    <Fumi
+                        style={styles.fumi}
+                        label={'Email'}
+                        labelStyle={{ color: "#757575", }}
+                        inputStyle={{ color: "#424242" }}
+                        autoCorrect={false}
+                        iconClass={Icon}
+                        iconName={'mail'}
+                        iconColor={AppColors.color}
+                        returnKeyType={"next"}
+                        iconSize={21}
+                        onChangeText={email => this.setState({ email })}
+                    />
+                    <Fumi
+                        secureTextEntry
+                        style={styles.fumi}
+                        label={'Mật khẩu'}
+                        labelStyle={{ color: "#757575", }}
+                        inputStyle={{ color: "#424242" }}
+                        autoCorrect={false}
+                        iconClass={Icon}
+                        iconName={'lock'}
+                        iconColor={AppColors.color}
+                        returnKeyType={"next"}
+                        iconSize={21}
+                        onChangeText={password => this.setState({ password })}
+                    />
                 </View>
                 <View style={styles.buttonGroup}>
-                    <Button
-                        title='Đăng nhập'
-                        buttonStyle={{
-                            backgroundColor: AppColors.color,
-                            width: 300,
-                            height: 45,
-                            borderColor: "transparent",
-                            borderWidth: 0,
-                            borderRadius: 5,
+                    <AwesomeButton
+                        width={width * 0.8}
+                        backgroundColor={'white'}
+                        borderRadius={7}
+                        onPress={(next) => {
+                            this.login();
+                            next();
                         }}
-                        onPress={() => this.login()}
-                    />
-                    <View style={styles.containerText}>
-                        <TouchableOpacity style={{ marginTop: "3%", marginLeft: "6%" }}>
+                        onPress={() => this.login()}>
+                        <Text>Đăng nhập</Text>
+                    </AwesomeButton>
+                    <View style={styles.rowView}>
+                        <TouchableOpacity style={{ marginTop: "3%" }}>
                             <Text style={{ color: "black" }} > Forgot password?</Text>
                         </TouchableOpacity>
                         <Text style={styles.text}>|</Text>
@@ -154,50 +161,53 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
-    },
-    containerTypeUser: {
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        marginLeft: '11%',
-        marginRight: '11%'
-    },
-    childContainerTypeUser: {
-        borderColor: AppColors.color,
+        backgroundColor: AppColors.color,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: '15%'
+    },
+    tabContainer: {
+        backgroundColor: AppColors.color,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 2,
+        flex: 1
+    },
+    containerLogo: {
+        alignItems: 'center',
+        marginBottom: '6%'
+    },
+    logo: {
+        color: 'white',
+        fontStyle: 'italic',
+        textShadowColor: 'rgba(0, 0, 0, 1)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 1,
+        fontSize: 60
+    },
+    rowView: {
+        flexDirection: 'row',
     },
     inputGroupContainer: {
         marginLeft: "15%",
-        marginRight: "15%",
-        marginTop: '10%'
-    },
-    containerText: {
-        flexDirection: 'row',
-    },
-    logo: {
-        width: 100,
-        height: 100,
+        marginRight: "15%"
     },
     buttonGroup: {
         marginTop: "7%",
-        marginLeft: "10%"
+        alignItems: 'center',
+        marginBottom: '25%'
     },
     text: {
         color: "white",
         marginLeft: "6%",
         marginTop: "3%"
     },
-    inputGroup: {
-        borderColor: AppColors.color,
-        borderBottomWidth: 1.5,
-        borderTopWidth: 1.5,
-        borderLeftWidth: 1.5,
-        borderRightWidth: 1.5
-    },
     icon: {
         marginLeft: '5%'
+    },
+    fumi: {
+        width: width * 0.8,
+        height: 70,
+        marginTop: '5%',
+        borderRadius: 100
     }
 });

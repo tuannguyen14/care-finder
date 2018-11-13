@@ -19,6 +19,7 @@ import { change_url_image } from '../utils/Utils';
 import axios from 'axios';
 const ImagePicker = require("react-native-image-picker");
 import { IPServer } from "../Server/IPServer.js";
+import Spinner from 'react-native-loading-spinner-overlay';
 const options = {
     title: "Chọn ảnh từ:",
     quality: 1,

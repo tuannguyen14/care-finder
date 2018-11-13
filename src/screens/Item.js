@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList } from "react-native";
 import { Header, Text, Rating } from 'react-native-elements';
 import { Container, Tab, Tabs } from 'native-base';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { AppColors } from '../styles/AppColors.js';
 import InformationItem from './InformationItem.js';
 import RatingItem from './RatingItem.js';
@@ -52,18 +53,26 @@ export default class Item extends Component {
                     <View style={[styles.line]} />
 
                     <View style={{ marginLeft: '1%' }}>
-                        <Text h3 style={{ color: 'black' }}>{this.state.item.name}</Text>
                         <View style={styles.rowView}>
-                            <Text>{ratingCount}</Text>
-                            <Rating
-                                type="heart"
-                                ratingCount={5}
-                                fractions={2}
-                                startingValue={ratingCount}
-                                imageSize={20}
-                                readonly
-                                style={{ marginLeft: '1%' }}
-                            />
+                            <View style={{ flex: 5 }}>
+                                <Text h4 style={{ color: 'black', fontWeight: 'bold' }}>{this.state.item.name}</Text>
+                                <View style={styles.rowView}>
+                                    <Text style={{ fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
+                                    <Rating
+                                        type="heart"
+                                        ratingCount={5}
+                                        fractions={2}
+                                        startingValue={this.state.item.totalRatingAvg}
+                                        imageSize={23}
+                                        readonly
+                                        style={{ marginLeft: '1%' }}
+                                    />
+                                </View>
+                                <Text style={{ fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                                <Icon name={'plussquare'} size={50} color={AppColors.color} />
+                            </View>
                         </View>
                     </View>
 

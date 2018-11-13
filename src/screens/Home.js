@@ -24,15 +24,12 @@ export default class Home extends Component {
       responseType: 'stream'
     })
       .then((response) => {
-        
-        let nearByData = response.data.doc.map((e,i) => {
-          let {street, ward, district, city} = e.address;
-          console.log(i, e)
+        let nearByData = response.data.doc.map((e, i) => {
+          let { street, ward, district, city } = e.address;
           let address = `${street}, ${ward}, ${district}, ${city}`
-          e.address =address
+          e.address = address
           return e
         })
-        console.log(nearByData)
         this.setState({
           nearByData
         })
@@ -71,7 +68,6 @@ export default class Home extends Component {
 
   render() {
     const { navigate } = this.props.navigation
-    console.log(this.state.nearByData)
     return (
       <ScrollView style={styles.container}>
         <Header
@@ -108,12 +104,12 @@ export default class Home extends Component {
             horizontal={true}
             renderItem={({ item: rowData }) => {
               return (
-                <TouchableOpacity onPress={() => this.openDetailItem(rowData)}>
+                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(rowData)}>
                   <View>
                     <Card
                       title={rowData.name}
                       image={{ uri: change_url_image(rowData.imageUrls[0]) }}
-                      imageStyle={styles.cardContainer}>
+                      imageStyle={styles.imageCard}>
                       <Text>
                         {rowData.address}
                       </Text>
@@ -143,13 +139,11 @@ export default class Home extends Component {
             horizontal={true}
             renderItem={({ item: rowData }) => {
               return (
-                <TouchableOpacity onPress={() => this.openDetailItem(rowData)}>
+                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(rowData)}>
                   <Card
-                    wrapperStyle={styles.cardWrapperStyle}
-                    containerStyle={{ padding: 0, backgroundColor: '#E0E0E0' }}
                     title={rowData.name}
                     image={{ uri: change_url_image(rowData.imageUrls[0]) }}
-                    imageStyle={styles.cardContainer}>
+                    imageStyle={styles.imageCard}>
                     <Text>
                       {rowData.address}
                     </Text>
@@ -179,7 +173,11 @@ const styles = StyleSheet.create({
     height: height * 0.01
   },
   cardContainer: {
-    width: width * 0.5,
+    width: width * 0.7,
+    height: height * 0.5
+  },
+  imageCard: {
+    width: '100%',
     height: height * 0.3
   },
   rowView: {

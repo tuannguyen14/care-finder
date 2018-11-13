@@ -17,6 +17,7 @@ export default class RatingItem extends Component {
         this.state = {
             user: global.user,
             item: this.props.item,
+            reviews: this.props.item.reviews,
             modalVisible: false,
             startingValueRating: 1,
             errorContentInput: false,
@@ -45,10 +46,6 @@ export default class RatingItem extends Component {
         // })
     }
 
-    ratingCompleted = async (rating) => {
-        this.setState({ startingValueRating: rating })
-    }
-
     onPostComment = async () => {
         if (this.state.contentPost == undefined || this.state.contentPost.length < 6) {
             this.setState({ errorContentInput: true });
@@ -69,7 +66,7 @@ export default class RatingItem extends Component {
                 }
             })
                 .then(response => {
-                    this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false });
+                    this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: this.state.reviews.push(body) });
                 }).catch(err => {
                     console.log(err)
                 });
@@ -77,13 +74,14 @@ export default class RatingItem extends Component {
     }
 
     createRatingoneToFive = () => {
-        let array = []
-        let arrayString = ['Vị trí', 'Giá cả', 'Thái độ', 'Dịch vụ']
-        for (let i = 1; i <= arrayString.length; i++) {
+        let array = [];
+        let arrayString = ['Vị trí', 'Giá cả', 'Dịch vụ', 'Thái độ'];
+        let i = 0;
+        for (element in this.state.item.ratingAvg) {
             array.push(
                 < View style={[styles.rowView]}>
                     <View style={[styles.rowView, { marginLeft: '3%', flex: 1 }]}>
-                        <Text h4 style={{ marginLeft: '3%' }}>{i}</Text>
+                        <Text h4 style={{ marginLeft: '3%' }}>{(this.state.item.ratingAvg[element] + "").includes('.') ? this.state.item.ratingAvg[element] : this.state.item.ratingAvg[element] + '.0'}</Text>
                         <View style={{ marginTop: '10%', marginLeft: '3%' }} >
                             <Icon name={'heart'} size={26} color={'#F44336'} />
                         </View>
@@ -91,7 +89,7 @@ export default class RatingItem extends Component {
                     <Rating
                         type="custom"
                         ratingImage={square}
-                        ratingCount={i * 2}
+                        ratingCount={this.state.item.ratingAvg[element] * 2}
                         fractions={0}
                         startingValue={10}
                         imageSize={26}
@@ -115,6 +113,10 @@ export default class RatingItem extends Component {
             }).catch(err => {
                 console.log(err)
             });
+    }
+
+    ratingCompleted = (rating) => {
+        this.setState({ startingValueRating: rating });
     }
 
     render() {
@@ -142,7 +144,7 @@ export default class RatingItem extends Component {
                             />
                             <Text h3 style={{ color: 'black' }}>Nguyễn Đức Tuấn</Text>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingLocation == 0 ? this.state.startingValueRating : this.state.ratingLocation}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingLocation}</Text>
                                 <Slider
                                     style={styles.sliderRating}
                                     value={this.state.ratingLocation == 0 ? this.state.startingValueRating : this.state.ratingLocation}
@@ -154,7 +156,7 @@ export default class RatingItem extends Component {
                                 <Text style={styles.nameTextSliderRating}>Vị trí</Text>
                             </View>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingPrice == 0 ? this.state.startingValueRating : this.state.ratingPrice}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingPrice}</Text>
                                 <Slider
                                     style={styles.sliderRating}
                                     value={this.state.ratingPrice == 0 ? this.state.startingValueRating : this.state.ratingPrice}
@@ -166,10 +168,10 @@ export default class RatingItem extends Component {
                                 <Text style={styles.nameTextSliderRating}>Giá cả</Text>
                             </View>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingAttitude == 0 ? this.state.startingValueRating : this.state.ratingAttitude}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingAttitude}</Text>
                                 <Slider
                                     style={styles.sliderRating}
-                                    value={this.state.ratingAttitude == 0 ? this.state.startingValueRating : this.state.ratingAttitude}
+                                    value={this.state.ratingAttitude}
                                     step={1}
                                     onValueChange={(ratingAttitude) => this.setState({ ratingAttitude })}
                                     minimumValue={1}
@@ -178,10 +180,10 @@ export default class RatingItem extends Component {
                                 <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thái độ</Text>
                             </View>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingQuality == 0 ? this.state.startingValueRating : this.state.ratingQuality}</Text>
+                                <Text style={styles.nameTextSliderRating}>{this.state.ratingQuality}</Text>
                                 <Slider
                                     style={styles.sliderRating}
-                                    value={this.state.ratingQuality == 0 ? this.state.startingValueRating : this.state.ratingQuality}
+                                    value={this.state.ratingQuality}
                                     step={1}
                                     onValueChange={(ratingQuality) => this.setState({ ratingQuality })}
                                     minimumValue={1}
@@ -233,8 +235,8 @@ export default class RatingItem extends Component {
                             ratingCount={5}
                             fractions={0}
                             startingValue={this.state.startingValueRating}
-                            onFinishRating={this.ratingCompleted}
                             imageSize={40}
+                            onFinishRating={this.ratingCompleted}
                             style={{ marginLeft: '1%' }}
                         />
                         <Button
@@ -247,7 +249,7 @@ export default class RatingItem extends Component {
                                 borderWidth: 0,
                                 borderRadius: 5
                             }}
-                            onPress={() => this.setState({ modalVisible: !this.state.modalVisible })} />
+                            onPress={() => this.setState({ modalVisible: !this.state.modalVisible, ratingLocation: this.state.startingValueRating, ratingPrice: this.state.startingValueRating, ratingQuality: this.state.startingValueRating, ratingAttitude: this.state.startingValueRating })} />
                     </View>
                     <View style={[styles.line, { marginTop: '3%' }]} />
                 </View>
@@ -265,7 +267,7 @@ export default class RatingItem extends Component {
                             :
                             <FlatList
                                 style={{ marginBottom: '1%' }}
-                                data={this.state.item.reviews}
+                                data={this.state.reviews}
                                 renderItem={({ item: rowData, index }) => {
                                     this.getInformationUser(rowData._idUser);
                                     return (

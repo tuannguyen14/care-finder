@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity, Dimensions, ScrollView } from "react-native";
-import { InputGroup, Input, ListItem } from 'native-base';
-import { Button, CheckBox } from 'react-native-elements';
+import { View, StyleSheet, Text, Dimensions, ScrollView, TouchableOpacity } from "react-native";
+import { ListItem } from 'native-base';
+import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
+import { Fumi } from 'react-native-textinput-effects';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import AwesomeButton from 'react-native-really-awesome-button';
 import axios from 'axios';
 import Toast from 'react-native-easy-toast'
+import Spinner from 'react-native-loading-spinner-overlay';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 
@@ -23,144 +26,159 @@ export default class Register extends Component {
             male: false,
             female: false,
             showToast: false,
+            buttonProgress: false,
+            spinner: false
         }
     }
 
     register = async () => {
-        const body = {
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            phoneNumber: this.state.phoneNumber,
-            email: this.state.email,
-            password: this.state.password,
-            gender: this.state.male ? 'Nam' : 'Nữ'
-        }
-        console.log(body)
-        axios.post(IPServer.ip + '/register', body, {
-            headers: {
-                'Content-Type': 'application/json',
+        this.setState({
+            spinner: !this.state.spinner
+        }, () => {
+            const body = {
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                phoneNumber: this.state.phoneNumber,
+                email: this.state.email,
+                password: this.state.password,
+                gender: this.state.male ? 'Nam' : 'Nữ'
             }
-        })
-            .then(response => {
-                this.refs.toast.show('Đăng ký thành công');
-                this.timeoutHandle = setTimeout(() => {
-                    let user = response.data.createdUser;
-                    this.props.navigation.navigate('VerifyScreen', { user });
-                }, 1000)
-                console.log(response)
-            }).catch(err => {
-                this.refs.toast.show('Đăng ký thất bại');
-                console.log(err)
+            console.log(body)
+            axios.post(IPServer.ip + '/register', body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             })
+                .then(response => {
+                    this.refs.toast.show('Đăng ký thành công');
+                    this.setState({
+                        spinner: !this.state.spinner
+                    }, () => {
+                        this.timeoutHandle = setTimeout(() => {
+                            let user = response.data.createdUser;
+                            this.props.navigation.navigate('VerifyScreen', { user });
+                        }, 1000)
+                    });
+                }).catch(err => {
+                    this.refs.toast.show('Đăng ký thất bại');
+                    console.log(err)
+                })
+        });
     }
 
     render() {
         const { goBack } = this.props.navigation;
         return (
             <ScrollView style={styles.container}>
+                <Spinner
+                    visible={this.state.spinner}
+                    textContent={'Đang xử lý'}
+                    textStyle={{ color: 'white' }}
+                />
                 {/* <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}> */}
-                <View>
-                    <TouchableOpacity onPress={() => goBack()}>
-                        <View style={styles.backButtonContainer}>
-                            <Icon name={'arrow-long-left'} size={27} color={AppColors.color} />
-                        </View>
-                    </TouchableOpacity>
-                    {/* <View style={styles.containerLogo}>
-                        <Image
-                            source={require("../img/hospitalLogo.png")}
-                            style={styles.logo}
+                <TouchableOpacity onPress={() => goBack()}>
+                    <View style={styles.backButtonContainer}>
+                        <Icon name={'arrow-long-left'} size={27} color={'white'} />
+                    </View>
+                </TouchableOpacity>
+                <View style={{ alignItems: 'center' }}>
+                    <View style={[styles.rowView, { alignItems: 'center', marginBottom: '3%' }]}>
+                        <View style={{ width: height * 0.15, borderBottomWidth: 1, marginRight: '1.5%', borderBottomColor: 'white' }} />
+                        <Text style={{ color: 'white', fontSize: 17 }}>Đăng ký</Text>
+                        <View style={{ width: height * 0.15, borderBottomWidth: 1, marginLeft: '1.5%', borderBottomColor: 'white' }} />
+                    </View>
+                    <View >
+                        <Fumi
+                            style={styles.fumi}
+                            label={'Họ'}
+                            labelStyle={{ color: "#757575", }}
+                            inputStyle={{ color: "#424242" }}
+                            autoCorrect={false}
+                            iconClass={Icon}
+                            iconName={'user'}
+                            iconColor={AppColors.color}
+                            returnKeyType={"next"}
+                            iconSize={21}
+                            onChangeText={lastName => this.setState({ lastName })}
                         />
-                    </View> */}
-                    <View style={styles.inputGroupContainer}>
-                        <InputGroup style={[styles.inputGroup]}>
-                            <Icon name={'user'} size={27} color={AppColors.color} style={styles.icon} />
-                            <Input
-                                style={{ color: "black", marginLeft: "3%" }}
-                                placeholder="Họ"
-                                placeholderTextColor="rgba(255,255,255,255)"
-                                autoCorrect={false}
-                                onChangeText={lastName => this.setState({ lastName })}
-                                value={this.state.lastName}
-                                returnKeyType={"next"}
-                                onSubmitEditing={() => { this.emailInput._root.focus() }} />
-                        </InputGroup>
-                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
-                            <Icon name={'user'} size={27} color={AppColors.color} style={styles.icon} />
-                            <Input
-                                style={{ color: "black", marginLeft: "3%" }}
-                                placeholder="Tên"
-                                placeholderTextColor="rgba(255,255,255,255)"
-                                autoCorrect={false}
-                                onChangeText={firstName => this.setState({ firstName })}
-                                value={this.state.firstName}
-                                returnKeyType={"next"}
-                                onSubmitEditing={() => { this.emailInput._root.focus() }} />
-                        </InputGroup>
 
-                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
-                            <Icon name={'mail'} size={27} color={AppColors.color} style={styles.icon} />
-                            <Input
-                                style={{ color: "black", marginLeft: "3%" }}
-                                placeholder="Email"
-                                placeholderTextColor={AppColors.color}
-                                autoCorrect={false}
-                                onChangeText={email => this.setState({ email })}
-                                value={this.state.email}
-                                ref={(input) => { this.emailInput = input; }}
-                                keyboardType="email-address"
-                                returnKeyType={"next"}
-                                onSubmitEditing={() => { this.passwordInput._root.focus() }} />
-                        </InputGroup>
+                        <Fumi
+                            style={styles.fumi}
+                            label={'Tên'}
+                            labelStyle={{ color: "#757575", }}
+                            inputStyle={{ color: "#424242" }}
+                            autoCorrect={false}
+                            iconClass={Icon}
+                            iconName={'user'}
+                            iconColor={AppColors.color}
+                            returnKeyType={"next"}
+                            iconSize={21}
+                            onChangeText={firstName => this.setState({ firstName })}
+                        />
 
-                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
-                            <Icon name={'lock'} size={27} color={AppColors.color} style={styles.icon} />
-                            <Input
-                                style={{ color: "black", marginLeft: "3%" }}
-                                placeholder="Mật khẩu"
-                                secureTextEntry
-                                placeholderTextColor={AppColors.color}
-                                onChangeText={password => this.setState({ password })}
-                                value={this.state.password}
-                                autoCorrect={false}
-                                ref={(input) => { this.passwordInput = input; }}
-                                returnKeyType={"next"}
-                                onSubmitEditing={() => { this.submitPasswordInput._root.focus() }} />
-                        </InputGroup>
+                        <Fumi
+                            style={styles.fumi}
+                            label={'Email'}
+                            labelStyle={{ color: "#757575", }}
+                            inputStyle={{ color: "#424242" }}
+                            autoCorrect={false}
+                            iconClass={Icon}
+                            iconName={'mail'}
+                            iconColor={AppColors.color}
+                            returnKeyType={"next"}
+                            iconSize={21}
+                            onChangeText={email => this.setState({ email })}
+                        />
 
-                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
-                            <Icon name={'lock'} size={27} color={AppColors.color} style={styles.icon} />
-                            <Input
-                                style={{ color: "black", marginLeft: "3%" }}
-                                placeholder="Xác nhận mật khẩu"
-                                secureTextEntry
-                                placeholderTextColor={AppColors.color}
-                                onChangeText={confirmPassword => this.setState({ confirmPassword })}
-                                value={this.state.confirmPassword}
-                                autoCorrect={false}
-                                ref={(input) => { this.submitPasswordInput = input; }}
-                                returnKeyType={"next"}
-                                onSubmitEditing={() => { this.phoneNumberInput._root.focus() }} />
-                        </InputGroup>
+                        <Fumi
+                            style={styles.fumi}
+                            label={'Mật khẩu'}
+                            labelStyle={{ color: "#757575", }}
+                            inputStyle={{ color: "#424242" }}
+                            autoCorrect={false}
+                            iconClass={Icon}
+                            iconName={'lock'}
+                            iconColor={AppColors.color}
+                            returnKeyType={"next"}
+                            iconSize={21}
+                            secureTextEntry
+                            onChangeText={password => this.setState({ password })}
+                        />
 
-                        <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]}>
-                            <Icon name={'phone'} size={27} color={AppColors.color} style={styles.icon} />
-                            <Input
-                                style={{ color: "black", marginLeft: "3%" }}
-                                placeholder="Số điện thoại"
-                                placeholderTextColor={AppColors.color}
-                                onChangeText={phoneNumber => this.setState({ phoneNumber })}
-                                value={this.state.phoneNumber}
-                                keyboardType="numeric"
-                                autoCorrect={false}
-                                ref={(input) => { this.phoneNumberInput = input; }}
-                                returnKeyType={"next"}
-                            />
-                        </InputGroup>
+                        <Fumi
+                            style={styles.fumi}
+                            label={'Xác nhận mật khẩu'}
+                            labelStyle={{ color: "#757575", }}
+                            inputStyle={{ color: "#424242" }}
+                            autoCorrect={false}
+                            iconClass={Icon}
+                            iconName={'lock'}
+                            iconColor={AppColors.color}
+                            returnKeyType={"next"}
+                            iconSize={21}
+                            secureTextEntry
+                            onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                        />
+
+                        <Fumi
+                            style={styles.fumi}
+                            label={'Số điện thoại'}
+                            labelStyle={{ color: "#757575", }}
+                            inputStyle={{ color: "#424242" }}
+                            autoCorrect={false}
+                            iconClass={Icon}
+                            iconName={'phone'}
+                            iconColor={AppColors.color}
+                            returnKeyType={"next"}
+                            iconSize={21}
+                            secureTextEntry
+                            onChangeText={phoneNumber => this.setState({ phoneNumber })}
+                        />
                     </View>
 
                     <View style={styles.containerGender}>
                         <ListItem>
-                            <IconFontAwesome name={'male'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
+                            <IconFontAwesome name={'male'} size={27} color={'white'} style={{ marginLeft: "3%" }} />
                             <CheckBox
                                 center
                                 title='Nam'
@@ -171,7 +189,7 @@ export default class Register extends Component {
                                 onPress={() => this.setState({ male: !this.state.male, female: false })}
                             />
 
-                            <IconFontAwesome name={'female'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
+                            <IconFontAwesome name={'female'} size={27} color={'white'} style={{ marginLeft: "3%" }} />
                             <CheckBox
                                 center
                                 title='Nữ'
@@ -184,20 +202,15 @@ export default class Register extends Component {
                         </ListItem>
                     </View>
 
-                    <View style={styles.buttonGroup}>
-                        <Button
-                            onPress={() => this.register()}
-                            title='Đăng ký'
-                            buttonStyle={{
-                                backgroundColor: AppColors.color,
-                                width: 300,
-                                height: 45,
-                                borderColor: "transparent",
-                                borderWidth: 0,
-                                borderRadius: 5,
-                            }}
-                        />
-                    </View>
+                    <AwesomeButton
+                        style={{ marginBottom: '1.5 %' }}
+                        width={width * 0.8}
+                        backgroundColor={'white'}
+                        borderRadius={7}
+                        progress={this.state.buttonProgress}
+                        onPress={() => this.register()}>
+                        <Text>Đăng ký</Text>
+                    </AwesomeButton>
                 </View>
                 <Toast ref="toast" />
                 {/* </ImageBackground > */}
@@ -209,29 +222,25 @@ export default class Register extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: AppColors.color,
     },
     backButtonContainer: {
         margin: "5%"
     },
-    inputGroupContainer: {
-        marginLeft: "15%",
-        marginRight: "15%"
-    },
     containerLogo: {
-        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        marginBottom: '6%'
+    },
+    rowView: {
+        flexDirection: 'row'
     },
     logo: {
-        width: 100,
-        height: 100,
-        marginBottom: '10%'
-    },
-    buttonGroup: {
-        marginTop: "7%",
-        marginLeft: "10%",
-        marginBottom: '30%'
+        color: 'white',
+        fontStyle: 'italic',
+        textShadowColor: 'rgba(0, 0, 0, 1)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 1,
+        fontSize: 60
     },
     backgroundImage: {
         width: width,
@@ -241,11 +250,10 @@ const styles = StyleSheet.create({
         marginLeft: "10%",
         marginRight: "15%"
     },
-    inputGroup: {
-        borderColor: '#BDBDBD',
-        borderBottomWidth: 1.5
-    },
-    icon: {
-        marginLeft: '5%'
+    fumi: {
+        width: width * 0.8,
+        height: 70,
+        marginTop: '5%',
+        borderRadius: 100
     }
 });
