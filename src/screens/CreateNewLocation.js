@@ -160,13 +160,6 @@ export default class CreateNewLocation extends Component {
         });
     }
 
-    getAllCities = () => {
-        const a = this.state.dataCities.map((e, i) => {
-            conso
-            return { value: e.name }
-        })
-    }
-
     render() {
         const { navigate } = this.props.navigation;
         const selectedItems = this.state.selectedItems;
