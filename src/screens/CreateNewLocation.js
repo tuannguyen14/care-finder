@@ -9,6 +9,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import Spinner from 'react-native-loading-spinner-overlay';
 let { width, height } = Dimensions.get("window");
 import { AppColors } from '../styles/AppColors.js';
+import MultiSelect from 'react-native-multiple-select';
 
 const ASPECT_RATIO = width / height;
 const LATITUDE = 0;
@@ -41,6 +42,7 @@ export default class CreateNewLocation extends Component {
             }, {
                 uri: require('../img/NoImageAvailable.png')
             }],
+            website: "",
             dataCities: [],
             dataDistricts: [],
             dataWards: [],
@@ -51,10 +53,15 @@ export default class CreateNewLocation extends Component {
             indexDistricts: 0,
             ready: false,
             street: "",
-            spinner: false
+            spinner: false,
+            selectedItems : [],
+            departments:[],
+            items: []
         };
+        
     }
 
+    
     componentDidMount() {
         this.setState({
             spinner: !this.state.spinner
@@ -63,10 +70,25 @@ export default class CreateNewLocation extends Component {
         });
     }
 
+    onSelectedItemsChange = selectedItems => {
+      const departments = selectedItems.map((e,i) => {
+        return this.state.items.find(x => x.id === e).name
+      })
+      this.setState({ selectedItems, departments });
+    };
+  
+
     fetchData = async () => {
         const response = await fetch(IPServer.ip + '/city');
         const json = await response.json();
-        this.setState({ dataCities: json.doc, ready: true, spinner: !this.state.spinner });
+        const responseDepartment = await fetch(IPServer.ip + '/department')
+        const jsonDepartment = await responseDepartment.json();
+        const departmentItems = jsonDepartment.doc.map((e,i) => {
+          const {_id, name} = e;
+          return {id:_id, name}
+        })
+        console.log(departmentItems)
+        this.setState({ dataCities: json.doc,items: departmentItems, ready: true, spinner: !this.state.spinner });
     }
 
     uploadPhoto() {
@@ -111,8 +133,11 @@ export default class CreateNewLocation extends Component {
         body.append('ward', this.state.ward);
         body.append('district', this.state.district);
         body.append('city', this.state.city);
-        body.append('departments', this.state.departments);
+        body.append('website', this.state.website)
         body.append('phoneNumber', this.state.phoneNumber);
+        this.state.departments.forEach(e => {
+          body.append('departments', e)
+        })
         this.state.listUploadImage.map(e => {
             body.append('imageUrls', {
                 uri: Object.values(e.uri)[0],
@@ -144,9 +169,10 @@ export default class CreateNewLocation extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
+        const selectedItems = this.state.selectedItems;
 
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: AppColors.color }}>
+            <ScrollView style={{flex:1, backgroundColor: AppColors.color }}>
                 <View style={styles.container}>
                     <Spinner
                         visible={this.state.spinner}
@@ -189,19 +215,6 @@ export default class CreateNewLocation extends Component {
                             />
                             <Fumi
                                 style={styles.fumi}
-                                label={'Số nhà + Tên đường'}
-                                labelStyle={{ color: "#757575", fontWeight: "" }}
-                                inputStyle={{ color: "#424242" }}
-                                autoCorrect={false}
-                                iconClass={materialCommunityIconsIcon}
-                                iconName={'map-marker'}
-                                iconColor={AppColors.color}
-                                returnKeyType={"next"}
-                                onChangeText={street => this.setState({ street })}
-                            />
-
-                            <Fumi
-                                style={styles.fumi}
                                 label={'Website'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
                                 inputStyle={{ color: "#424242" }}
@@ -211,6 +224,18 @@ export default class CreateNewLocation extends Component {
                                 iconColor={'#2979FF'}
                                 returnKeyType={"next"}
                                 onChangeText={website => this.setState({ website })}
+                            />
+                            <Fumi
+                                style={styles.fumi}
+                                label={'Số nhà + Tên đường'}
+                                labelStyle={{ color: "#757575", fontWeight: "" }}
+                                inputStyle={{ color: "#424242" }}
+                                autoCorrect={false}
+                                iconClass={materialCommunityIconsIcon}
+                                iconName={'map-marker'}
+                                iconColor={AppColors.color}
+                                returnKeyType={"next"}
+                                onChangeText={street => this.setState({ street })}
                             />
                         </View>
                         {!this.state.ready ? null :
@@ -240,6 +265,31 @@ export default class CreateNewLocation extends Component {
                                         return <Picker.Item label={e.name} value={e.name} />
                                     })}
                                 </Picker>
+                                <MultiSelect
+                                  hideTags
+                                  items={this.state.items}
+                                  uniqueKey="id"
+                                  ref={(component) => { this.multiSelect = component }}
+                                  onSelectedItemsChange={this.onSelectedItemsChange}
+                                  selectedItems={selectedItems}
+                                  selectText="Chuyên khoa"
+                                  searchInputPlaceholderText="Chọn chuyên khoa"
+                                  onChangeInput={ (text)=> console.log(text)}
+                                  altFontFamily="ProximaNova-Light"
+                                  tagRemoveIconColor="#CCC"
+                                  tagBorderColor="#CCC"
+                                  tagTextColor="#CCC"
+                                  selectedItemTextColor="#CCC"
+                                  selectedItemIconColor="#CCC"
+                                  itemTextColor="#000"
+                                  displayKey="name"
+                                  searchInputStyle={{ color: '#CCC' }}
+                                  submitButtonColor="#CCC"
+                                  submitButtonText="Submit"
+                                />
+                                <View>
+                                  {this.multiSelect && this.multiSelect.getSelectedItemsExt(selectedItems)}
+                                </View>
                             </View>
                         }
 
@@ -303,7 +353,9 @@ export default class CreateNewLocation extends Component {
 const styles = StyleSheet.create({
     container: {
         marginLeft: "6.2%",
-        marginRight: "6.2%"
+        marginRight: "6.2%",
+        flex: 1,
+        maxHeight: 3000
     },
     rowView: {
         flexDirection: 'row'
