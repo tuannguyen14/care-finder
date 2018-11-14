@@ -111,7 +111,7 @@ export default class CreateNewLocation extends Component {
         body.append('ward', this.state.ward);
         body.append('district', this.state.district);
         body.append('city', this.state.city);
-        body.append('department', this.state.website);
+        body.append('departments', this.state.departments);
         body.append('phoneNumber', this.state.phoneNumber);
         this.state.listUploadImage.map(e => {
             body.append('imageUrls', {
