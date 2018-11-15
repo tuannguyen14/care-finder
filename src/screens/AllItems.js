@@ -45,10 +45,10 @@ export default class AllItems extends Component {
               <ListItem
                 style={{ marginLeft: 0, marginTop: 0 }}
                 key={i}>
-                <View style={{ flex: 1 }}>
+                <TouchableOpacity style={{ flex: 1 }} onPress={() => this.props.navigation.navigate("ItemScreen", { item: l })}>
                   <View style={[styles.rowView, { marginLeft: '3%', marginBottom: '1%' }]}>
                     <ImageBackground style={styles.imageRating}>
-                      <Text style={{ color: 'white' }}>{(l.rating + "").includes('.') ? l.rating : l.rating + '.0'}</Text>
+                      <Text style={{ color: 'white' }}>{(l.totalRatingAvg + "").includes('.') ? l.totalRatingAvg : l.totalRatingAvg + '.0'}</Text>
                     </ImageBackground>
                     <View style={{ marginTop: '1%', marginLeft: '3%' }}>
                       <Text style={{ color: 'black' }}>{l.name}</Text>
@@ -78,7 +78,7 @@ export default class AllItems extends Component {
                     </View>
                   </View>
                   <View style={styles.bigLine}></View>
-                </View>
+                </TouchableOpacity>
               </ListItem>
             ))
           }

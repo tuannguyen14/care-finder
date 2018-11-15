@@ -26,24 +26,33 @@ export default class RatingItem extends Component {
             ratingPrice: 1,
             ratingQuality: 1,
             ratingAttitude: 1,
-            contentPost: 'Ngonnnn!',
+            contentPost: '',
             informationUserComment: []
         };
     }
 
     componentWillMount() {
-        // const list = [];
-        // for (let i = 0; i < 17; i++) {
-        //     list.push({
-        //         name: 'Amy Farha',
-        //         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-        //         subtitle: 'ngon' + i,
-        //         ratingCount: 5
-        //     });
-        // }
-        // this.setState({
-        //     listComments: list
-        // })
+        let arrayIdUserComment = [];
+        for (let id in this.state.reviews) { /// à lấy từng cái review ra xong lấy id rồi mới lấy thông tin user bằng id
+            axios.get(IPServer.ip + '/user/' + this.state.reviews[id]._idUser, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => {
+                    arrayIdUserComment.push(response.data.user);
+                }).catch(err => {
+                    console.log(err)
+                });
+        }
+        console.log(arrayIdUserComment)
+        this.setState({
+            informationUserComment: arrayIdUserComment
+        }, () => {
+            // for (let i in ) {
+            console.log(this.state.informationUserComment)
+            // }
+        })
     }
 
     onPostComment = async () => {
@@ -54,10 +63,10 @@ export default class RatingItem extends Component {
                 _idUser: this.state.user.userId,
                 content: this.state.contentPost,
                 rating: {
-                    'location': this.state.ratingLocation == 0 ? 1 : this.state.ratingLocation,
-                    'price': this.state.ratingPrice == 0 ? 1 : this.state.ratingPrice,
-                    'quality': this.state.ratingQuality == 0 ? 1 : this.state.ratingQuality,
-                    'attitude': this.state.ratingAttitude == 0 ? 1 : this.state.ratingAttitude
+                    'location': this.state.ratingLocation,
+                    'price': this.state.ratingPrice,
+                    'quality': this.state.ratingQuality,
+                    'attitude': this.state.ratingAttitude
                 }
             }
             axios.patch(IPServer.ip + '/location/comment/' + this.state.item._id, body, {
@@ -66,7 +75,9 @@ export default class RatingItem extends Component {
                 }
             })
                 .then(response => {
-                    this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: this.state.reviews.push(body) });
+                    let array = this.state.reviews;
+                    array.push(body);
+                    this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: array });
                 }).catch(err => {
                     console.log(err)
                 });
@@ -100,19 +111,6 @@ export default class RatingItem extends Component {
             )
         }
         return array;
-    }
-
-    getInformationUser(userId) {
-        return axios.get(IPServer.ip + '/user/' + userId, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => {
-                this.setState({ informationUserComment: response.data.user });
-            }).catch(err => {
-                console.log(err)
-            });
     }
 
     ratingCompleted = (rating) => {
@@ -259,47 +257,46 @@ export default class RatingItem extends Component {
                         <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
                     </View>
                     {
-                        this.state.item.reviews.length == 0
-                            ?
-                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <Text>Chưa có bình luận!</Text>
-                            </View>
-                            :
-                            <FlatList
-                                style={{ marginBottom: '1%' }}
-                                data={this.state.reviews}
-                                renderItem={({ item: rowData, index }) => {
-                                    this.getInformationUser(rowData._idUser);
-                                    return (
-                                        this.state.informationUserComment.avatar != undefined ?
-                                            <View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1, padding: '1%' }]}>
-                                                <View style={{ marginLeft: '3%' }}>
-                                                    <Avatar
-                                                        medium
-                                                        rounded
-                                                        source={{ uri: this.state.informationUserComment.avatar.includes('localhost') ? this.state.informationUserComment.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.informationUserComment.avatar }}
-                                                        onPress={() => console.log("Works!")}
-                                                        activeOpacity={0.7}
-                                                    />
-                                                </View>
-                                                <View style={{ marginLeft: '3%' }}>
-                                                    <Text style={{ fontWeight: 'bold' }}>{this.state.informationUserComment.firstName + ' ' + this.state.informationUserComment.lastName}</Text>
-                                                    < Rating
-                                                        type="heart"
-                                                        readonly
-                                                        ratingCount={5}
-                                                        fractions={2}
-                                                        startingValue={(rowData.rating.location + rowData.rating.price + rowData.rating.quality + rowData.rating.attitude) / 4}
-                                                        imageSize={21}
-                                                    />
-                                                    <Text>{rowData.content}</Text>
-                                                </View>
-                                            </View>
-                                            :
-                                            <View />
-                                    );
-                                }}
-                            />
+                        // this.state.reviews.length == 0
+                        //     ?
+                        //     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        //         <Text>Chưa có bình luận!</Text>
+                        //     </View>
+                        //     :
+                        //     <FlatList
+                        //         style={{ marginBottom: '1%' }}
+                        //         data={this.state.reviews}
+                        //         renderItem={({ item: rowData, index }) => {
+                        //             return (
+                        //                 this.state.informationUserComment[index].avatar != undefined ?
+                        //                     <View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1, padding: '1%' }]}>
+                        //                         <View style={{ marginLeft: '3%' }}>
+                        //                             <Avatar
+                        //                                 medium
+                        //                                 rounded
+                        //                                 source={{ uri: this.state.informationUserComment[index].avatar.includes('localhost') ? this.state.informationUserComment[index].avatar.replace('http://localhost:3000', IPServer.ip) : this.state.informationUserComment.avatar[index] }}
+                        //                                 onPress={() => console.log("Works!")}
+                        //                                 activeOpacity={0.7}
+                        //                             />
+                        //                         </View>
+                        //                         <View style={{ marginLeft: '3%' }}>
+                        //                             <Text style={{ fontWeight: 'bold' }}>{this.state.informationUserComment[index].firstName + ' ' + this.state.informationUserComment[index].lastName}</Text>
+                        //                             < Rating
+                        //                                 type="heart"
+                        //                                 readonly
+                        //                                 ratingCount={5}
+                        //                                 fractions={2}
+                        //                                 startingValue={(rowData.rating.location + rowData.rating.price + rowData.rating.quality + rowData.rating.attitude) / 4}
+                        //                                 imageSize={21}
+                        //                             />
+                        //                             <Text>{rowData.content}</Text>
+                        //                         </View>
+                        //                     </View>
+                        //                     :
+                        //                     <View />
+                        //             );
+                        //         }}
+                        //     />
                     }
                 </View>
             </ScrollView >

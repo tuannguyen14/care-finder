@@ -13,7 +13,8 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nearByData: []
+      recentInteractiveLocation: [],
+      bestLocation: []
     };
   }
 
@@ -24,16 +25,20 @@ export default class Home extends Component {
       responseType: 'stream'
     })
       .then((response) => {
-        let nearByData = response.data.doc.map((e, i) => {
+        let data = response.data.doc.map((e, i) => {
           let { street, ward, district, city } = e.address;
           let address = `${street}, ${ward}, ${district}, ${city}`
           e.address = address
           return e
         })
+        let dataBestRating = data;
+        console.log(dataBestRating)
+        dataBestRating.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg));
         this.setState({
-          nearByData
+          recentInteractiveLocation: data,
+          bestLocation: dataBestRating
         })
-        global.allLocations = response.data.doc;
+        global.allLocations = data;
       });
   }
 
@@ -90,6 +95,38 @@ export default class Home extends Component {
         <View style={styles.line} />
 
         <View style={{ flex: 1 }}>
+          <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
+            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Đánh giá cao</Text>
+            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => navigate("AllItemsScreen")}>
+              <Text h5>Thêm</Text>
+              <Icon name={'expand-more'} size={27} color={'black'} />
+            </TouchableOpacity>
+          </View>
+
+          <FlatList
+            data={this.state.bestLocation}
+            horizontal={true}
+            renderItem={({ item: rowData }) => {
+              return (
+                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(rowData)}>
+                  <Card
+                    title={rowData.name}
+                    image={{ uri: change_url_image(rowData.imageUrls[0]) }}
+                    imageStyle={styles.imageCard}>
+                    <Text>
+                      {rowData.address}
+                    </Text>
+                  </Card>
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+
+        <View style={{ width: width, height: 3, backgroundColor: '#BDBDBD', marginTop: '3%' }} />
+
+        <View style={{ width: width, height: height * 0.7, marginBottom: '10%' }}>
 
           <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
             <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Mới đây</Text>
@@ -98,9 +135,8 @@ export default class Home extends Component {
               <Icon name={'expand-more'} size={27} color={'black'} />
             </TouchableOpacity>
           </View>
-
           <FlatList
-            data={this.state.nearByData}
+            data={this.state.recentInteractiveLocation}
             horizontal={true}
             renderItem={({ item: rowData }) => {
               return (
@@ -115,39 +151,6 @@ export default class Home extends Component {
                       </Text>
                     </Card>
                   </View>
-                </TouchableOpacity>
-              );
-            }}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-
-        <View style={{ width: width, height: 3, backgroundColor: '#BDBDBD', marginTop: '3%' }} />
-
-        <View style={{ width: width, height: height * 0.7, marginBottom: '10%' }}>
-
-          <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
-            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Đánh giá cao</Text>
-            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => navigate("AllItemsScreen")}>
-              <Text h5>Thêm</Text>
-              <Icon name={'expand-more'} size={27} color={'black'} />
-            </TouchableOpacity>
-          </View>
-
-          <FlatList
-            data={this.state.nearByData}
-            horizontal={true}
-            renderItem={({ item: rowData }) => {
-              return (
-                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(rowData)}>
-                  <Card
-                    title={rowData.name}
-                    image={{ uri: change_url_image(rowData.imageUrls[0]) }}
-                    imageStyle={styles.imageCard}>
-                    <Text>
-                      {rowData.address}
-                    </Text>
-                  </Card>
                 </TouchableOpacity>
               );
             }}
