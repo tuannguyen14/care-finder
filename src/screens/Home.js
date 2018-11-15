@@ -32,7 +32,7 @@ export default class Home extends Component {
           return e
         })
         let dataBestRating = data;
-        console.log(dataBestRating)
+        console.log(dataBestRating)// tro lai file cu
         dataBestRating.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg));
         this.setState({
           recentInteractiveLocation: data,

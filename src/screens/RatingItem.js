@@ -45,7 +45,7 @@ export default class RatingItem extends Component {
                     console.log(err)
                 });
         }
-        console.log(arrayIdUserComment)
+        // console.log(arrayIdUserComment) nos điên ddeien vậy đó có khi ra ba cái co khi lan` dau no chua get du~ lieu xong [0] undefined do nó bị vậy đó ông coi bên này nè
         this.setState({
             informationUserComment: arrayIdUserComment
         }, () => {
