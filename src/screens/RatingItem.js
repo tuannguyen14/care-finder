@@ -33,26 +33,32 @@ export default class RatingItem extends Component {
 
     componentWillMount() {
         let arrayIdUserComment = [];
-        for (let id in this.state.reviews) { /// à lấy từng cái review ra xong lấy id rồi mới lấy thông tin user bằng id
-            axios.get(IPServer.ip + '/user/' + this.state.reviews[id]._idUser, {
+        let promises = [];
+        for (let id in this.state.reviews) {
+            promises.push(axios.get(IPServer.ip + '/user/' + this.state.reviews[id]._idUser, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
-            })
-                .then(response => {
-                    arrayIdUserComment.push(response.data.user);
-                }).catch(err => {
-                    console.log(err)
-                });
+            }))
         }
-        // console.log(arrayIdUserComment) nos điên ddeien vậy đó có khi ra ba cái co khi lan` dau no chua get du~ lieu xong [0] undefined do nó bị vậy đó ông coi bên này nè
-        this.setState({
-            informationUserComment: arrayIdUserComment
-        }, () => {
-            // for (let i in ) {
-            console.log(this.state.informationUserComment)
-            // }
-        })
+        Promise.all(promises)
+            .then((results) => {
+                results.forEach((e, i) => {
+                    arrayIdUserComment.push(e.data.user)
+                })
+                return arrayIdUserComment
+            }).then((array) => {
+                this.setState({
+                    informationUserComment: array
+                }, () => {
+                    console.log(this.state.informationUserComment[0])
+                })
+            })
+    }
+
+    onGetUser = (id) => {
+
+
     }
 
     onPostComment = async () => {
