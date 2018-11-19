@@ -4,6 +4,7 @@ import { Header, SearchBar, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import { change_url_image } from '../utils/Utils'
+import Spinner from 'react-native-loading-spinner-overlay';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 
@@ -14,32 +15,38 @@ export default class Home extends Component {
     super(props);
     this.state = {
       recentInteractiveLocation: [],
-      bestLocation: []
+      bestLocation: [],
+      spinner: false
     };
   }
 
   componentWillMount() {
-    axios({
-      method: 'get',
-      url: IPServer.ip + '/location',
-      responseType: 'stream'
-    })
-      .then((response) => {
-        let data = response.data.doc.map((e, i) => {
-          let { street, ward, district, city } = e.address;
-          let address = `${street}, ${ward}, ${district}, ${city}`
-          e.address = address
-          return e
-        })
-        let dataBestRating = data;
-        console.log(dataBestRating)// tro lai file cu
-        dataBestRating.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg));
-        this.setState({
-          recentInteractiveLocation: data,
-          bestLocation: dataBestRating
-        })
-        global.allLocations = data;
-      });
+    this.setState({
+      spinner: !this.state.spinner
+    }, () => {
+      axios({
+        method: 'get',
+        url: IPServer.ip + '/location',
+        responseType: 'stream'
+      })
+        .then((response) => {
+          let data = response.data.doc.map((e, i) => {
+            let { street, ward, district, city } = e.address;
+            let address = `${street}, ${ward}, ${district}, ${city}`
+            e.address = address
+            return e
+          })
+          const dataBestRating = data;
+
+          this.setState({
+            recentInteractiveLocation: data,
+            bestLocation: dataBestRating.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg)),
+            spinner: !this.state.spinner
+          })
+          global.navigate = this.props.navigation.navigate;
+          global.allLocations = data;
+        });
+    });
   }
 
   openDetailItem(rowData) {
@@ -80,6 +87,11 @@ export default class Home extends Component {
           backgroundColor={AppColors.color}
           leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
           centerComponent={{ text: 'Trang Chính', style: { color: '#fff', fontSize: 20 } }}
+        />
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Đang xử lý'}
+          textStyle={{ color: 'white' }}
         />
         <View style={styles.searchBarContainer}>
           <SearchBar

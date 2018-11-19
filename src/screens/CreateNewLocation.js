@@ -7,9 +7,11 @@ import Toast from 'react-native-easy-toast'
 import { IPServer } from '../Server/IPServer.js';
 import { Fumi } from 'react-native-textinput-effects';
 import Spinner from 'react-native-loading-spinner-overlay';
-let { width, height } = Dimensions.get("window");
+import MapView from 'react-native-maps';
 import { AppColors } from '../styles/AppColors.js';
 import MultiSelect from 'react-native-multiple-select';
+
+let { width, height } = Dimensions.get("window");
 
 const ASPECT_RATIO = width / height;
 const LATITUDE = 0;
@@ -54,41 +56,67 @@ export default class CreateNewLocation extends Component {
             ready: false,
             street: "",
             spinner: false,
-            selectedItems : [],
-            departments:[],
-            items: []
+            selectedItems: [],
+            departments: [],
+            items: [],
+            region: new MapView.AnimatedRegion({
+                latitude: LATITUDE,
+                longitude: LONGITUDE,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+            }),
+            marker: {
+                latitude: 0,
+                longitude: 0
+            }
         };
-        
+
     }
 
-    
-    componentDidMount() {
+
+    componentWillMount() {
         this.setState({
             spinner: !this.state.spinner
         }, () => {
             this.fetchData();
+            this.getCurrentLocation();
         });
     }
 
     onSelectedItemsChange = selectedItems => {
-      const departments = selectedItems.map((e,i) => {
-        return this.state.items.find(x => x.id === e).name
-      })
-      this.setState({ selectedItems, departments });
+        const departments = selectedItems.map((e, i) => {
+            return this.state.items.find(x => x.id === e).name
+        })
+        this.setState({ selectedItems, departments });
     };
-  
+
 
     fetchData = async () => {
         const response = await fetch(IPServer.ip + '/city');
         const json = await response.json();
         const responseDepartment = await fetch(IPServer.ip + '/department')
         const jsonDepartment = await responseDepartment.json();
-        const departmentItems = jsonDepartment.doc.map((e,i) => {
-          const {_id, name} = e;
-          return {id:_id, name}
+        const departmentItems = jsonDepartment.doc.map((e, i) => {
+            const { _id, name } = e;
+            return { id: _id, name }
         })
-        console.log(departmentItems)
-        this.setState({ dataCities: json.doc,items: departmentItems, ready: true, spinner: !this.state.spinner });
+        this.setState({ dataCities: json.doc, items: departmentItems, ready: true, spinner: !this.state.spinner });
+    }
+
+    getCurrentLocation() {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                this.setState({
+                    region: new MapView.AnimatedRegion({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA
+                    })
+                });
+            },
+            error => console.log(error.message),
+        );
     }
 
     uploadPhoto() {
@@ -114,49 +142,59 @@ export default class CreateNewLocation extends Component {
                 const uriTemp = { uri: response.uri };
                 listUploadImageTemp.push({ uri: uriTemp });
                 this.setState({ listUploadImage: listUploadImageTemp });
-                console.log(this.state.listUploadImage)
             }
         });
     }
 
     createLocation = async () => {
-        const body = new FormData();
-        let address = {};
-        address.street = this.state.street;
-        address.ward = this.state.ward;
-        address.district = this.state.district;
-        address.city = this.state.city;
+        this.setState({
+            spinner: !this.state.spinner
+        }, () => {
+            const body = new FormData();
+            let address = {};
+            address.street = this.state.street;
+            address.ward = this.state.ward;
+            address.district = this.state.district;
+            address.city = this.state.city;
 
-        body.append('_idDoctor', '5b94ce2b6b34ae003a557c33')
-        body.append('name', this.state.name);
-        body.append('street', this.state.street);
-        body.append('ward', this.state.ward);
-        body.append('district', this.state.district);
-        body.append('city', this.state.city);
-        body.append('website', this.state.website)
-        body.append('phoneNumber', this.state.phoneNumber);
-        this.state.departments.forEach(e => {
-          body.append('departments', e)
-        })
-        this.state.listUploadImage.map(e => {
-            body.append('imageUrls', {
-                uri: Object.values(e.uri)[0],
-                type: 'image/jpg',
-                name: 'image.jpg'
+            body.append('_idDoctor', global.user.userId);
+            body.append('name', this.state.name);
+            body.append('street', this.state.street);
+            body.append('ward', this.state.ward);
+            body.append('district', this.state.district);
+            body.append('city', this.state.city);
+            body.append('phoneNumber', this.state.phoneNumber);
+            this.state.departments.forEach(e => {
+                body.append('departments', e)
             })
-        })
-        console.log(body)
-        fetch(IPServer.ip + '/location', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }, body
-        }).then(response => {
-            this.refs.toast.show('Thành công');
-            global.allLocations.push()
-        }).catch(err => {
-            this.refs.toast.show('Thất bại');
-            console.log(err)
+            this.state.listUploadImage.map(e => {
+                body.append('imageUrls', {
+                    uri: Object.values(e.uri)[0],
+                    type: 'image/jpg',
+                    name: 'image.jpg'
+                })
+            })
+            fetch(IPServer.ip + '/location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }, body
+            }).then(response => {
+                this.refs.toast.show('Thành công');
+                global.allLocations.push(response);
+                this.setState({
+                    spinner: !this.state.spinner
+                })
+            }).catch(err => {
+                this.refs.toast.show('Thất bại');
+                console.log(err)
+            });
+        });
+    }
+
+    onMapPress(e) {
+        this.setState({
+            marker: e.nativeEvent.coordinate
         });
     }
 
@@ -165,7 +203,7 @@ export default class CreateNewLocation extends Component {
         const selectedItems = this.state.selectedItems;
 
         return (
-            <ScrollView style={{flex:1, backgroundColor: AppColors.color }}>
+            <ScrollView style={{ flex: 1, backgroundColor: AppColors.color }}>
                 <View style={styles.container}>
                     <Spinner
                         visible={this.state.spinner}
@@ -208,18 +246,6 @@ export default class CreateNewLocation extends Component {
                             />
                             <Fumi
                                 style={styles.fumi}
-                                label={'Website'}
-                                labelStyle={{ color: "#757575", fontWeight: "" }}
-                                inputStyle={{ color: "#424242" }}
-                                autoCorrect={false}
-                                iconClass={materialCommunityIconsIcon}
-                                iconName={'pencil'}
-                                iconColor={'#2979FF'}
-                                returnKeyType={"next"}
-                                onChangeText={website => this.setState({ website })}
-                            />
-                            <Fumi
-                                style={styles.fumi}
                                 label={'Số nhà + Tên đường'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
                                 inputStyle={{ color: "#424242" }}
@@ -230,9 +256,34 @@ export default class CreateNewLocation extends Component {
                                 returnKeyType={"next"}
                                 onChangeText={street => this.setState({ street })}
                             />
+
+                        </View>
+                        <View style={{ marginTop: '3%' }}>
+                            <MultiSelect
+                                hideTags
+                                items={this.state.items}
+                                uniqueKey="id"
+                                ref={(component) => { this.multiSelect = component }}
+                                onSelectedItemsChange={this.onSelectedItemsChange}
+                                selectedItems={selectedItems}
+                                selectText="Chuyên khoa"
+                                searchInputPlaceholderText="Chọn chuyên khoa"
+                                onChangeInput={(text) => console.log(text)}
+                                altFontFamily="ProximaNova-Light"
+                                tagRemoveIconColor="#0097A7"
+                                tagBorderColor="white"
+                                tagTextColor="#424242"
+                                selectedItemTextColor={AppColors.color}
+                                selectedItemIconColor="#CCC"
+                                itemTextColor="#000"
+                                displayKey="name"
+                                searchInputStyle={{ color: '#grey' }}
+                                submitButtonColor="#0097A7"
+                                submitButtonText="Đồng ý"
+                            />
                         </View>
                         {!this.state.ready ? null :
-                            <View style={{ marginTop: '3%' }}>
+                            <View>
                                 <Text h4>Địa điểm</Text>
                                 <Picker
                                     selectedValue={this.state.city}
@@ -258,53 +309,48 @@ export default class CreateNewLocation extends Component {
                                         return <Picker.Item label={e.name} value={e.name} />
                                     })}
                                 </Picker>
-                                <MultiSelect
-                                  hideTags
-                                  items={this.state.items}
-                                  uniqueKey="id"
-                                  ref={(component) => { this.multiSelect = component }}
-                                  onSelectedItemsChange={this.onSelectedItemsChange}
-                                  selectedItems={selectedItems}
-                                  selectText="Chuyên khoa"
-                                  searchInputPlaceholderText="Chọn chuyên khoa"
-                                  onChangeInput={ (text)=> console.log(text)}
-                                  altFontFamily="ProximaNova-Light"
-                                  tagRemoveIconColor="#CCC"
-                                  tagBorderColor="#CCC"
-                                  tagTextColor="#CCC"
-                                  selectedItemTextColor="#CCC"
-                                  selectedItemIconColor="#CCC"
-                                  itemTextColor="#000"
-                                  displayKey="name"
-                                  searchInputStyle={{ color: '#CCC' }}
-                                  submitButtonColor="#CCC"
-                                  submitButtonText="Submit"
-                                />
+
                                 <View>
-                                  {this.multiSelect && this.multiSelect.getSelectedItemsExt(selectedItems)}
+                                    {this.multiSelect && this.multiSelect.getSelectedItemsExt(selectedItems)}
                                 </View>
+
+                                <MapView
+                                    ref={(el) => (this.map = el)}
+                                    onPress={(e) => this.onMapPress(e)}
+                                    provider={this.props.provider}
+                                    style={styles.map}
+                                    initialRegion={this.state.region}
+                                    showsUserLocation={true}
+                                    loadingEnabled={true}
+                                >
+                                    <MapView.Marker
+                                        coordinate={this.state.marker}
+                                    />
+                                </MapView>
                             </View>
                         }
 
-                        <View style={{ borderWidth: 1 }}>
-                            <FlatList
-                                data={this.state.listUploadImage}
-                                horizontal={true}
-                                renderItem={({ item: rowData }) => {
-                                    return (
-                                        <View style={[styles.rowView]}>
-                                            <Image
-                                                style={styles.imageUpload}
-                                                source={rowData.uri} />
-                                        </View>
-                                    );
-                                }}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
-
+                        <View>
+                            <Text h4>Hình ảnh</Text>
+                            <View style={{ borderWidth: 1 }}>
+                                <FlatList
+                                    data={this.state.listUploadImage}
+                                    horizontal={true}
+                                    renderItem={({ item: rowData }) => {
+                                        return (
+                                            <View style={[styles.rowView]}>
+                                                <Image
+                                                    style={styles.imageUpload}
+                                                    source={rowData.uri} />
+                                            </View>
+                                        );
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
+                            </View>
                         </View>
                         <View style={{ alignItems: 'center' }}>
-                            <View style={[styles.containerLogo, { marginTop: '3%' }]} >
+                            <View style={{ marginTop: '1%' }} >
                                 <Button
                                     onPress={() => this.uploadPhoto()}
                                     title='Thêm hình'
@@ -379,5 +425,8 @@ const styles = StyleSheet.create({
         height: 70,
         borderRadius: 100,
         marginTop: '1%'
-    }
+    },
+    map: {
+        height: height / 3
+    },
 });

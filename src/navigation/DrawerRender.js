@@ -12,10 +12,7 @@ class MainDrawer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            coverPhoto: 'https://images.alphacoders.com/744/74453.jpg',
-            avatar: 'https://image.flaticon.com/icons/png/128/145/145867.png',
-            name: 'Siêu nhân',
-            email: 'superman@superman.com',
+            user: global.user,
             id: '',
             listSettingsItem: {
                 name: '',
@@ -42,8 +39,8 @@ class MainDrawer extends Component {
         ]
         const listUtilitiesItem = [
             {
-                icon: 'place',
-                name: 'Địa điểm gần đây',
+                icon: 'check',
+                name: 'Xác thực tài khoản bác sĩ',
                 navigation: 'NearByScreen'
             }
         ];
@@ -66,7 +63,6 @@ class MainDrawer extends Component {
         })
     }
 
-
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -74,22 +70,22 @@ class MainDrawer extends Component {
 
                 <View>
                     <ImageBackground
-                        source={{ uri: this.state.coverPhoto }}
+                        source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
                         style={styles.coverPhoto}
                     >
                         <View style={styles.containerTextImage}>
                             <Avatar
-                                medium
+                                large
                                 rounded
-                                source={{ uri: this.state.avatar }}
+                                source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
                                 onPress={() => console.log("Works!")}
                                 activeOpacity={0.7}
                             />
                             <Text style={[styles.textShadow, { color: 'white', fontSize: 19 }]}>
-                                {this.state.name}
+                                {this.state.user.lastName + " " + this.state.user.firstName}
                             </Text>
                             <Text style={[styles.textShadow, { color: '#E0E0E0', fontSize: 19 }]}>
-                                {this.state.email}
+                                {this.state.user.email}
                             </Text>
                         </View>
                     </ImageBackground>

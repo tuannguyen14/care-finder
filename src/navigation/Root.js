@@ -24,7 +24,7 @@ export const MainScreen = createStackNavigator({
   VerifyScreen: { screen: Verify },
   RootDrawer: { screen: RootDrawer },
   ItemScreen: { screen: Item },
-  InformationItem: { screen: InformationItem },
+  InformationItemScreen: { screen: InformationItem },
   InformationUserScreen: { screen: InformationUser },
   ChangeInformationUserScreen: { screen: ChangeInformationUser },
   CreateNewLocationScreen: { screen: CreateNewLocation },
@@ -33,7 +33,7 @@ export const MainScreen = createStackNavigator({
   CoordinatesScreen: { screen: Coordinatess },
   WorkingTimeScreen: { screen: WorkingTime },
   NearByScreen: { screen: NearBy },
-  AllItemsScreen: { screen: AllItems }
+  AllItemsScreen: { screen: AllItems },
 },
   {
     headerMode: 'none'

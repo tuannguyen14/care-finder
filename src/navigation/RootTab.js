@@ -1,8 +1,10 @@
 import { createBottomTabNavigator } from "react-navigation";
 import Home from "../screens/Home";
 import BookMark from "../screens/BookMark";
+import NearBy from "../screens/NearBy";
 import React, { Component } from 'react';
 import IconFoundation from 'react-native-vector-icons/Foundation';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { AppColors } from '../styles/AppColors.js';
 
 export const RootTab = createBottomTabNavigator(
@@ -19,9 +21,18 @@ export const RootTab = createBottomTabNavigator(
         BookMark: {
             screen: BookMark,
             navigationOptions: {
-                tabBarLabel: "Lưu trữ",
+                tabBarLabel: "Đang Theo dõi",
                 tabBarIcon: ({ tintColor }) => (
-                    <IconFoundation name={'book-bookmark'} color={tintColor} size={24} />
+                    <IconSimpleLineIcons name={'user-following'} color={tintColor} size={24} />
+                )
+            }
+        },
+        NearBy: {
+            screen: NearBy,
+            navigationOptions: {
+                tabBarLabel: "Bản đồ",
+                tabBarIcon: ({ tintColor }) => (
+                    <IconFoundation name={'map'} color={tintColor} size={24} />
                 )
             }
         }

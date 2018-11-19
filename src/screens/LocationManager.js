@@ -13,10 +13,17 @@ export default class LocationManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listLocation: global.allLocations,
+            listLocation: []
         };
     }
 
+    componentWillMount() {
+        for (let i in global.allLocations) {
+            if (global.allLocations[i]._idDoctor == global.user.userId) {
+                listLocation.push(global.allLocations[i]);
+            }
+        }
+    }
 
     render() {
         const { navigate } = this.props.navigation;

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList } from "react-native";
 import { Header, Text, Rating } from 'react-native-elements';
 import { Container, Tab, Tabs } from 'native-base';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { AppColors } from '../styles/AppColors.js';
 import InformationItem from './InformationItem.js';
 import RatingItem from './RatingItem.js';
@@ -17,12 +16,19 @@ export default class Item extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: this.props.navigation.state.params.item
+            item: this.props.navigation.state.params.item,
+            text: '1'
         };
+        this.onUpdate = this.onUpdate.bind(this);
+    }
+
+    onUpdate = (val) => {
+        this.setState({
+            text: val
+        })
     }
 
     render() {
-        const ratingCount = this.state.item.ratingCount == undefined ? '0.0' : item.ratingCount;
         return (
             <Container>
                 <ScrollView>
@@ -53,27 +59,20 @@ export default class Item extends Component {
                     <View style={[styles.line]} />
 
                     <View style={{ marginLeft: '1%' }}>
+                        <Text h4 style={{ color: 'black', fontWeight: 'bold' }}>{this.state.item.name}</Text>
                         <View style={styles.rowView}>
-                            <View style={{ flex: 5 }}>
-                                <Text h4 style={{ color: 'black', fontWeight: 'bold' }}>{this.state.item.name}</Text>
-                                <View style={styles.rowView}>
-                                    <Text style={{ fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
-                                    <Rating
-                                        type="heart"
-                                        ratingCount={5}
-                                        fractions={2}
-                                        startingValue={this.state.item.totalRatingAvg}
-                                        imageSize={23}
-                                        readonly
-                                        style={{ marginLeft: '1%' }}
-                                    />
-                                </View>
-                                <Text style={{ fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
-                            </View>
-                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                                <Icon name={'plussquare'} size={50} color={AppColors.color} />
-                            </View>
+                            <Text style={{ fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
+                            <Rating
+                                type="heart"
+                                ratingCount={5}
+                                fractions={2}
+                                startingValue={this.state.item.totalRatingAvg}
+                                imageSize={23}
+                                readonly
+                                style={{ marginLeft: '1%' }}
+                            />
                         </View>
+                        <Text style={{ fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
                     </View>
 
                     <View style={[styles.line, { marginTop: '1%' }]} />
@@ -84,7 +83,7 @@ export default class Item extends Component {
                                 <InformationItem item={this.state.item} />
                             </Tab>
                             <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                <RatingItem item={this.state.item} />
+                                <RatingItem item={this.state.item} onUpdate={this.onUpdate} />
                             </Tab>
                             <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
                                 <ListImagesItem item={this.state.item} />

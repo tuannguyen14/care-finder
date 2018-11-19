@@ -43,7 +43,8 @@ export default class NearBy extends Component {
             slideAnimationScrollView: new Animated.Value(10),
             slideAnimationExpandIcon: new Animated.Value(275),
             isHideScrollView: false,
-            visibleIconExpand: true
+            visibleIconExpand: true,
+            booleanBackButton: this.props.navigation.state.params == undefined ? false : true
         };
     }
 
@@ -53,6 +54,12 @@ export default class NearBy extends Component {
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
+    }
+
+    componentDidMount() {
+        if (this.state.booleanBackButton) {
+            this.onDirection(this.props.navigation.state.params.destinationFromInformationItem);
+        }
     }
 
     getCurrentLocation() {
@@ -99,7 +106,7 @@ export default class NearBy extends Component {
                 );
                 if (distance <= this.state.distanceExpand) {
                     listLocationAdded.push(allLocations[i]);
-                    listLocationAdded[listLocationAdded.length - 1].distance = distance + "";
+                    listLocationAdded[listLocationAdded.length - 1].distance = distance / 1000 + "km";
                 }
             }
             listLocationAdded.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
@@ -178,6 +185,7 @@ export default class NearBy extends Component {
                     style={styles.map}
                     showsUserLocation={true}
                     loadingEnabled={true}
+                    showsMyLocationButton={false}
                 >
                     {this.state.listLocation.map(marker => (
                         <MapView.Marker
@@ -221,11 +229,12 @@ export default class NearBy extends Component {
                         }}
                     />
                 </MapView>
-
-                <TouchableOpacity style={[styles.backButtonContainer]} onPress={() => goBack()}>
-                    <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
-                </TouchableOpacity>
-
+                {this.state.booleanBackButton ?
+                    <TouchableOpacity style={[styles.backButtonContainer]} onPress={() => goBack()}>
+                        <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
+                    </TouchableOpacity>
+                    : null
+                }
                 <TouchableOpacity style={styles.expandButton} onPress={() => this.onExpand()}>
                     <Image
                         source={require('../img/Expand.png')}
@@ -258,14 +267,15 @@ export default class NearBy extends Component {
                 >
                     {this.state.listLocation.map((listLocation, index) => (
                         <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: listLocation })}>
-                            <View style={[styles.rowView]}>
+                            <View style={[styles.rowView, { alignItems: 'center' }]}>
                                 <ImageBackground style={[styles.imageRating]}>
                                     <Text style={{ color: 'white' }}>{(listLocation.totalRatingAvg + "").includes('.') ? listLocation.totalRatingAvg : listLocation.totalRatingAvg + '.0'}</Text>
                                 </ImageBackground>
-                                <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', flex: 1 }]}>
-                                    <View style={{ flex: 4 }}>
-                                        <Text style={{ color: 'black' }}>{listLocation.name}</Text>
-                                        <Text>{listLocation.address}</Text>
+                                <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', }]}>
+                                    <View>
+                                        <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: 'black' }}>{listLocation.name}</Text>
+                                        <Text numberOfLines={1} ellipsizeMode='tail'>{listLocation.address}</Text>
+                                        <Text>{listLocation.distance}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -330,17 +340,17 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(0,0,0,0.2)',
         borderRadius: 100
     },
-    backButtonContainer: {
-        position: 'absolute',
-        top: '3%',
-        left: '5%'
-    },
     expandButton: {
         position: 'absolute',
         top: '3%',
         right: '5%',
         alignSelf: 'flex-end',
         alignItems: 'center'
+    },
+    backButtonContainer: {
+        position: 'absolute',
+        top: '3%',
+        left: '5%'
     },
     scrollView: {
         position: "absolute",

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
+import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from "react-native";
 import { Text } from 'react-native-elements';
 import { Accordion } from 'native-base';
 import { ListItem } from 'react-native-elements'
-import IconFoundation from 'react-native-vector-icons/Foundation';
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { AppColors } from '../styles/AppColors.js';
+import Coordinates from './EditLocation/Coordinates.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -53,18 +54,35 @@ export default class InformationItem extends Component {
         })
     }
 
+    onFollow = async () => {
+        const body =
+        {
+            idLocation: this.state.item._id,
+            idUser: this.state.user._id
+        };
+        axios.post(IPServer.ip + '/follow/' + this.state.item._id, body, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+            }).catch(err => {
+                console.log(err)
+            })
+    }
+
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1 }}>
                 <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
-                    <View style={[styles.centerContainer, { width: width * 0.5 }]}>
+                    <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => global.navigate("NearByScreen", { booleanBackButton: true, destinationFromInformationItem: this.state.item.coordinates })}>
                         <IconFontAwesome5 name={'directions'} size={50} color={AppColors.color} />
                         <Text style={{ color: 'black' }}>Chỉ đường</Text>
-                    </View>
-                    <View style={[styles.centerContainer, { width: width * 0.5 }]}>
-                        <IconFoundation name={'book-bookmark'} size={50} color={AppColors.color} />
-                        <Text style={{ color: 'black' }}>lưu</Text>
-                    </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => this.onFollow()}>
+                        <IconMaterialIcons name={'add-box'} size={50} color={AppColors.color} />
+                        <Text style={{ color: 'black' }}>Theo dõi</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={[styles.line, { marginTop: '1%' }]} />
                 <View style={{ height: height }}>
@@ -89,7 +107,7 @@ export default class InformationItem extends Component {
                         ))
                     }
                 </View>
-            </View >
+            </ScrollView >
         );
     }
 }
@@ -101,7 +119,7 @@ const styles = StyleSheet.create({
     line: {
         backgroundColor: '#BDBDBD',
         width: width,
-        height: height * 0.003
+        height: height * 0.005
     },
     centerContainer: {
         justifyContent: 'center',

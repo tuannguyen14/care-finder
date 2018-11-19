@@ -57,14 +57,16 @@ export default class Login extends Component {
                         let objectUser = response.data;
                         objectUser.userId = jwtDecode(global.token).userId;
                         global.user = objectUser;
+
+                        this.setState({
+                            spinner: !this.state.spinner
+                        }, () => {
+                            // console.log(global.user);
+                            this.props.navigation.navigate("RootDrawer");
+                        });
                     }).catch(err => {
                         console.log(err)
                     })
-                    this.setState({
-                        spinner: !this.state.spinner
-                    }, () => {
-                        this.props.navigation.navigate("RootDrawer");
-                    });
                 }).catch(err => {
                     this.refs.toast.show('Đăng nhập thất bại');
                     console.log(err)
