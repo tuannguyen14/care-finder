@@ -19,15 +19,13 @@ export default class Item extends Component {
             item: this.props.navigation.state.params.item,
             text: '1'
         };
-        this.onUpdate = this.onUpdate.bind(this);
     }
 
-    onUpdate = (val) => {
-        this.setState({
-            text: val
-        })
-    }
+    getRatingScore = (n) => {
 
+      this.setState({text: n})
+    }
+    
     render() {
         return (
             <Container>
@@ -61,7 +59,7 @@ export default class Item extends Component {
                     <View style={{ marginLeft: '1%' }}>
                         <Text h4 style={{ color: 'black', fontWeight: 'bold' }}>{this.state.item.name}</Text>
                         <View style={styles.rowView}>
-                            <Text style={{ fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
+                            <Text style={{ fontSize: 18 }}>{this.state.text}</Text>
                             <Rating
                                 type="heart"
                                 ratingCount={5}
@@ -83,7 +81,7 @@ export default class Item extends Component {
                                 <InformationItem item={this.state.item} />
                             </Tab>
                             <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
-                                <RatingItem item={this.state.item} onUpdate={this.onUpdate} />
+                                <RatingItem item={this.state.item} ratingScore={this.getRatingScore} />
                             </Tab>
                             <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
                                 <ListImagesItem item={this.state.item} />

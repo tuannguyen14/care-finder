@@ -60,11 +60,9 @@ export default class RatingItem extends Component {
         });
     }
 
-    update = () => {
-        this.props.onUpdate("aaa");
-    }
+    
 
-    onPostComment = async () => {
+    onPostComment = () => {
         this.setState({
             spinner: !this.state.spinner
         }, () => {
@@ -90,7 +88,7 @@ export default class RatingItem extends Component {
                         console.log(response);
                         let arrayIdUserComment = this.state.informationUserComment;
                         arrayIdUserComment.push(this.state.user);
-                        this.update;
+                        this.props.ratingScore('hello');
                         this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: response.data.doc.reviews, informationUserComment: arrayIdUserComment, item: response.data.doc, spinner: !this.state.spinner });
                     }).catch(err => {
                         console.log(err)
