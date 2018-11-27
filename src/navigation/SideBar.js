@@ -5,7 +5,7 @@ export default class Sidebar extends Component {
     render() {
         return (
             <Content style={{ backgroundColor: '#FFFFFF' }}>
-                <Text style={{ margin: 20 }}>Drawer</Text>
+                <Text style={{margin: 20 }}>Drawer</Text>
             </Content>
         );
     }

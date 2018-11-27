@@ -23,6 +23,7 @@ class MainDrawer extends Component {
                 icon: ''
             },
         };
+        // console.log(this.state.user)
     }
 
     componentWillMount() {
@@ -41,10 +42,10 @@ class MainDrawer extends Component {
             {
                 icon: 'check',
                 name: 'Xác thực tài khoản bác sĩ',
-                navigation: 'NearByScreen'
+                navigation: 'VerifyDoctorScreen'
             }
         ];
-        if (global.doctor) {
+        if (this.state.user.permission === 'DOCTOR') {
             listUtilitiesItem.push(
                 {
                     icon: 'assistant-photo',

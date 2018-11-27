@@ -14,6 +14,7 @@ import { InputGroup, Input, CheckBox, Body, ListItem } from 'native-base';
 import { Button, Header } from 'react-native-elements';
 import Toast from 'react-native-easy-toast'
 import { AppColors } from '../styles/AppColors.js';
+import { Font } from '../styles/Font.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -122,13 +123,13 @@ export default class ChangeInformationUser extends Component {
                                 <IconFontAwesome name={'male'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
                                 <CheckBox onPress={() => this.checkMale()} checked={this.state.male} color={AppColors.color} style={{ marginLeft: "0.5%" }} />
                                 <Body style={{ marginLeft: "3%" }}>
-                                    <Text style={{ color: AppColors.color }}>Nam</Text>
+                                    <Text style={{fontFamily: Font.textFont, color: AppColors.color }}>Nam</Text>
                                 </Body>
 
                                 <IconFontAwesome name={'female'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
                                 <CheckBox onPress={() => this.checkFeMale()} checked={this.state.female} color={AppColors.color} style={{ marginLeft: "0.5%" }} />
                                 <Body style={{ marginLeft: "3%" }}>
-                                    <Text style={{ color: AppColors.color }}>Nữ</Text>
+                                    <Text style={{fontFamily: Font.textFont, color: AppColors.color }}>Nữ</Text>
                                 </Body>
                             </ListItem>
                         </View>

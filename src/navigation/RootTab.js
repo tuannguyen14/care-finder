@@ -27,15 +27,15 @@ export const RootTab = createBottomTabNavigator(
                 )
             }
         },
-        NearBy: {
-            screen: NearBy,
-            navigationOptions: {
-                tabBarLabel: "Bản đồ",
-                tabBarIcon: ({ tintColor }) => (
-                    <IconFoundation name={'map'} color={tintColor} size={24} />
-                )
-            }
-        }
+        // NearBy: {
+        //     screen: NearBy,
+        //     navigationOptions: {
+        //         tabBarLabel: "Bản đồ",
+        //         tabBarIcon: ({ tintColor }) => (
+        //             <IconFoundation name={'map'} color={tintColor} size={24} />
+        //         )
+        //     }
+        // }
     },
     {
         tabBarOptions: {

@@ -14,6 +14,7 @@ import {
   Button,
   ScrollView
 } from 'react-native';
+import { Font } from '../styles/Font.js';
 
 const ImagePicker = require("react-native-image-picker");
 
@@ -48,7 +49,7 @@ export default class MapsPicker extends Component {
     return (
       <View>
         <TouchableOpacity onPress={() => this.test()}>
-          <Text>a</Text>
+          <Text style={{}}>a</Text>
         </TouchableOpacity>
       </View>
     );

@@ -5,8 +5,10 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { InputGroup, Input } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import AwesomeButton from 'react-native-really-awesome-button';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
+import { Font } from '../styles/Font.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -60,7 +62,7 @@ export default class RatingItem extends Component {
         });
     }
 
-    
+
 
     onPostComment = () => {
         this.setState({
@@ -85,10 +87,9 @@ export default class RatingItem extends Component {
                     }
                 })
                     .then(response => {
-                        console.log(response);
                         let arrayIdUserComment = this.state.informationUserComment;
                         arrayIdUserComment.push(this.state.user);
-                        this.props.ratingScore('hello');
+                        this.props.ratingScore(response.data.doc);
                         this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: response.data.doc.reviews, informationUserComment: arrayIdUserComment, item: response.data.doc, spinner: !this.state.spinner });
                     }).catch(err => {
                         console.log(err)
@@ -103,12 +104,10 @@ export default class RatingItem extends Component {
         let i = 0;
         for (element in this.state.item.ratingAvg) {
             array.push(
-                < View style={[styles.rowView]}>
-                    <View style={[styles.rowView, { marginLeft: '3%', flex: 1 }]}>
-                        <Text h4 style={{ marginLeft: '3%' }}>{(this.state.item.ratingAvg[element] + "").includes('.') ? this.state.item.ratingAvg[element] : this.state.item.ratingAvg[element] + '.0'}</Text>
-                        <View style={{ marginTop: '10%', marginLeft: '3%' }} >
-                            <Icon name={'heart'} size={26} color={'#F44336'} />
-                        </View>
+                < View style={[styles.rowView, { alignItems: 'center', justifyContent: "center" }]}>
+                    <View style={[styles.rowView, { marginLeft: '3%', flex: 1, alignItems: 'center' }]}>
+                        <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{(this.state.item.ratingAvg[element] + "").includes('.') ? this.state.item.ratingAvg[element] : this.state.item.ratingAvg[element] + '.0'}</Text>
+                        <Icon name={'heart'} size={26} color={'#F44336'} style={{ marginLeft: '3%' }} />
                     </View>
                     <Rating
                         type="custom"
@@ -117,10 +116,10 @@ export default class RatingItem extends Component {
                         fractions={0}
                         startingValue={10}
                         imageSize={26}
-                        style={{ marginLeft: '1%', marginTop: '1.5%', flex: 3 }}
+                        style={{ marginLeft: '1%', flex: 3 }}
                     />
-                    <Text h4 style={{ fontWeight: 'bold', fontSize: 16, marginLeft: '3%', marginTop: '1.6%', flex: 1 }}>{arrayString[i - 1]}</Text>
-                </View>
+                    <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, marginLeft: '3%', marginTop: '1.6%', flex: 1 }}>{arrayString[i - 1]}</Text>
+                </View >
             )
         }
         return array;
@@ -147,7 +146,7 @@ export default class RatingItem extends Component {
                         <Header
                             backgroundColor={AppColors.color}
                             leftComponent={{ icon: 'clear', color: '#fff', size: 31, onPress: () => this.setState({ modalVisible: !this.state.modalVisible }) }}
-                            centerComponent={{ text: this.state.item.name, style: { color: '#fff', fontSize: 20 } }}
+                            centerComponent={{ text: this.state.item.name.substring(0, 23) + '...', style: { color: '#fff', fontSize: 20 } }}
                             rightComponent={{ icon: 'send', color: '#fff', size: 31, onPress: () => this.onPostComment() }}
                         />
                         <View style={{ alignItems: 'center', marginLeft: '3%', marginRight: '1%' }}>
@@ -158,7 +157,7 @@ export default class RatingItem extends Component {
                                 onPress={() => console.log("Works!")}
                                 activeOpacity={0.7}
                             />
-                            <Text h3 style={{ color: 'black' }}>{this.state.user.lastName + " " + this.state.user.firstName}</Text>
+                            <Text style={{ fontFamily: Font.textFont, color: 'black' }}>{this.state.user.lastName + " " + this.state.user.firstName}</Text>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
                                 <Text style={styles.nameTextSliderRating}>{this.state.ratingLocation}</Text>
                                 <Slider
@@ -193,7 +192,7 @@ export default class RatingItem extends Component {
                                     minimumValue={1}
                                     maximumValue={5}
                                     thumbTintColor={AppColors.color} />
-                                <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thái độ</Text>
+                                <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thái độ</Text>
                             </View>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
                                 <Text style={styles.nameTextSliderRating}>{this.state.ratingQuality}</Text>
@@ -220,7 +219,7 @@ export default class RatingItem extends Component {
                             </InputGroup>
                             {
                                 this.state.errorContentInput ?
-                                    <Text style={{ color: 'red' }}>Bình luận ít nhất phải có 5 ký tự!</Text> :
+                                    <Text style={{ fontFamily: Font.textFont, color: 'red' }}>Bình luận ít nhất phải có 5 ký tự!</Text> :
                                     null
                             }
                         </View>
@@ -244,8 +243,8 @@ export default class RatingItem extends Component {
                             onPress={() => console.log("Works!")}
                             activeOpacity={0.7}
                         />
-                        <Text style={{ color: 'black' }}>Xếp hạng và đánh giá</Text>
-                        <Text>Chia sẽ trải nghiệm của bạn để giúp đỡ người khác</Text>
+                        <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Xếp hạng và đánh giá</Text>
+                        <Text style={{ fontFamily: Font.textFont, }}>Chia sẽ trải nghiệm của bạn để giúp đỡ người khác</Text>
                         <Rating
                             type="heart"
                             ratingCount={5}
@@ -255,30 +254,26 @@ export default class RatingItem extends Component {
                             onFinishRating={this.ratingCompleted}
                             style={{ marginLeft: '1%' }}
                         />
-                        <Button
-                            title='Đánh giá'
-                            buttonStyle={{
-                                backgroundColor: AppColors.color,
-                                width: 300,
-                                height: 45,
-                                borderColor: "transparent",
-                                borderWidth: 0,
-                                borderRadius: 5
-                            }}
-                            onPress={() => this.setState({ modalVisible: !this.state.modalVisible, ratingLocation: this.state.startingValueRating, ratingPrice: this.state.startingValueRating, ratingQuality: this.state.startingValueRating, ratingAttitude: this.state.startingValueRating })} />
+                        <AwesomeButton
+                            width={width * 0.8}
+                            backgroundColor={AppColors.color}
+                            borderRadius={7}
+                            onPress={() => this.setState({ modalVisible: !this.state.modalVisible, ratingLocation: this.state.startingValueRating, ratingPrice: this.state.startingValueRating, ratingQuality: this.state.startingValueRating, ratingAttitude: this.state.startingValueRating })}>
+                            <Text style={{ fontFamily: Font.textFont, color: 'white', fontSize: 18 }}>Đánh giá</Text>
+                        </AwesomeButton>
                     </View>
                     <View style={[styles.line, { marginTop: '3%' }]} />
                 </View>
 
                 <View>
                     <View style={[styles.centerContainer]}>
-                        <Text h4 style={{ color: 'black' }}>Bài đánh giá</Text>
+                        <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Bài đánh giá</Text>
                     </View>
                     {
                         this.state.reviews.length == 0
                             ?
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <Text>Chưa có bình luận!</Text>
+                                <Text style={{ fontFamily: Font.textFont, }}>Chưa có bình luận!</Text>
                             </View>
                             :
                             <FlatList
@@ -298,7 +293,7 @@ export default class RatingItem extends Component {
                                                     />
                                                 </View>
                                                 <View style={{ marginLeft: '3%' }}>
-                                                    <Text style={{ fontWeight: 'bold' }}>{this.state.informationUserComment[index].firstName + ' ' + this.state.informationUserComment[index].lastName}</Text>
+                                                    <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold' }}>{this.state.informationUserComment[index].firstName + ' ' + this.state.informationUserComment[index].lastName}</Text>
                                                     < Rating
                                                         type="heart"
                                                         readonly
@@ -307,7 +302,7 @@ export default class RatingItem extends Component {
                                                         startingValue={(rowData.rating.location + rowData.rating.price + rowData.rating.quality + rowData.rating.attitude) / 4}
                                                         imageSize={21}
                                                     />
-                                                    <Text>{rowData.content}</Text>
+                                                    <Text style={{ fontFamily: Font.textFont, }}>{rowData.content}</Text>
                                                 </View>
                                             </View>
                                             :

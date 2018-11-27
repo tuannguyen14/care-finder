@@ -17,6 +17,7 @@ import WorkingTime from "../screens/EditLocation/WorkingTime";
 import NearBy from "../screens/NearBy";
 import AllItems from "../screens/AllItems";
 import Verify from "../screens/Verify";
+import VerifyDoctor from "../screens/VerifyDoctor";
 
 export const MainScreen = createStackNavigator({
   LoginScreen: { screen: Login },
@@ -34,6 +35,7 @@ export const MainScreen = createStackNavigator({
   WorkingTimeScreen: { screen: WorkingTime },
   NearByScreen: { screen: NearBy },
   AllItemsScreen: { screen: AllItems },
+  VerifyDoctorScreen: { screen: VerifyDoctor }
 },
   {
     headerMode: 'none'

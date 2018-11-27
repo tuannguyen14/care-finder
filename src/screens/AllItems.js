@@ -5,6 +5,7 @@ import { List, ListItem } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
+import { Font } from '../styles/Font.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -12,7 +13,8 @@ export default class AllItems extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listAllItems: global.allLocations,
+      listAllItems: this.props.navigation.state.params.allLocations,
+      label: this.props.navigation.state.params.label,
       visiblModalFilter: false
     };
   }
@@ -30,9 +32,9 @@ export default class AllItems extends Component {
           <View></View>
         </Modal>
         <View style={[styles.rowView, { flex: 1 }]}>
-          <Text style={{ fontSize: 18, marginLeft: '4%', fontWeight: 'bold', flex: 4, marginTop: '3%' }}>Mới nhất</Text>
+          <Text style={{ fontFamily: Font.textFont, fontSize: 18, marginLeft: '4%', fontWeight: 'bold', flex: 4, marginTop: '3%' }}>{this.state.label}</Text>
           <TouchableOpacity style={[styles.rowView, { flex: 1, alignItems: 'center', marginTop: '1.5%' }]} onPress={() => this.setState({ visiblModalFilter: !this.state.visiblModalFilter })}>
-            <Text style={{ fontSize: 18 }}>Bộ lọc</Text>
+            <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Bộ lọc</Text>
             <Icon name={'filter'} size={21} color={'gray'} />
           </TouchableOpacity>
         </View>
@@ -48,11 +50,11 @@ export default class AllItems extends Component {
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => this.props.navigation.navigate("ItemScreen", { item: l })}>
                   <View style={[styles.rowView, { marginLeft: '3%', marginBottom: '1%' }]}>
                     <ImageBackground style={styles.imageRating}>
-                      <Text style={{ color: 'white' }}>{(l.totalRatingAvg + "").includes('.') ? l.totalRatingAvg : l.totalRatingAvg + '.0'}</Text>
+                      <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(l.totalRatingAvg + "").includes('.') ? l.totalRatingAvg : l.totalRatingAvg + '.0'}</Text>
                     </ImageBackground>
                     <View style={{ marginTop: '1%', marginLeft: '3%' }}>
-                      <Text style={{ color: 'black' }}>{l.name}</Text>
-                      <Text>{l.address}</Text>
+                      <Text style={{ fontFamily: Font.textFont, color: 'black' }}>{l.name}</Text>
+                      <Text style={{ fontFamily: Font.textFont, }}>{l.address.street + ', ' + l.address.ward + ', ' + l.address.district + ', ' + l.address.city}</Text>
                     </View>
                   </View>
                   <Image
@@ -62,19 +64,19 @@ export default class AllItems extends Component {
                   <View style={[styles.rowView, {}]}>
                     <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                       <Icon name={'eye'} size={15} color={'gray'} />
-                      <Text style={{ marginLeft: '3%' }}>10</Text>
+                      <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{l.countView}</Text>
                     </View>
                     <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                       <Icon name={'comment'} size={15} color={'gray'} />
-                      <Text style={{ marginLeft: '3%' }}>{l.reviews.length}</Text>
+                      <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{l.reviews.length}</Text>
                     </View>
                     <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                       <Icon name={'camera'} size={15} color={'gray'} />
-                      <Text style={{ marginLeft: '3%' }}>{l.imageUrls.length}</Text>
+                      <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{l.imageUrls.length}</Text>
                     </View>
                     <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                       <Icon name={'star'} size={15} color={'gray'} />
-                      <Text style={{ marginLeft: '3%' }}>{l.numberOfFollows}</Text>
+                      <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{l.numberOfFollows}</Text>
                     </View>
                   </View>
                   <View style={styles.bigLine}></View>

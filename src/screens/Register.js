@@ -12,6 +12,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 
+import { Font } from '../styles/Font.js';
+
+
 let { width, height } = Dimensions.get("window");
 
 export default class Register extends Component {
@@ -50,14 +53,11 @@ export default class Register extends Component {
                 }
             })
                 .then(response => {
-                    this.refs.toast.show('Đăng ký thành công');
                     this.setState({
                         spinner: !this.state.spinner
                     }, () => {
-                        this.timeoutHandle = setTimeout(() => {
-                            let user = response.data.createdUser;
-                            this.props.navigation.navigate('VerifyScreen', { user });
-                        }, 1000)
+                        let user = response.data.createdUser;
+                        this.props.navigation.navigate('VerifyScreen', { user });
                     });
                 }).catch(err => {
                     this.refs.toast.show('Đăng ký thất bại');
@@ -84,15 +84,15 @@ export default class Register extends Component {
                 <View style={{ alignItems: 'center' }}>
                     <View style={[styles.rowView, { alignItems: 'center', marginBottom: '3%' }]}>
                         <View style={{ width: height * 0.15, borderBottomWidth: 1, marginRight: '1.5%', borderBottomColor: 'white' }} />
-                        <Text style={{ color: 'white', fontSize: 17 }}>Đăng ký</Text>
+                        <Text style={{ fontFamily: 'Berkshireswash-Regular', color: 'white', fontSize: 26 }}>Đăng ký</Text>
                         <View style={{ width: height * 0.15, borderBottomWidth: 1, marginLeft: '1.5%', borderBottomColor: 'white' }} />
                     </View>
                     <View >
                         <Fumi
                             style={styles.fumi}
                             label={'Họ'}
-                            labelStyle={{ color: "#757575", }}
-                            inputStyle={{ color: "#424242" }}
+                            labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                            inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                             autoCorrect={false}
                             iconClass={Icon}
                             iconName={'user'}
@@ -105,8 +105,8 @@ export default class Register extends Component {
                         <Fumi
                             style={styles.fumi}
                             label={'Tên'}
-                            labelStyle={{ color: "#757575", }}
-                            inputStyle={{ color: "#424242" }}
+                            labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                            inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                             autoCorrect={false}
                             iconClass={Icon}
                             iconName={'user'}
@@ -119,8 +119,8 @@ export default class Register extends Component {
                         <Fumi
                             style={styles.fumi}
                             label={'Email'}
-                            labelStyle={{ color: "#757575", }}
-                            inputStyle={{ color: "#424242" }}
+                            labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                            inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                             autoCorrect={false}
                             iconClass={Icon}
                             iconName={'mail'}
@@ -133,8 +133,8 @@ export default class Register extends Component {
                         <Fumi
                             style={styles.fumi}
                             label={'Mật khẩu'}
-                            labelStyle={{ color: "#757575", }}
-                            inputStyle={{ color: "#424242" }}
+                            labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                            inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                             autoCorrect={false}
                             iconClass={Icon}
                             iconName={'lock'}
@@ -148,8 +148,8 @@ export default class Register extends Component {
                         <Fumi
                             style={styles.fumi}
                             label={'Xác nhận mật khẩu'}
-                            labelStyle={{ color: "#757575", }}
-                            inputStyle={{ color: "#424242" }}
+                            labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                            inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                             autoCorrect={false}
                             iconClass={Icon}
                             iconName={'lock'}
@@ -163,15 +163,14 @@ export default class Register extends Component {
                         <Fumi
                             style={styles.fumi}
                             label={'Số điện thoại'}
-                            labelStyle={{ color: "#757575", }}
-                            inputStyle={{ color: "#424242" }}
+                            labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                            inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                             autoCorrect={false}
                             iconClass={Icon}
                             iconName={'phone'}
                             iconColor={AppColors.color}
                             returnKeyType={"next"}
                             iconSize={21}
-                            secureTextEntry
                             onChangeText={phoneNumber => this.setState({ phoneNumber })}
                         />
                     </View>
@@ -209,7 +208,7 @@ export default class Register extends Component {
                         borderRadius={7}
                         progress={this.state.buttonProgress}
                         onPress={() => this.register()}>
-                        <Text>Đăng ký</Text>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Đăng ký</Text>
                     </AwesomeButton>
                 </View>
                 <Toast ref="toast" />

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Modal, TouchableOpacity, FlatList, Image, ScrollView } from "react-native";
 import ImageViewer from 'react-native-image-zoom-viewer';
-
+import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
+
 let { width, height } = Dimensions.get("window");
 
 export default class ListImagesItem extends Component {

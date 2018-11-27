@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { Header, Card, Text, } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
-
 import { AppColors } from '../styles/AppColors.js';
+import { change_url_image } from '../utils/Utils'
 
 let { width, height } = Dimensions.get("window");
 
@@ -20,7 +20,7 @@ export default class LocationManager extends Component {
     componentWillMount() {
         for (let i in global.allLocations) {
             if (global.allLocations[i]._idDoctor == global.user.userId) {
-                listLocation.push(global.allLocations[i]);
+                this.state.listLocation.push(global.allLocations[i]);
             }
         }
     }
@@ -37,34 +37,32 @@ export default class LocationManager extends Component {
                 />
                 <FlatList
                     data={this.state.listLocation}
-                    renderItem={({ item: rowData }) => {
+                    renderItem={({ item: data }) => {
                         return (
-                            <TouchableOpacity>
-                                <View>
-                                    <Card
-                                        title={rowData.name}
-                                        image={{ uri: rowData.imageUrls[0] }}
-                                        imageStyle={styles.cardContainer}>
-                                        <Text>
-                                            {rowData.address}
-                                        </Text>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate("ItemScreen", { item: data })} style={{ borderWidth: 1 }}>
+                                <Card
+                                    title={data.name}
+                                    image={{ uri: change_url_image(data.imageUrls[0]) }}
+                                    imageStyle={styles.image}>
+                                    <Text style={{ fontFamily: Font.textFont, fontFamily: Font.textFont, }}>
+                                        {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
+                                    </Text>
 
-                                        <View style={styles.containerRow} >
-                                            <TouchableOpacity onPress={() => navigate('BasicInformationScreen', { item: rowData })}>
-                                                <View>
-                                                    <Icon name={'edit'} size={24} color={'black'} />
-                                                    <Text>Sửa</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={{ marginLeft: '3%' }}>
-                                                <View>
-                                                    <Icon name={'delete'} size={24} color={'black'} />
-                                                    <Text>Xóa</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </Card>
-                                </View>
+                                    <View style={styles.containerRow} >
+                                        <TouchableOpacity onPress={() => navigate('BasicInformationScreen', { item: data })}>
+                                            <View>
+                                                <Icon name={'edit'} size={24} color={'black'} />
+                                                <Text style={{ fontFamily: Font.textFont, }}>Sửa</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ marginLeft: '3%' }}>
+                                            <View>
+                                                <Icon name={'delete'} size={24} color={'black'} />
+                                                <Text style={{ fontFamily: Font.textFont, }}>Xóa</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </Card>
                             </TouchableOpacity>
                         );
                     }
@@ -82,5 +80,8 @@ const styles = StyleSheet.create({
     },
     containerRow: {
         flexDirection: 'row'
+    },
+    image: {
+        height: height / 3
     }
 });

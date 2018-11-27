@@ -20,6 +20,8 @@ import axios from 'axios';
 const ImagePicker = require("react-native-image-picker");
 import { IPServer } from "../Server/IPServer.js";
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Font } from '../styles/Font.js';
+import Icon from 'react-native-vector-icons/Entypo';
 const options = {
     title: "Chọn ảnh từ:",
     quality: 1,
@@ -33,7 +35,7 @@ class MyComponent extends Component {
     render() {
         return (
             <View style={{ alignItems: "center", paddingVertical: "4%" }}>
-                <Text>{this.props.name}</Text>
+                <Text style={{ fontFamily: Font.textFont, }}>{this.props.name}</Text>
             </View>
         );
     }
@@ -137,8 +139,8 @@ export default class componentName extends Component {
                                     <Image
                                         source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
                                         style={styles.avatar}
-                                    >
-                                    </Image>
+                                    />
+                                    <Icon style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={'white'} />
                                 </TouchableOpacity>
                             </View>
                         </ImageBackground>
@@ -146,23 +148,23 @@ export default class componentName extends Component {
                     <View style={{ flex: 1 }}>
 
                         <View style={styles.containerText}>
-                            <Text style={styles.textHeader}> Email </Text>
+                            <Text style={styles.textHeader}> Email: </Text>
                             <Text style={styles.textState}>{this.state.user.email}</Text>
                         </View>
                         <View style={styles.containerText}>
-                            <Text style={styles.textHeader}> Điện thoại </Text>
+                            <Text style={styles.textHeader}> Điện thoại: </Text>
                             <Text style={styles.textState}>{this.state.user.phoneNumber}</Text>
                         </View>
                         <View style={styles.containerText}>
-                            <Text style={styles.textHeader}> Giới tính </Text>
+                            <Text style={styles.textHeader}> Giới tính: </Text>
                             <Text style={styles.textState}>{this.state.user.gender}</Text>
                         </View>
                         <View style={styles.containerText}>
-                            <Text style={styles.textHeader}> Lượt theo dõi </Text>
+                            <Text style={styles.textHeader}> Số địa điểm đang theo dõi: </Text>
                             <Text style={styles.textState}>{this.state.user.follows.length}</Text>
                         </View>
 
-                        <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                        {/* <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
                             <Button
                                 title='Đổi thông tin'
                                 buttonStyle={{
@@ -175,7 +177,7 @@ export default class componentName extends Component {
                                 }}
                                 onPress={() => navigate("ChangeInformationUserScreen")}
                             />
-                        </View>
+                        </View> */}
                     </View>
 
                 </View>
@@ -220,6 +222,7 @@ const styles = StyleSheet.create({
         marginLeft: 15
     },
     avatar: {
+        borderWidth: 1,
         width: 140,
         height: 140,
         ...Platform.select({
@@ -268,10 +271,11 @@ const styles = StyleSheet.create({
     textHeader: {
         fontWeight: "bold",
         fontSize: 16,
-        width: 110
+        flex: 2
     },
     textState: {
-        fontSize: 16
+        fontSize: 16,
+        flex: 2
     },
     touchable: {
         marginTop: "6%",

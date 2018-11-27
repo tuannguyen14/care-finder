@@ -6,7 +6,7 @@ import { AppColors } from '../styles/AppColors.js';
 import InformationItem from './InformationItem.js';
 import RatingItem from './RatingItem.js';
 import ListImagesItem from './ListImagesItem.js';
-
+import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
 
 let { width, height } = Dimensions.get("window");
@@ -17,15 +17,17 @@ export default class Item extends Component {
         super(props);
         this.state = {
             item: this.props.navigation.state.params.item,
-            text: '1'
         };
     }
 
-    getRatingScore = (n) => {
-
-      this.setState({text: n})
+    getRatingScore = (newItem) => {
+        this.setState({ item: newItem });
     }
-    
+
+    getNumberOfFollows = (newItem) => {
+        this.setState({ item: newItem });
+    }
+
     render() {
         return (
             <Container>
@@ -34,7 +36,7 @@ export default class Item extends Component {
                         outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
-                        centerComponent={{ text: this.state.item.name, style: { color: '#fff', fontSize: 20 } }}
+                        centerComponent={{ text: this.state.item.name.substring(0, 23) + '...', style: { color: '#fff', fontSize: 20 } }}
                     />
                     <View>
                         <FlatList
@@ -57,9 +59,9 @@ export default class Item extends Component {
                     <View style={[styles.line]} />
 
                     <View style={{ marginLeft: '1%' }}>
-                        <Text h4 style={{ color: 'black', fontWeight: 'bold' }}>{this.state.item.name}</Text>
+                        <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{this.state.item.name}</Text>
                         <View style={styles.rowView}>
-                            <Text style={{ fontSize: 18 }}>{this.state.text}</Text>
+                            <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
                             <Rating
                                 type="heart"
                                 ratingCount={5}
@@ -70,7 +72,7 @@ export default class Item extends Component {
                                 style={{ marginLeft: '1%' }}
                             />
                         </View>
-                        <Text style={{ fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
+                        <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
                     </View>
 
                     <View style={[styles.line, { marginTop: '1%' }]} />
@@ -78,7 +80,7 @@ export default class Item extends Component {
                     <ScrollView>
                         <Tabs>
                             <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
-                                <InformationItem item={this.state.item} />
+                                <InformationItem item={this.state.item} updateNumberOfFollows={this.getNumberOfFollows} />
                             </Tab>
                             <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
                                 <RatingItem item={this.state.item} ratingScore={this.getRatingScore} />

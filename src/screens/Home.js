@@ -7,6 +7,7 @@ import { change_url_image } from '../utils/Utils'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
+import { Font } from '../styles/Font.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -14,6 +15,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: global.user,
       recentInteractiveLocation: [],
       bestLocation: [],
       spinner: false
@@ -30,34 +32,35 @@ export default class Home extends Component {
         responseType: 'stream'
       })
         .then((response) => {
-          let data = response.data.doc.map((e, i) => {
-            let { street, ward, district, city } = e.address;
-            let address = `${street}, ${ward}, ${district}, ${city}`
-            e.address = address
-            return e
-          })
-          const dataBestRating = data;
-
+          const data = Array.from(response.data.doc);
+          const dataSort = Array.from(response.data.doc);
           this.setState({
-            recentInteractiveLocation: data,
-            bestLocation: dataBestRating.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg)),
+            recentInteractiveLocation: data.sort((a, b) => parseFloat(b.countView) - parseFloat(a.countView)),
+            bestLocation: dataSort.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg)),
             spinner: !this.state.spinner
           })
           global.navigate = this.props.navigation.navigate;
-          global.allLocations = data;
+          global.allLocations = response.data.doc;
         });
     });
   }
 
   openDetailItem(rowData) {
+    if ((this.state.user.userId) !== (rowData._idDoctor)) {
+      axios({
+        method: 'get',
+        url: IPServer.ip + '/location/' + rowData._id,
+        responseType: 'stream'
+      });
+    }
     this.props.navigation.navigate("ItemScreen", { item: rowData });
   }
 
   moreNearBy() {
   }
 
-  allItems() {
-    this.props.navigation.navigate("AllItems");
+  onOpenAllItemsSreen(locations, label) {
+    this.props.navigation.navigate("AllItemsScreen", { allLocations: locations, label: label });
   }
 
   componentDidMount() {
@@ -79,7 +82,6 @@ export default class Home extends Component {
   }
 
   render() {
-    const { navigate } = this.props.navigation
     return (
       <ScrollView style={styles.container}>
         <Header
@@ -108,8 +110,8 @@ export default class Home extends Component {
 
         <View style={{ flex: 1 }}>
           <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
-            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Đánh giá cao</Text>
-            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => navigate("AllItemsScreen")}>
+            <Text style={{ fontFamily: Font.textFont, marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Đánh giá cao</Text>
+            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => this.onOpenAllItemsSreen(this.state.bestLocation, 'Đánh giá cao nhất')}>
               <Text h5>Thêm</Text>
               <Icon name={'expand-more'} size={27} color={'black'} />
             </TouchableOpacity>
@@ -118,15 +120,15 @@ export default class Home extends Component {
           <FlatList
             data={this.state.bestLocation}
             horizontal={true}
-            renderItem={({ item: rowData }) => {
+            renderItem={({ item: data }) => {
               return (
-                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(rowData)}>
+                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(data)}>
                   <Card
-                    title={rowData.name}
-                    image={{ uri: change_url_image(rowData.imageUrls[0]) }}
+                    title={data.name}
+                    image={{ uri: change_url_image(data.imageUrls[0]) }}
                     imageStyle={styles.imageCard}>
-                    <Text>
-                      {rowData.address}
+                    <Text style={{ fontFamily: Font.textFont, }}>
+                      {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
                     </Text>
                   </Card>
                 </TouchableOpacity>
@@ -141,8 +143,8 @@ export default class Home extends Component {
         <View style={{ width: width, height: height * 0.7, marginBottom: '10%' }}>
 
           <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
-            <Text h5 style={{ marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Mới đây</Text>
-            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => navigate("AllItemsScreen")}>
+            <Text style={{ fontFamily: Font.textFont, marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Được xem nhiều</Text>
+            <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => this.onOpenAllItemsSreen(this.state.bestLocation, 'Được xem nhiều nhất')}>
               <Text h5>Thêm</Text>
               <Icon name={'expand-more'} size={27} color={'black'} />
             </TouchableOpacity>
@@ -150,16 +152,16 @@ export default class Home extends Component {
           <FlatList
             data={this.state.recentInteractiveLocation}
             horizontal={true}
-            renderItem={({ item: rowData }) => {
+            renderItem={({ item: data }) => {
               return (
-                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(rowData)}>
+                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(data)}>
                   <View>
                     <Card
-                      title={rowData.name}
-                      image={{ uri: change_url_image(rowData.imageUrls[0]) }}
+                      title={data.name}
+                      image={{ uri: change_url_image(data.imageUrls[0]) }}
                       imageStyle={styles.imageCard}>
-                      <Text>
-                        {rowData.address}
+                      <Text style={{ fontFamily: Font.textFont, }}>
+                        {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
                       </Text>
                     </Card>
                   </View>

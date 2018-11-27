@@ -8,8 +8,10 @@ import { IPServer } from '../Server/IPServer.js';
 import { Fumi } from 'react-native-textinput-effects';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MapView from 'react-native-maps';
+import AwesomeButton from 'react-native-really-awesome-button';
 import { AppColors } from '../styles/AppColors.js';
 import MultiSelect from 'react-native-multiple-select';
+import { Font } from '../styles/Font.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -36,7 +38,7 @@ export default class CreateNewLocation extends Component {
         this.state = {
             name: "Test",
             phoneNumber: "09020309",
-            department: "muahaha.com",
+            website: "muahaha.com",
             listUploadImage: [{
                 uri: require('../img/NoImageAvailable.png')
             }, {
@@ -44,7 +46,6 @@ export default class CreateNewLocation extends Component {
             }, {
                 uri: require('../img/NoImageAvailable.png')
             }],
-            website: "",
             dataCities: [],
             dataDistricts: [],
             dataWards: [],
@@ -164,6 +165,7 @@ export default class CreateNewLocation extends Component {
             body.append('district', this.state.district);
             body.append('city', this.state.city);
             body.append('phoneNumber', this.state.phoneNumber);
+            body.append('website', this.state.website);
             this.state.departments.forEach(e => {
                 body.append('departments', e)
             })
@@ -174,19 +176,24 @@ export default class CreateNewLocation extends Component {
                     name: 'image.jpg'
                 })
             })
+            body.append('latitude', this.state.marker.latitude)
+            body.append('longitude', this.state.marker.longitude)
             fetch(IPServer.ip + '/location', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }, body
             }).then(response => {
-                this.refs.toast.show('Thành công');
+                this.refs.toast.show('Tạo thành công');
                 global.allLocations.push(response);
                 this.setState({
                     spinner: !this.state.spinner
                 })
             }).catch(err => {
-                this.refs.toast.show('Thất bại');
+                this.setState({
+                    spinner: !this.state.spinner
+                })
+                this.refs.toast.show('Tạo thất bại');
                 console.log(err)
             });
         });
@@ -223,7 +230,7 @@ export default class CreateNewLocation extends Component {
                                 style={styles.fumi}
                                 label={'Tên địa điểm'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
-                                inputStyle={{ color: "#424242" }}
+                                inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                                 autoCorrect={false}
                                 iconClass={materialCommunityIconsIcon}
                                 iconName={'hospital-building'}
@@ -235,7 +242,7 @@ export default class CreateNewLocation extends Component {
                                 style={styles.fumi}
                                 label={'Số điện thoại'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
-                                inputStyle={{ color: "#424242" }}
+                                inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                                 autoCorrect={false}
                                 iconClass={materialCommunityIconsIcon}
                                 iconName={'phone'}
@@ -248,13 +255,25 @@ export default class CreateNewLocation extends Component {
                                 style={styles.fumi}
                                 label={'Số nhà + Tên đường'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
-                                inputStyle={{ color: "#424242" }}
+                                inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                                 autoCorrect={false}
                                 iconClass={materialCommunityIconsIcon}
                                 iconName={'map-marker'}
                                 iconColor={AppColors.color}
                                 returnKeyType={"next"}
                                 onChangeText={street => this.setState({ street })}
+                            />
+                             <Fumi
+                                style={styles.fumi}
+                                label={'Website'}
+                                labelStyle={{ color: "#757575", fontWeight: "" }}
+                                inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
+                                autoCorrect={false}
+                                iconClass={Icon}
+                                iconName={'globe'}
+                                iconColor={AppColors.color}
+                                returnKeyType={"next"}
+                                onChangeText={website => this.setState({ website })}
                             />
 
                         </View>
@@ -281,6 +300,11 @@ export default class CreateNewLocation extends Component {
                                 submitButtonColor="#0097A7"
                                 submitButtonText="Đồng ý"
                             />
+
+                            <View>
+                                {this.multiSelect && this.multiSelect.getSelectedItemsExt(selectedItems)}
+                            </View>
+
                         </View>
                         {!this.state.ready ? null :
                             <View>
@@ -309,10 +333,6 @@ export default class CreateNewLocation extends Component {
                                         return <Picker.Item label={e.name} value={e.name} />
                                     })}
                                 </Picker>
-
-                                <View>
-                                    {this.multiSelect && this.multiSelect.getSelectedItemsExt(selectedItems)}
-                                </View>
 
                                 <MapView
                                     ref={(el) => (this.map = el)}
@@ -351,34 +371,22 @@ export default class CreateNewLocation extends Component {
                         </View>
                         <View style={{ alignItems: 'center' }}>
                             <View style={{ marginTop: '1%' }} >
-                                <Button
-                                    onPress={() => this.uploadPhoto()}
-                                    title='Thêm hình'
-                                    textStyle={{ color: AppColors.color }}
-                                    buttonStyle={{
-                                        backgroundColor: 'white',
-                                        width: 150,
-                                        height: 30,
-                                        borderColor: "transparent",
-                                        borderWidth: 0,
-                                        borderRadius: 5,
-                                    }}
-                                />
+                                <AwesomeButton
+                                    width={width * 0.5}
+                                    backgroundColor={'white'}
+                                    borderRadius={7}
+                                    onPress={() => this.uploadPhoto()}>
+                                    <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Thêm hình</Text>
+                                </AwesomeButton>
                             </View>
                             <View style={styles.buttonGroup}>
-                                <Button
-                                    onPress={() => this.createLocation()}
-                                    title='Thêm địa điểm'
-                                    textStyle={{ color: AppColors.color }}
-                                    buttonStyle={{
-                                        backgroundColor: 'white',
-                                        width: 300,
-                                        height: 45,
-                                        borderColor: "transparent",
-                                        borderWidth: 0,
-                                        borderRadius: 5,
-                                    }}
-                                />
+                                <AwesomeButton
+                                    width={width * 0.8}
+                                    backgroundColor={'white'}
+                                    borderRadius={7}
+                                    onPress={() => this.createLocation()}>
+                                    <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Thêm địa điểm</Text>
+                                </AwesomeButton>
                             </View>
                         </View>
                     </View>

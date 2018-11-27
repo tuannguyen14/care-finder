@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Image, Text, TouchableOpacity } from "react-native";
-import Icon from 'react-native-vector-icons/Entypo';
-import { InputGroup, Input } from 'native-base';
-import { Button } from 'react-native-elements';
+import { View, StyleSheet, Text } from "react-native";
 import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
 import CodeInput from 'react-native-confirmation-code-input';
 import { IPServer } from '../Server/IPServer.js';
+import { Font } from '../styles/Font.js';
 
 export default class Verify extends Component {
     constructor(props) {
         super(props);
         this.state = {
             email: "ntd180295@gmail.com",
-            password: "hahaha"
+            password: "hahaha",
+            isValidCode: false,
+            timer: 60
         }
+    }
+
+    componentWillMount() {
+        this.clockCall = setInterval(() => {
+            if (this.state.timer === 0) return clearInterval(this.clockCall)
+            this.setState({ timer: this.state.timer - 1 });
+        }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.clockCall);
     }
 
     _onFinishCheckingCode(code, user) {
@@ -32,7 +43,7 @@ export default class Verify extends Component {
                 console.log(response)
                 this.props.navigation.navigate('LoginScreen');
             }).catch(err => {
-                this.refs.toast.show('Code sai');
+                this.setState({ isValidCode: !this.state.isValidCode })
                 console.log(err)
             })
         console.log(code)
@@ -42,55 +53,34 @@ export default class Verify extends Component {
         const { navigation } = this.props;
         const user = navigation.getParam('user', 'NO-USER');
         return (
-            <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}>
+            <View style={{ backgroundColor: 'white', alignItems: 'center', flex: 1 }}>
+                <Text style={{ fontSize: 18, color: '#000', marginTop: '50%' }}>
+                    {this.state.timer === 0 ? 'Gửi lại?' : 'Mã xác thực sẽ gửi trong ' + this.state.timer + 's'}
+                </Text>
+                <Text style={{ fontFamily: Font.textFont, fontSize: 23, fontWeight: 'bold' }}>Nhập mã xác thực</Text>
                 <CodeInput
                     codeLength="4"
                     ref="codeInputRef2"
-                    activeColor='rgba(49, 180, 4, 1)'
-                    inactiveColor='rgba(49, 180, 4, 1.3)'
+                    activeColor='grey'
+                    inactiveColor='grey'
                     autoFocus={false}
                     ignoreCase={true}
                     inputPosition='center'
                     size={50}
                     onFulfill={(code) => this._onFinishCheckingCode(code, user)}
-                    containerStyle={{ marginTop: 30 }}
-                    codeInputStyle={{ borderWidth: 1.5 }}
+                    containerStyle={{}}
+                    codeInputStyle={{ borderWidth: 1.5, borderColor: AppColors.color }}
                 />
-            </ImageBackground >
+                {
+                    this.state.isValidCode ?
+                        null
+                        :
+                        <Text style={{ color: 'red', marginBottom: '70%', fontSize: 21 }}>Mã xác thực sai</Text>
+                }
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    inputGroup: {
-        marginLeft: "15%",
-        marginRight: "15%",
-        marginTop: "50%"
-    },
-    containerLogo: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-
-    },
-    containerText: {
-        flexDirection: 'row',
-    },
-    logo: {
-        marginTop: "50%",
-        width: 100,
-        height: 100
-    },
-    buttonGroup: {
-        marginTop: "7%",
-        marginLeft: "10%"
-    },
-    backgroundImage: {
-        flex: 1
-    },
-    text: {
-        color: "white",
-        marginLeft: "6%",
-        marginTop: "3%"
-    }
 });

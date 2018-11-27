@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
-import { Text, Avatar, ListItem, Header } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import { Header, ListItem, Avatar, Text } from 'react-native-elements'
+import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { change_url_image } from '../utils/Utils'
 import { AppColors } from '../styles/AppColors.js';
+import { IPServer } from '../Server/IPServer.js';
+import { Font } from '../styles/Font.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -11,34 +14,48 @@ export default class BookMark extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listBookMark: {
-                name: '',
-                icon: ''
-            },
+            listIdLocation: [],
+            listLocationFollow: [],
+            spinner: false
         };
     }
 
+    componentDidMount() {
+        this.props.navigation.addListener(
+          'didFocus',
+          payload => {
+            this.componentWillMount();
+          }
+        );
+      }
+
     componentWillMount() {
-        const listDefaultItemTemp = [
-            {
-                title: 'Vạn Phúc',
-                address: 'Thủ Dầu Một',
-                avatar_url: 'https://nmc.ae/Uploads/HospitalBannerImage/Thumb1/HospitalMainBannerImage143674.jpg'
-            },
-            {
-                title: 'Hạnh Phúc',
-                address: 'Thành Phố Mới',
-                avatar_url: 'https://www.srilankanewslive.com/media/k2/items/cache/42e19da95401f7ea26c18a84f93b00ef_XL.jpg'
-            },
-            {
-                title: 'Becamex',
-                address: 'Thành Phố Hồ Chí Minh ',
-                avatar_url: 'https://images.adsttc.com/media/images/594a/2a4a/b22e/38e9/2900/00a6/large_jpg/Cherry_Hospital-1.jpg?1498032701'
-            }
-        ]
         this.setState({
-            listBookMark: listDefaultItemTemp
-        })
+            spinner: !this.state.spinner,
+            listIdLocation: global.user.follows
+        }, () => {
+            let listLocationFollowTemp = []
+            let promises = [];
+            for (let i = 0; i < this.state.listIdLocation.length; i++) {
+                promises.push(axios.get(IPServer.ip + '/location/' + this.state.listIdLocation[i], {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }));
+            }
+            Promise.all(promises)
+                .then((results) => {
+                    results.forEach((locationData, i) => {
+                        listLocationFollowTemp.push(locationData.data.doc);
+                    })
+                    return listLocationFollowTemp
+                }).then((arrayLocationReturn) => {
+                    this.setState({
+                        listLocationFollow: arrayLocationReturn,
+                        spinner: !this.state.spinner
+                    })
+                });
+        });
     }
 
     render() {
@@ -48,20 +65,26 @@ export default class BookMark extends Component {
                     outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
-                    centerComponent={{ text: 'Lưu trữ', style: { color: '#fff', fontSize: 20 } }}
+                    centerComponent={{ text: 'Đang theo dõi', style: { color: '#fff', fontSize: 20 } }}
+                />
+                <Spinner
+                    visible={this.state.spinner}
+                    textContent={'Đang xử lý'}
+                    textStyle={{ color: 'white' }}
                 />
                 <View>
                     {
-                        this.state.listBookMark.map((l, i) => (
+                        this.state.listLocationFollow.map((data, i) => (
                             <ListItem
                                 key={i}
                                 hideChevron={true}
-                                title={l.title}
-                                subtitle={l.address}
+                                title={data.name}
+                                subtitle={data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
                                 avatar={<Avatar
                                     large
-                                    source={{ uri: l.avatar_url }}
+                                    source={{ uri: change_url_image(data.imageUrls[0]) }}
                                 />}
+                                onPress={() => this.props.navigation.navigate("ItemScreen", { item: data })}
                             />
                         ))
                     }
@@ -72,4 +95,11 @@ export default class BookMark extends Component {
 }
 
 const styles = StyleSheet.create({
+    cardContainer: {
+        flex: 1
+    },
+    image: {
+        height: height,
+        width: width
+    }
 });

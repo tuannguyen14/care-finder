@@ -9,6 +9,7 @@ import Toast from 'react-native-easy-toast'
 import AwesomeButton from 'react-native-really-awesome-button';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { AppColors } from '../styles/AppColors.js';
+import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
 
 var jwtDecode = require('jwt-decode');
@@ -21,8 +22,6 @@ export default class Login extends Component {
         this.state = {
             email: "tuan123@gmail.com",
             password: "admin123",
-            checkedDoctor: true,
-            checkedUser: false,
             tabLogicColor: 'white',
             tabRegisterColor: AppColors.color,
             isLoginOrRegister: false,
@@ -45,10 +44,6 @@ export default class Login extends Component {
             })
                 .then(response => {
                     global.token = response.data.token;
-                    if (this.state.checkedDoctor) {
-                        global.doctor = true;
-                    }
-
                     axios.get(IPServer.ip + '/me', {
                         headers: {
                             "Authorization": `Bearer ${global.token}`
@@ -58,17 +53,21 @@ export default class Login extends Component {
                         objectUser.userId = jwtDecode(global.token).userId;
                         global.user = objectUser;
 
+                        console.log(response.data)
                         this.setState({
                             spinner: !this.state.spinner
                         }, () => {
-                            // console.log(global.user);
                             this.props.navigation.navigate("RootDrawer");
                         });
                     }).catch(err => {
                         console.log(err)
                     })
                 }).catch(err => {
-                    this.refs.toast.show('Đăng nhập thất bại');
+                    this.setState({
+                        spinner: !this.state.spinner
+                    }, () => {
+                        this.refs.toast.show('Đăng nhập thất bại');
+                    });
                     console.log(err)
                 })
         });
@@ -85,7 +84,7 @@ export default class Login extends Component {
                     textStyle={{ color: 'white' }}
                 />
                 <View style={styles.containerLogo}>
-                    <Text h1 style={styles.logo}>Care Finder</Text>
+                    <Text style={styles.logo}> Care Finder </Text>
                 </View>
                 {/* <View style={[styles.rowView]} >
                     <TouchableOpacity style={[styles.tabContainer, { borderBottomColor: this.state.tabLogicColor }]} onPress={() => this.setState({ tabRegisterColor: AppColors.color, tabLogicColor: 'white' })}>
@@ -99,15 +98,16 @@ export default class Login extends Component {
                 }
                 <View style={[styles.rowView, { alignItems: 'center', marginBottom: '3%', marginTop: '1%' }]}>
                     <View style={{ width: height * 0.15, borderBottomWidth: 1, marginRight: '1.5%', borderBottomColor: 'white' }} />
-                    <Text style={{ color: 'white', fontSize: 17 }}>Đăng nhập</Text>
+                    <Text style={{ fontFamily: 'Berkshireswash-Regular', color: 'white', fontSize: 26 }}>Đăng nhập</Text>
                     <View style={{ width: height * 0.15, borderBottomWidth: 1, marginLeft: '1.5%', borderBottomColor: 'white' }} />
                 </View>
                 <View style={styles.inputGroupContainer}>
                     <Fumi
+                        fontFamily={'Billabong'}
                         style={styles.fumi}
                         label={'Email'}
-                        labelStyle={{ color: "#757575", }}
-                        inputStyle={{ color: "#424242" }}
+                        labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                        inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                         autoCorrect={false}
                         iconClass={Icon}
                         iconName={'mail'}
@@ -120,8 +120,8 @@ export default class Login extends Component {
                         secureTextEntry
                         style={styles.fumi}
                         label={'Mật khẩu'}
-                        labelStyle={{ color: "#757575", }}
-                        inputStyle={{ color: "#424242" }}
+                        labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
+                        inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                         autoCorrect={false}
                         iconClass={Icon}
                         iconName={'lock'}
@@ -136,20 +136,16 @@ export default class Login extends Component {
                         width={width * 0.8}
                         backgroundColor={'white'}
                         borderRadius={7}
-                        onPress={(next) => {
-                            this.login();
-                            next();
-                        }}
                         onPress={() => this.login()}>
-                        <Text>Đăng nhập</Text>
+                        <Text style={{ fontSize: 16, fontFamily: Font.textFont, fontWeight: 'bold' }}>Đăng nhập</Text>
                     </AwesomeButton>
                     <View style={styles.rowView}>
                         <TouchableOpacity style={{ marginTop: "3%" }}>
-                            <Text style={{ color: "black" }} > Forgot password?</Text>
+                            <Text style={{ color: "black", fontFamily: Font.textFont }} > Forgot password?</Text>
                         </TouchableOpacity>
                         <Text style={styles.text}>|</Text>
                         <TouchableOpacity onPress={() => navigate("RegisterScreen")} style={{ marginTop: "3%", marginLeft: "6%" }}>
-                            <Text style={{ color: "black" }}>Create an account</Text>
+                            <Text style={{ color: "black", fontFamily: Font.textFont }}>Create an account</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -176,15 +172,15 @@ const styles = StyleSheet.create({
     },
     containerLogo: {
         alignItems: 'center',
-        marginBottom: '6%'
+        justifyContent: 'center',
     },
     logo: {
+        fontSize: 90,
         color: 'white',
-        fontStyle: 'italic',
+        fontFamily: 'Billabong',
         textShadowColor: 'rgba(0, 0, 0, 1)',
         textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 1,
-        fontSize: 60
+        textShadowRadius: 50
     },
     rowView: {
         flexDirection: 'row',
@@ -210,6 +206,7 @@ const styles = StyleSheet.create({
         width: width * 0.8,
         height: 70,
         marginTop: '5%',
-        borderRadius: 100
+        borderRadius: 100,
+        fontFamily: 'Billabong'
     }
 });
