@@ -43,6 +43,7 @@ export default class componentName extends Component {
             } else if (response.customButton) {
                 console.log("User tapped custom button: ", response.customButton);
             } else {
+                console.log(response.uri)
                 this.setState({ uploadIdentificationFontImage: response.uri });
             }
         });
@@ -82,24 +83,28 @@ export default class componentName extends Component {
             spinner: !this.state.spinner
         }, () => {
             const body = new FormData();
-            let address = {};
-            address.street = this.state.street;
-            address.ward = this.state.ward;
-            address.district = this.state.district;
-            address.city = this.state.city;
-
-            body.append('_idDoctor', global.user.userId);
-            body.append('name', this.state.name);
-            body.append('street', this.state.street);
-
-            fetch(IPServer.ip + '/location', {
-                method: 'POST',
+            body.append('imageOfIdentificationFront', {
+              uri: this.state.uploadIdentificationFontImage,
+              type: 'image/jpg',
+              name: 'image.jpg'
+            })
+            body.append('imageOfIdentificationBack', {
+              uri: this.state.uploadIdentificationBackImage,
+              type: 'image/jpg',
+              name: 'image.jpg'
+            })
+            body.append('imageOfDiploma', {
+              uri: this.state.uploadDiplomaImage,
+              type: 'image/jpg',
+              name: 'image.jpg'
+            })
+            fetch(IPServer.ip + '/user/' +global.user.userId, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }, body
             }).then(response => {
                 this.refs.toast.show('Tạo thành công');
-                global.allLocations.push(response);
                 this.setState({
                     spinner: !this.state.spinner
                 })
