@@ -50,7 +50,7 @@ export default class ListImagesItem extends Component {
 
 const styles = StyleSheet.create({
     image: {
-        height: height * 0.3,
+        height: height * 0.36,
         width: width
     }
 })

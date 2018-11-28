@@ -55,7 +55,7 @@ export default class InformationItem extends Component {
             },
             {
                 describe: 'department',
-                detail: this.state.item.departments.join(),
+                detail: this.state.item.departments.join(', '),
                 icon: 'location-city'
             },
             {

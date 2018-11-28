@@ -98,7 +98,7 @@ export default class Item extends Component {
 
 const styles = StyleSheet.create({
     image: {
-        height: height * 0.3,
+        height: height * 0.34,
         width: width
     },
     rowView: {

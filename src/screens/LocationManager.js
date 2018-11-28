@@ -39,7 +39,7 @@ export default class LocationManager extends Component {
                     data={this.state.listLocation}
                     renderItem={({ item: data }) => {
                         return (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate("ItemScreen", { item: data })} style={{ borderWidth: 1 }}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate("ItemScreen", { item: data })} >
                                 <Card
                                     title={data.name}
                                     image={{ uri: change_url_image(data.imageUrls[0]) }}

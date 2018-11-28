@@ -263,7 +263,7 @@ export default class CreateNewLocation extends Component {
                                 returnKeyType={"next"}
                                 onChangeText={street => this.setState({ street })}
                             />
-                             <Fumi
+                            <Fumi
                                 style={styles.fumi}
                                 label={'Website'}
                                 labelStyle={{ color: "#757575", fontWeight: "" }}
@@ -376,7 +376,7 @@ export default class CreateNewLocation extends Component {
                                     backgroundColor={'white'}
                                     borderRadius={7}
                                     onPress={() => this.uploadPhoto()}>
-                                    <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Thêm hình</Text>
+                                    <Text style={{ fontFamily: Font.textFont, fontSize: 17, fontWeight: 'bold' }}>Thêm hình</Text>
                                 </AwesomeButton>
                             </View>
                             <View style={styles.buttonGroup}>
@@ -385,7 +385,7 @@ export default class CreateNewLocation extends Component {
                                     backgroundColor={'white'}
                                     borderRadius={7}
                                     onPress={() => this.createLocation()}>
-                                    <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Thêm địa điểm</Text>
+                                    <Text style={{ fontFamily: Font.textFont, fontSize: 17, ontWeight: 'bold' }}>Thêm địa điểm</Text>
                                 </AwesomeButton>
                             </View>
                         </View>

@@ -9,21 +9,32 @@ import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
 
+const ImagePicker = require("react-native-image-picker");
+
+const options = {
+    title: "Chọn ảnh từ:",
+    quality: 1,
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+};
+
 let { width, height } = Dimensions.get("window");
 
 export default class componentName extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            uploadIdentificationFontImage: 'https://www.grocio.in/images/No_image_available.jpg',
-            uploadIdentificationBackImage: 'https://www.grocio.in/images/No_image_available.jpg',
-            uploadDiplomaImage: 'https://www.grocio.in/images/No_image_available.jpg',
+            uploadIdentificationFontImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
+            uploadIdentificationBackImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
+            uploadDiplomaImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
             spinner: false,
         };
     }
 
 
-    uploadPhoto() {
+    onUploadIdentificationFontImage() {
         ImagePicker.showImagePicker(options, response => {
             if (response.didCancel) {
                 console.log("User cancelled image picker");
@@ -32,21 +43,73 @@ export default class componentName extends Component {
             } else if (response.customButton) {
                 console.log("User tapped custom button: ", response.customButton);
             } else {
-                const listUploadImage = this.state.listUploadImage;
-                let listUploadImageTemp = listUploadImage;
-                for (const o in listUploadImage) {
-                    if (listUploadImage[o].uri < Number.MAX_SAFE_INTEGER) {
-                        listUploadImageTemp = []
-                    }
-                    this.setState({
-                        listUploadImage: []
-                    });
-                    break;
-                }
-                const uriTemp = { uri: response.uri };
-                listUploadImageTemp.push({ uri: uriTemp });
-                this.setState({ listUploadImage: listUploadImageTemp });
+                this.setState({ uploadIdentificationFontImage: response.uri });
             }
+        });
+    }
+
+    onUploadIdentificationBackImage() {
+        ImagePicker.showImagePicker(options, response => {
+            if (response.didCancel) {
+                console.log("User cancelled image picker");
+            } else if (response.error) {
+                console.log("ImagePicker Error: ", response.error);
+            } else if (response.customButton) {
+                console.log("User tapped custom button: ", response.customButton);
+            } else {
+                this.setState({ uploadIdentificationBackImage: response.uri });
+            }
+        });
+    }
+
+    onUploadDiplomaImage() {
+        ImagePicker.showImagePicker(options, response => {
+            if (response.didCancel) {
+                console.log("User cancelled image picker");
+            } else if (response.error) {
+                console.log("ImagePicker Error: ", response.error);
+            } else if (response.customButton) {
+                console.log("User tapped custom button: ", response.customButton);
+            } else {
+                this.setState({ uploadDiplomaImage: response.uri });
+            }
+        });
+    }
+
+
+    onSendVerify() {
+        this.setState({
+            spinner: !this.state.spinner
+        }, () => {
+            const body = new FormData();
+            let address = {};
+            address.street = this.state.street;
+            address.ward = this.state.ward;
+            address.district = this.state.district;
+            address.city = this.state.city;
+
+            body.append('_idDoctor', global.user.userId);
+            body.append('name', this.state.name);
+            body.append('street', this.state.street);
+
+            fetch(IPServer.ip + '/location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }, body
+            }).then(response => {
+                this.refs.toast.show('Tạo thành công');
+                global.allLocations.push(response);
+                this.setState({
+                    spinner: !this.state.spinner
+                })
+            }).catch(err => {
+                this.setState({
+                    spinner: !this.state.spinner
+                })
+                this.refs.toast.show('Tạo thất bại');
+                console.log(err)
+            });
         });
     }
 
@@ -66,35 +129,47 @@ export default class componentName extends Component {
                     </TouchableOpacity>
 
                     <View>
-                        <Text h4>Hình ảnh chứng minh nhân dân mặt trước và sau</Text>
-                        <TouchableOpacity style={{ borderWidth: 1, flexDirection: 'row' }}>
-                            <Image
-                                style={styles.imageUpload}
-                                source={{ uri: this.state.uploadIdentificationFontImage }} />
-                            <Image
-                                style={styles.imageUpload}
-                                source={{ uri: this.state.uploadIdentificationBackImage }} />
-                        </TouchableOpacity>
+                        <View style={{ alignItems: 'center' }}>
+                            <Text h4 style={{ color: 'white', fontFamily: Font.textFont }}>Hình ảnh chứng minh nhân dân</Text>
+                        </View>
+                        <Text h5 style={{ fontSize: 19, color: 'white' }}>Mặt trước</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <TouchableOpacity onPress={() => this.onUploadIdentificationFontImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
+                                <Image
+                                    style={styles.imageUpload}
+                                    source={{ uri: this.state.uploadIdentificationFontImage }} />
+                            </TouchableOpacity>
+                        </View>
+                        <Text h5 style={{ fontSize: 19, color: 'white' }}>Mặt sau</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <TouchableOpacity onPress={() => this.onUploadIdentificationBackImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
+                                <Image
+                                    style={styles.imageUpload}
+                                    source={{ uri: this.state.uploadIdentificationBackImage }} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     <View>
-                        <Text h4>Hình ảnh bằng cấp bác sĩ</Text>
+                        <View style={{ alignItems: 'center' }}>
+                            <Text h4 style={{ color: 'white', fontFamily: Font.textFont }} > Hình ảnh bằng cấp bác sĩ</Text>
+                        </View>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <TouchableOpacity onPress={() => this.uploadPhoto()} style={{ borderWidth: 1, width: width * 0.5 }}>
+                            <TouchableOpacity onPress={() => this.onUploadDiplomaImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
                                 <Image
                                     style={styles.imageUpload}
                                     source={{ uri: this.state.uploadDiplomaImage }} />
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ alignItems: 'center', marginTop: '3%' }}>
+                    <View style={{ alignItems: 'center', marginTop: '3%', marginBottom: '3%' }}>
                         <View style={styles.buttonGroup}>
                             <AwesomeButton
                                 width={width * 0.8}
                                 backgroundColor={'white'}
                                 borderRadius={7}
-                                onPress={() => this.createLocation()}>
-                                <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Thêm địa điểm</Text>
+                                onPress={() => this.onSendVerify()}>
+                                <Text style={{ fontFamily: Font.textFont, fontSize: 17, fontWeight: 'bold' }}>Gửi xác thực</Text>
                             </AwesomeButton>
                         </View>
                     </View>
@@ -113,7 +188,7 @@ const styles = StyleSheet.create({
         maxHeight: 3000
     },
     imageUpload: {
-        width: width * 0.5,
+        width: '100%',
         height: height * 0.3
     }
 });
