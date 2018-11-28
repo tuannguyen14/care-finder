@@ -101,7 +101,8 @@ export default class componentName extends Component {
             fetch(IPServer.ip + '/user/' +global.user.userId, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${global.token}`
                 }, body
             }).then(response => {
                 this.refs.toast.show('Tạo thành công');
