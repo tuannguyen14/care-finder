@@ -228,12 +228,6 @@ export default class CreateNewLocation extends Component {
             spinner: !this.state.spinner
         }, () => {
             const body = new FormData();
-            let address = {};
-            address.street = this.state.street;
-            address.ward = this.state.ward;
-            address.district = this.state.district;
-            address.city = this.state.city;
-
             body.append('_idDoctor', global.user.userId);
             body.append('name', this.state.name);
             body.append('street', this.state.street);
@@ -242,6 +236,19 @@ export default class CreateNewLocation extends Component {
             body.append('city', this.state.city);
             body.append('phoneNumber', this.state.phoneNumber);
             body.append('website', this.state.website);
+
+            // cách làm nè ông append zô timeOpen 
+            // định dạng của mảng nè
+            body.append('timeOpen', JSON.stringify([
+              [{from:"6:00", to: "10:00"}, {from: "16:00", to: "19:00"}], // chủ nhật
+              [{from:"17:00", to: "21:00"}], // thứ 2
+              [{from:"19:00", to: "21:00"}], // thứ 3
+              [{from: "17:00", to: "20:00"}], // thứ 4
+              [{from: "17:00", to: "20:00"}],// thứ 5
+              [{from: "18:00", to: "20:00"}],// thứ 6
+              [{from: "8:00", to: "10:00"}, {from: "16:00", to: "20:00"}] // thứ 7
+            ]))
+
             this.state.departments.forEach(e => {
                 body.append('departments', e)
             })
