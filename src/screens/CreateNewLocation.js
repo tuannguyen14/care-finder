@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Dimensions, ScrollView, FlatList, Picker } from "react-native";
-import { Button, Text } from 'react-native-elements';
+import { View, StyleSheet, Image, TouchableOpacity, Dimensions, ScrollView, FlatList } from "react-native";
+import { Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
+import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { Picker } from 'native-base';
 import materialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-easy-toast'
 import { IPServer } from '../Server/IPServer.js';
@@ -11,6 +13,7 @@ import MapView from 'react-native-maps';
 import AwesomeButton from 'react-native-really-awesome-button';
 import { AppColors } from '../styles/AppColors.js';
 import MultiSelect from 'react-native-multiple-select';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Font } from '../styles/Font.js';
 
 let { width, height } = Dimensions.get("window");
@@ -18,7 +21,7 @@ let { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
 const LATITUDE = 0;
 const LONGITUDE = 0;
-const LATITUDE_DELTA = 0.001;
+const LATITUDE_DELTA = 0.007;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const ImagePicker = require("react-native-image-picker");
@@ -37,8 +40,8 @@ export default class CreateNewLocation extends Component {
         super(props);
         this.state = {
             name: "Test",
-            phoneNumber: "09020309",
-            website: "muahaha.com",
+            phoneNumber: "0902807067",
+            website: "test.com",
             listUploadImage: [{
                 uri: require('../img/NoImageAvailable.png')
             }, {
@@ -66,10 +69,49 @@ export default class CreateNewLocation extends Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             }),
-            marker: {
+            markerNewLocation: {
                 latitude: 0,
                 longitude: 0
-            }
+            },
+            listLocation: global.allLocations,
+            timeStart: '00:00',
+            timeEnd: '00:00',
+            monday: {
+                from: '00:00',
+                to: '00:00'
+            },
+            tuesday: {
+                from: '00:00',
+                to: '00:00'
+            },
+            wednesday: {
+                from: '00:00',
+                to: '00:00'
+            },
+            thursday: {
+                from: '00:00',
+                to: '00:00'
+            },
+            friday: {
+                from: '00:00',
+                to: '00:00'
+            },
+            saturday: {
+                from: '00:00',
+                to: '00:00'
+            },
+            sunday: {
+                from: '00:00',
+                to: '00:00'
+            },
+            booleanMonday: true,
+            booleanTuesday: false,
+            booleanWednesday: false,
+            booleanThursday: false,
+            booleanFriday: false,
+            booleanSaturday: false,
+            booleanSunday: false,
+            isCreateSuccess: false
         };
 
     }
@@ -103,6 +145,40 @@ export default class CreateNewLocation extends Component {
         })
         this.setState({ dataCities: json.doc, items: departmentItems, ready: true, spinner: !this.state.spinner });
     }
+
+    _showDateTimePickerStart = () => this.setState({ isDateTimePickerStartVisible: true });
+
+    _hideDateTimePickerStart = () => this.setState({ isDateTimePickerStartVisible: false });
+
+    _showDateTimePickerEnd = () => this.setState({ isDateTimePickerEndVisible: true });
+
+    _hideDateTimePickerEnd = () => this.setState({ isDateTimePickerEndVisible: false });
+
+    _handleDatePickedStart = (date) => {
+        let hours = date.getHours().toString();
+        let minutes = date.getMinutes().toString();
+        if (hours.length == 1) {
+            hours = '0' + hours;
+        }
+        if (minutes.length == 1) {
+            minutes = '0' + minutes;
+        }
+        this.setState({ timeStart: hours + ":" + minutes });
+        this._hideDateTimePickerStart();
+    };
+
+    _handleDatePickedEnd = (date) => {
+        let hours = date.getHours().toString();
+        let minutes = date.getMinutes().toString();
+        if (hours.length == 1) {
+            hours = '0' + hours;
+        }
+        if (minutes.length == 1) {
+            minutes = '0' + minutes;
+        }
+        this.setState({ timeEnd: hours + ":" + minutes }, () => this.onPickDateTime());
+        this._hideDateTimePickerEnd();
+    };
 
     getCurrentLocation() {
         navigator.geolocation.getCurrentPosition(
@@ -169,6 +245,15 @@ export default class CreateNewLocation extends Component {
             this.state.departments.forEach(e => {
                 body.append('departments', e)
             })
+            body.append('timeOpen', JSON.stringify([
+                [this.state.sunday], // chủ nhật
+                [this.state.monday], // thứ 2
+                [this.state.tuesday], // thứ 3
+                [this.state.wednesday], // thứ 4
+                [this.state.thursday],// thứ 5
+                [this.state.friday],// thứ 6
+                [this.state.saturday, { from: "16:00", to: "20:00" }] // thứ 7
+            ]))
             this.state.listUploadImage.map(e => {
                 body.append('imageUrls', {
                     uri: Object.values(e.uri)[0],
@@ -176,18 +261,18 @@ export default class CreateNewLocation extends Component {
                     name: 'image.jpg'
                 })
             })
-            body.append('latitude', this.state.marker.latitude)
-            body.append('longitude', this.state.marker.longitude)
+            body.append('latitude', this.state.markerNewLocation.latitude)
+            body.append('longitude', this.state.markerNewLocation.longitude)
             fetch(IPServer.ip + '/location', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }, body
             }).then(response => {
-                this.refs.toast.show('Tạo thành công');
                 global.allLocations.push(response);
                 this.setState({
-                    spinner: !this.state.spinner
+                    spinner: !this.state.spinner,
+                    isCreateSuccess: true
                 })
             }).catch(err => {
                 this.setState({
@@ -201,14 +286,71 @@ export default class CreateNewLocation extends Component {
 
     onMapPress(e) {
         this.setState({
-            marker: e.nativeEvent.coordinate
+            markerNewLocation: e.nativeEvent.coordinate
         });
+    }
+
+    onPickDateTime() {
+        if (this.state.booleanMonday) {
+            this.setState({
+                monday: {
+                    from: this.state.timeStart,
+                    to: this.state.timeEnd
+                }
+            });
+        } else if (this.state.booleanTuesday) {
+            this.setState({
+                tuesday: {
+                    from: this.state.timeStart,
+                    to: this.state.timeEnd
+                }
+            });
+        }
+        else if (this.state.booleanWednesday) {
+            this.setState({
+                wednesday: {
+                    from: this.state.timeStart,
+                    to: this.state.timeEnd
+                }
+            });
+        }
+        else if (this.state.booleanThursday) {
+            this.setState({
+                thursday: {
+                    from: this.state.timeStart,
+                    to: this.state.timeEnd
+                }
+            });
+        }
+        else if (this.state.booleanFriday) {
+            this.setState({
+                friday: {
+                    from: this.state.timeStart,
+                    to: this.state.timeEnd
+                }
+            });
+        }
+        else if (this.state.booleanSaturday) {
+            this.setState({
+                saturday: {
+                    from: this.state.timeStart,
+                    to: this.state.timeEnd
+                }
+            });
+        }
+        else if (this.state.booleanSunday) {
+            this.setState({
+                sunday: {
+                    from: this.state.timeStart,
+                    to: this.state.timeEnd
+                }
+            });
+        }
     }
 
     render() {
         const { navigate } = this.props.navigation;
         const selectedItems = this.state.selectedItems;
-
         return (
             <ScrollView style={{ flex: 1, backgroundColor: AppColors.color }}>
                 <View style={styles.container}>
@@ -219,12 +361,12 @@ export default class CreateNewLocation extends Component {
                     />
                     <TouchableOpacity onPress={() => navigate("RootDrawer")}>
                         <View style={styles.backButtonContainer}>
-                            <Icon name={'arrow-long-left'} size={27} color={'white'} />
+                            <Icon name={'arrow-long-left'} size={27} color={'black'} />
                         </View>
                     </TouchableOpacity>
 
                     <View>
-                        <Text h4>Thông tin cơ bản</Text>
+                        <Text h4 style={{ fontFamily: Font.textFont }}>Thông tin cơ bản</Text>
                         <View style={{ alignItems: 'center' }}>
                             <Fumi
                                 style={styles.fumi}
@@ -277,7 +419,7 @@ export default class CreateNewLocation extends Component {
                             />
 
                         </View>
-                        <View style={{ marginTop: '3%' }}>
+                        <View style={{ marginTop: '3%', marginLeft: '3%', marginRight: '3%' }}>
                             <MultiSelect
                                 hideTags
                                 items={this.state.items}
@@ -306,9 +448,168 @@ export default class CreateNewLocation extends Component {
                             </View>
 
                         </View>
+                        <View>
+                            <Text h4 style={{ fontFamily: Font.textFont }}>Giờ hoạt động</Text>
+                            <View>
+                                <ScrollView horizontal={true}>
+                                    {
+                                        this.state.booleanMonday ?
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: true, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.monday.from, timeEnd: this.state.monday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ hai</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity> :
+                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: true, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.monday.from, timeEnd: this.state.monday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ hai</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                    }
+
+                                    {
+                                        this.state.booleanTuesday ?
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: true, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.tuesday.from, timeEnd: this.state.tuesday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Ba</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: true, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.tuesday.from, timeEnd: this.state.tuesday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Ba</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                    }
+
+                                    {
+                                        this.state.booleanWednesday ?
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: true, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.wednesday.from, timeEnd: this.state.wednesday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Tư</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: true, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.wednesday.from, timeEnd: this.state.wednesday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Tư</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                    }
+
+                                    {
+                                        this.state.booleanThursday ?
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: true, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.thursday.from, timeEnd: this.state.thursday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Năm</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: true, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.thursday.from, timeEnd: this.state.thursday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Năm</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                    }
+
+                                    {
+                                        this.state.booleanFriday ?
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: true, booleanSaturday: false, booleanSunday: false, timeStart: this.state.friday.from, timeEnd: this.state.friday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Sáu</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: true, booleanSaturday: false, booleanSunday: false, timeStart: this.state.friday.from, timeEnd: this.state.friday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Sáu</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                    }
+
+                                    {
+                                        this.state.booleanSaturday ?
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: true, booleanSunday: false, timeStart: this.state.saturday.from, timeEnd: this.state.saturday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Bảy</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: true, booleanSunday: false, timeStart: this.state.saturday.from, timeEnd: this.state.saturday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Thứ Bảy</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                    }
+
+                                    {
+                                        this.state.booleanSunday ?
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: true, timeStart: this.state.sunday.from, timeEnd: this.state.sunday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Chủ Nhật</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: true, timeStart: this.state.sunday.from, timeEnd: this.state.sunday.to }, () => { this.onPickDateTime() })}>
+                                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
+                                                    <Text style={styles.text}>Chủ Nhật</Text>
+                                                    <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                                </View>
+                                            </TouchableOpacity>
+                                    }
+                                </ScrollView>
+                                <View style={styles.rowView}>
+                                    <View style={[styles.rowView, { flex: 2, alignItems: 'center', justifyContent: 'center' }]}>
+                                        <Text style={[styles.text, { fontSize: 17 }]}>Từ</Text>
+                                        <View style={{ marginLeft: '3%', marginRight: '1.3%' }}>
+                                            <TouchableOpacity style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]} onPress={this._showDateTimePickerStart}>
+                                                <Text style={styles.text}>{this.state.timeStart}</Text>
+                                                <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                            </TouchableOpacity>
+                                            <DateTimePicker
+                                                mode='time'
+                                                isVisible={this.state.isDateTimePickerStartVisible}
+                                                onConfirm={this._handleDatePickedStart}
+                                                onCancel={this._hideDateTimePickerStart}
+                                            />
+                                        </View>
+                                        <Text style={styles.text}>giờ</Text>
+                                    </View>
+                                    <View style={[styles.rowView, { flex: 2, alignItems: 'center', justifyContent: 'center' }]}>
+                                        <Text style={styles.text}>đến</Text>
+                                        <View style={{ marginLeft: '3%', marginRight: '1.3%' }}>
+                                            <TouchableOpacity style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]} onPress={this._showDateTimePickerEnd}>
+                                                <Text style={styles.text}>{this.state.timeEnd}</Text>
+                                                <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
+                                            </TouchableOpacity>
+                                            <DateTimePicker
+                                                mode='time'
+                                                isVisible={this.state.isDateTimePickerEndVisible}
+                                                onConfirm={this._handleDatePickedEnd}
+                                                onCancel={this._hideDateTimePickerEnd}
+                                            />
+                                        </View>
+                                        <Text style={styles.text}>giờ</Text>
+                                    </View>
+                                </View>
+
+                            </View>
+                        </View>
                         {!this.state.ready ? null :
                             <View>
-                                <Text h4>Địa điểm</Text>
+                                <Text h4 style={{ fontFamily: Font.textFont }}>Địa điểm</Text>
                                 <Picker
                                     selectedValue={this.state.city}
                                     style={styles.pickerStyle}
@@ -344,14 +645,27 @@ export default class CreateNewLocation extends Component {
                                     loadingEnabled={true}
                                 >
                                     <MapView.Marker
-                                        coordinate={this.state.marker}
+                                        coordinate={this.state.markerNewLocation}
                                     />
+                                    {/* {this.state.listLocation.map(marker => (
+                                        <MapView.Marker
+                                            coordinate={marker.coordinates}
+                                            image={require('../img/hospitalMarker.png')}
+                                        >
+                                            <MapView.Callout>
+                                                <View style={{ alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
+                                                    <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
+                                                </View>
+                                            </MapView.Callout>
+                                        </MapView.Marker>
+                                    ))} */}
                                 </MapView>
                             </View>
                         }
 
                         <View>
-                            <Text h4>Hình ảnh</Text>
+                            <Text h4 style={{ fontFamily: Font.textFont }}>Hình ảnh</Text>
                             <View style={{ borderWidth: 1 }}>
                                 <FlatList
                                     data={this.state.listUploadImage}
@@ -385,9 +699,18 @@ export default class CreateNewLocation extends Component {
                                     backgroundColor={'white'}
                                     borderRadius={7}
                                     onPress={() => this.createLocation()}>
-                                    <Text style={{ fontFamily: Font.textFont, fontSize: 17, ontWeight: 'bold' }}>Thêm địa điểm</Text>
+                                    <Text style={{ fontFamily: Font.textFont, fontSize: 17, fontWeight: 'bold' }}>Thêm địa điểm</Text>
                                 </AwesomeButton>
                             </View>
+                            {
+                                this.state.isCreateSuccess ?
+                                    <View style={{ marginBottom: '3%', alignContent: 'center', flexDirection: 'row' }}>
+                                        <Text style={{ color: 'green', fontFamily: Font.textFont, fontSize: 19 }}>Tạo thành công</Text>
+                                        <Icon name={'check'} size={23} color={'green'} />
+                                    </View>
+                                    :
+                                    <View style={{ marginBottom: '3%' }} />
+                            }
                         </View>
                     </View>
                     <Toast ref="toast" />
@@ -399,8 +722,8 @@ export default class CreateNewLocation extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginLeft: "6.2%",
-        marginRight: "6.2%",
+        marginLeft: "3%",
+        marginRight: "3%",
         flex: 1,
         maxHeight: 3000
     },
@@ -411,15 +734,14 @@ const styles = StyleSheet.create({
         marginTop: "5%"
     },
     buttonGroup: {
-        marginTop: '7%',
-        marginBottom: '30%'
+        marginTop: '7%'
     },
     text: {
-        color: 'white',
-        fontSize: 18
+        fontSize: 17,
+        fontFamily: Font.textFont
     },
     imageUpload: {
-        width: width * 0.5,
+        width: width * 0.7,
         height: height * 0.3
     },
     pickerStyle: {
@@ -435,6 +757,10 @@ const styles = StyleSheet.create({
         marginTop: '1%'
     },
     map: {
-        height: height / 3
+        height: height / 2.5
     },
+    backgroundDatePicker: {
+        borderRadius: 100,
+        backgroundColor: '#F5F5F5'
+    }
 });

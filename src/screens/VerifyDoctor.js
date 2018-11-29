@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Toast from 'react-native-easy-toast'
 import Spinner from 'react-native-loading-spinner-overlay';
 import AwesomeButton from 'react-native-really-awesome-button';
+import MultiSelect from 'react-native-multiple-select';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
@@ -30,9 +31,28 @@ export default class componentName extends Component {
             uploadIdentificationBackImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
             uploadDiplomaImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
             spinner: false,
+            selectedItems: [],
+            departments: []
         };
     }
 
+    componentWillMount() {
+        this.setState({
+            spinner: !this.state.spinner
+        }, () => {
+            this.fetchData();
+        });
+    }
+
+    fetchData = async () => {
+        const responseDepartment = await fetch(IPServer.ip + '/department')
+        const jsonDepartment = await responseDepartment.json();
+        const departmentItems = jsonDepartment.doc.map((e, i) => {
+            const { _id, name } = e;
+            return { id: _id, name }
+        })
+        this.setState({ items: departmentItems, spinner: !this.state.spinner });
+    }
 
     onUploadIdentificationFontImage() {
         ImagePicker.showImagePicker(options, response => {
@@ -77,6 +97,13 @@ export default class componentName extends Component {
         });
     }
 
+    onSelectedItemsChange = selectedItems => {
+        const departments = selectedItems.map((e, i) => {
+            return this.state.items.find(x => x.id === e).name
+        })
+        this.setState({ selectedItems, departments });
+    };
+
 
     onSendVerify() {
         this.setState({
@@ -84,28 +111,31 @@ export default class componentName extends Component {
         }, () => {
             const body = new FormData();
             body.append('imageOfIdentificationFront', {
-              uri: this.state.uploadIdentificationFontImage,
-              type: 'image/jpg',
-              name: 'image.jpg'
+                uri: this.state.uploadIdentificationFontImage,
+                type: 'image/jpg',
+                name: 'image.jpg'
             })
             body.append('imageOfIdentificationBack', {
-              uri: this.state.uploadIdentificationBackImage,
-              type: 'image/jpg',
-              name: 'image.jpg'
+                uri: this.state.uploadIdentificationBackImage,
+                type: 'image/jpg',
+                name: 'image.jpg'
             })
             body.append('imageOfDiploma', {
-              uri: this.state.uploadDiplomaImage,
-              type: 'image/jpg',
-              name: 'image.jpg'
+                uri: this.state.uploadDiplomaImage,
+                type: 'image/jpg',
+                name: 'image.jpg'
             })
-            fetch(IPServer.ip + '/user/' +global.user.userId, {
+            this.state.departments.forEach(e => {
+                body.append('departments', e)
+            })
+            fetch(IPServer.ip + '/user/' + global.user.userId, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${global.token}`
                 }, body
             }).then(response => {
-                this.refs.toast.show('Tạo thành công');
+                this.refs.toast.show('Gửi thành công');
                 this.setState({
                     spinner: !this.state.spinner
                 })
@@ -113,13 +143,14 @@ export default class componentName extends Component {
                 this.setState({
                     spinner: !this.state.spinner
                 })
-                this.refs.toast.show('Tạo thất bại');
+                this.refs.toast.show('Gửi thất bại');
                 console.log(err)
             });
         });
     }
 
     render() {
+        const selectedItems = this.state.selectedItems;
         return (
             <ScrollView style={{ flex: 1, backgroundColor: AppColors.color }}>
                 <View style={styles.container}>
@@ -138,7 +169,7 @@ export default class componentName extends Component {
                         <View style={{ alignItems: 'center' }}>
                             <Text h4 style={{ color: 'white', fontFamily: Font.textFont }}>Hình ảnh chứng minh nhân dân</Text>
                         </View>
-                        <Text h5 style={{ fontSize: 19, color: 'white' }}>Mặt trước</Text>
+                        <Text h5 style={{ fontSize: 19, color: 'white', fontFamily: Font.textFont }}>Mặt trước</Text>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <TouchableOpacity onPress={() => this.onUploadIdentificationFontImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
                                 <Image
@@ -146,7 +177,7 @@ export default class componentName extends Component {
                                     source={{ uri: this.state.uploadIdentificationFontImage }} />
                             </TouchableOpacity>
                         </View>
-                        <Text h5 style={{ fontSize: 19, color: 'white' }}>Mặt sau</Text>
+                        <Text h5 style={{ fontSize: 19, color: 'white', fontFamily: Font.textFont }}>Mặt sau</Text>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <TouchableOpacity onPress={() => this.onUploadIdentificationBackImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
                                 <Image
@@ -167,6 +198,36 @@ export default class componentName extends Component {
                                     source={{ uri: this.state.uploadDiplomaImage }} />
                             </TouchableOpacity>
                         </View>
+                    </View>
+
+                    <View style={{ marginTop: '3%' }}>
+                        <MultiSelect
+                            hideTags
+                            items={this.state.items}
+                            uniqueKey="id"
+                            ref={(component) => { this.multiSelect = component }}
+                            onSelectedItemsChange={this.onSelectedItemsChange}
+                            selectedItems={selectedItems}
+                            selectText="Chuyên khoa"
+                            searchInputPlaceholderText="Chọn chuyên khoa"
+                            onChangeInput={(text) => console.log(text)}
+                            altFontFamily="ProximaNova-Light"
+                            tagRemoveIconColor="#0097A7"
+                            tagBorderColor="white"
+                            tagTextColor="#424242"
+                            selectedItemTextColor={AppColors.color}
+                            selectedItemIconColor="#CCC"
+                            itemTextColor="#000"
+                            displayKey="name"
+                            searchInputStyle={{ color: '#grey' }}
+                            submitButtonColor="#0097A7"
+                            submitButtonText="Đồng ý"
+                        />
+
+                        <View>
+                            {this.multiSelect && this.multiSelect.getSelectedItemsExt(selectedItems)}
+                        </View>
+
                     </View>
                     <View style={{ alignItems: 'center', marginTop: '3%', marginBottom: '3%' }}>
                         <View style={styles.buttonGroup}>

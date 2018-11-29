@@ -141,11 +141,11 @@ export default class Login extends Component {
                     </AwesomeButton>
                     <View style={styles.rowView}>
                         <TouchableOpacity style={{ marginTop: "3%" }}>
-                            <Text style={{ color: "black", fontFamily: Font.textFont }} > Forgot password?</Text>
+                            <Text style={{ color: "white", fontFamily: Font.textFont }} > Forgot password?</Text>
                         </TouchableOpacity>
                         <Text style={styles.text}>|</Text>
                         <TouchableOpacity onPress={() => navigate("RegisterScreen")} style={{ marginTop: "3%", marginLeft: "6%" }}>
-                            <Text style={{ color: "black", fontFamily: Font.textFont }}>Create an account</Text>
+                            <Text style={{ color: "white", fontFamily: Font.textFont }}>Create an account</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
