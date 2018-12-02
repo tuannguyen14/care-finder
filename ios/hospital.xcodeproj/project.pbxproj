@@ -83,6 +83,15 @@
 		53579FA8075F423C9006BCC7 /* Montserrat-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEE2AA69AE534F8AB5CF017A /* Montserrat-Thin.ttf */; };
 		79E3E3D48D0B444492634DF8 /* Montserrat-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2BD03AF97906450BA79E5E97 /* Montserrat-ThinItalic.ttf */; };
 		A68EA1AA7AB44A0E9813EBCA /* VHANTIQ.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 3473E6D4FD4B43BB973DE72A /* VHANTIQ.TTF */; };
+		B1EA0D9D45F1439396740A5D /* VHAVANB.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 7EF3F7555C1F49F0BF94EED4 /* VHAVANB.TTF */; };
+		D0AB4DDF34F64EB8BEE331CC /* VHBAHAB.TTF in Resources */ = {isa = PBXBuildFile; fileRef = BCBBF7D5B8504763B2348AC0 /* VHBAHAB.TTF */; };
+		57A02C91FF524F1D990D417D /* VHCLARE.TTF in Resources */ = {isa = PBXBuildFile; fileRef = E71289B4D04C424C8622A9E9 /* VHCLARE.TTF */; };
+		B3CE7EB9BA004559B63AE0AB /* VHCOOP.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 22C313E5112248A5A54CEA87 /* VHCOOP.TTF */; };
+		A078DD7D084A4A3F823AB1E4 /* VHHELS.TTF in Resources */ = {isa = PBXBuildFile; fileRef = A59368457FF84DA79213C7D9 /* VHHELS.TTF */; };
+		4DB773DFECEA4042A1847A26 /* GillSans.otf in Resources */ = {isa = PBXBuildFile; fileRef = 997907816A5347278F32043C /* GillSans.otf */; };
+		A58175955B4D4EFC881A3AA9 /* Good Morning.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7B6909BEB3472BAFA4C415 /* Good Morning.ttf */; };
+		AA35ACF514A04B7CA5941D51 /* Sketch 3D.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6C31EAD161A74BFE88FF54D3 /* Sketch 3D.otf */; };
+		7162EF4D100C42DEB69E3D62 /* Sketch 3D.woff in Resources */ = {isa = PBXBuildFile; fileRef = 49D84AA86AAF44FA8E3E9B0B /* Sketch 3D.woff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -438,6 +447,15 @@
 		EEE2AA69AE534F8AB5CF017A /* Montserrat-Thin.ttf */ = {isa = PBXFileReference; name = "Montserrat-Thin.ttf"; path = "../assets/fonts/Montserrat-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		2BD03AF97906450BA79E5E97 /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Montserrat-ThinItalic.ttf"; path = "../assets/fonts/Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		3473E6D4FD4B43BB973DE72A /* VHANTIQ.TTF */ = {isa = PBXFileReference; name = "VHANTIQ.TTF"; path = "../assets/fonts/VHANTIQ.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7EF3F7555C1F49F0BF94EED4 /* VHAVANB.TTF */ = {isa = PBXFileReference; name = "VHAVANB.TTF"; path = "../assets/fonts/VHAVANB.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BCBBF7D5B8504763B2348AC0 /* VHBAHAB.TTF */ = {isa = PBXFileReference; name = "VHBAHAB.TTF"; path = "../assets/fonts/VHBAHAB.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E71289B4D04C424C8622A9E9 /* VHCLARE.TTF */ = {isa = PBXFileReference; name = "VHCLARE.TTF"; path = "../assets/fonts/VHCLARE.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		22C313E5112248A5A54CEA87 /* VHCOOP.TTF */ = {isa = PBXFileReference; name = "VHCOOP.TTF"; path = "../assets/fonts/VHCOOP.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A59368457FF84DA79213C7D9 /* VHHELS.TTF */ = {isa = PBXFileReference; name = "VHHELS.TTF"; path = "../assets/fonts/VHHELS.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		997907816A5347278F32043C /* GillSans.otf */ = {isa = PBXFileReference; name = "GillSans.otf"; path = "../assets/fonts/GillSans.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8E7B6909BEB3472BAFA4C415 /* Good Morning.ttf */ = {isa = PBXFileReference; name = "Good Morning.ttf"; path = "../assets/fonts/Good Morning.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6C31EAD161A74BFE88FF54D3 /* Sketch 3D.otf */ = {isa = PBXFileReference; name = "Sketch 3D.otf"; path = "../assets/fonts/Sketch 3D.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		49D84AA86AAF44FA8E3E9B0B /* Sketch 3D.woff */ = {isa = PBXFileReference; name = "Sketch 3D.woff"; path = "../assets/fonts/Sketch 3D.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -752,6 +770,15 @@
 				EEE2AA69AE534F8AB5CF017A /* Montserrat-Thin.ttf */,
 				2BD03AF97906450BA79E5E97 /* Montserrat-ThinItalic.ttf */,
 				3473E6D4FD4B43BB973DE72A /* VHANTIQ.TTF */,
+				7EF3F7555C1F49F0BF94EED4 /* VHAVANB.TTF */,
+				BCBBF7D5B8504763B2348AC0 /* VHBAHAB.TTF */,
+				E71289B4D04C424C8622A9E9 /* VHCLARE.TTF */,
+				22C313E5112248A5A54CEA87 /* VHCOOP.TTF */,
+				A59368457FF84DA79213C7D9 /* VHHELS.TTF */,
+				997907816A5347278F32043C /* GillSans.otf */,
+				8E7B6909BEB3472BAFA4C415 /* Good Morning.ttf */,
+				6C31EAD161A74BFE88FF54D3 /* Sketch 3D.otf */,
+				49D84AA86AAF44FA8E3E9B0B /* Sketch 3D.woff */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1244,6 +1271,15 @@
 				53579FA8075F423C9006BCC7 /* Montserrat-Thin.ttf in Resources */,
 				79E3E3D48D0B444492634DF8 /* Montserrat-ThinItalic.ttf in Resources */,
 				A68EA1AA7AB44A0E9813EBCA /* VHANTIQ.TTF in Resources */,
+				B1EA0D9D45F1439396740A5D /* VHAVANB.TTF in Resources */,
+				D0AB4DDF34F64EB8BEE331CC /* VHBAHAB.TTF in Resources */,
+				57A02C91FF524F1D990D417D /* VHCLARE.TTF in Resources */,
+				B3CE7EB9BA004559B63AE0AB /* VHCOOP.TTF in Resources */,
+				A078DD7D084A4A3F823AB1E4 /* VHHELS.TTF in Resources */,
+				4DB773DFECEA4042A1847A26 /* GillSans.otf in Resources */,
+				A58175955B4D4EFC881A3AA9 /* Good Morning.ttf in Resources */,
+				AA35ACF514A04B7CA5941D51 /* Sketch 3D.otf in Resources */,
+				7162EF4D100C42DEB69E3D62 /* Sketch 3D.woff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

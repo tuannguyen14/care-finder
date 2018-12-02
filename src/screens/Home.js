@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import { Dimensions, View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler, Image } from 'react-native';
-import { Header, SearchBar, Card, Text, } from 'react-native-elements'
+import { Header, SearchBar, Card, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import { change_url_image } from '../utils/Utils'
@@ -8,6 +8,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
+import Styles from '../styles/Styles.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -33,6 +34,24 @@ export default class Home extends Component {
       })
         .then((response) => {
           const data = Array.from(response.data.doc);
+
+          let day = new Date();
+          let dayOfWeek = day.getDay();
+          let hours = parseInt(day.getHours());
+          let minutes = parseInt(day.getMinutes());
+          for (let i in data) {
+            if (data[i].timeOpen[dayOfWeek][0].isCloseAllDay) {
+              data[i].isOpen = false;
+            } else if (hours < parseInt((data[i].timeOpen[dayOfWeek][0].from).substring(0, 2)) || hours > parseInt((data[i].timeOpen[dayOfWeek][0].to).substring(3, 5))) {
+              data[i].isOpen = false;
+            } else if (hours == parseInt((data[i].timeOpen[dayOfWeek][0].from).substring(0, 2)) && minutes < parseInt((data[i].timeOpen[dayOfWeek][0].to).substring(3, 5))) {
+              data[i].isOpen = false;
+            } else if (hours == parseInt((data[i].timeOpen[dayOfWeek][0].to).substring(0, 2)) && minutes > parseInt((data[i].timeOpen[dayOfWeek][0].to).substring(3, 5))) {
+              data[i].isOpen = false;
+            } else {
+              data[i].isOpen = true;
+            }
+          }
           const dataSort = Array.from(response.data.doc);
           this.setState({
             recentInteractiveLocation: data.sort((a, b) => parseFloat(b.countView) - parseFloat(a.countView)),
@@ -85,10 +104,11 @@ export default class Home extends Component {
     return (
       <ScrollView style={styles.container}>
         <Header
+          innerContainerStyles={{ alignItems: 'center' }}
           outerContainerStyles={{ borderBottomWidth: 0 }}
           backgroundColor={AppColors.color}
           leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
-          centerComponent={{ text: 'Trang Chính', style: { color: '#fff', fontSize: 20 } }}
+          centerComponent={{ text: 'TRANG CHÍNH', style: [Styles.header, { color: '#fff' }] }}
         />
         <Spinner
           visible={this.state.spinner}
@@ -122,22 +142,33 @@ export default class Home extends Component {
             horizontal={true}
             renderItem={({ item: data }) => {
               return (
-                <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(data)}>
-                  <Card
-                    title={data.name}
-                    image={{ uri: change_url_image(data.imageUrls[0]) }}
-                    imageStyle={styles.imageCard}>
-                    <Text style={{ fontFamily: Font.textFont, }}>
-                      {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
-                    </Text>
-                  </Card>
+                <TouchableOpacity style={[styles.cardContainer]} onPress={() => this.openDetailItem(data)}>
+                  {
+                    data.isOpen ?
+                      <Image
+                        source={require('../img/open.png')}
+                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                      :
+                      <Image
+                        source={require('../img/close.png')}
+                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                  }
+                  <View style={{ zIndex: 100 }}>
+                    <Card
+                      title={data.name}
+                      image={{ uri: change_url_image(data.imageUrls[0]) }}
+                      imageStyle={styles.imageCard}>
+                      <Text style={{ fontFamily: Font.textFont, }}>
+                        {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
+                      </Text>
+                    </Card>
+                  </View>
                 </TouchableOpacity>
               );
             }}
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
-
         <View style={{ width: width, height: 3, backgroundColor: '#BDBDBD', marginTop: '3%' }} />
 
         <View style={{ width: width, height: height * 0.7, marginBottom: '10%' }}>
@@ -155,7 +186,17 @@ export default class Home extends Component {
             renderItem={({ item: data }) => {
               return (
                 <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(data)}>
-                  <View>
+                  {
+                    data.isOpen ?
+                      <Image
+                        source={require('../img/open.png')}
+                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                      :
+                      <Image
+                        source={require('../img/close.png')}
+                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                  }
+                  <View style={{ zIndex: 100 }}>
                     <Card
                       title={data.name}
                       image={{ uri: change_url_image(data.imageUrls[0]) }}

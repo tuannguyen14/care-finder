@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Dimensions, ScrollView, FlatList } from "react-native";
-import { Text } from 'react-native-elements';
+import { Text, CheckBox, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Picker } from 'native-base';
@@ -15,6 +15,7 @@ import { AppColors } from '../styles/AppColors.js';
 import MultiSelect from 'react-native-multiple-select';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Font } from '../styles/Font.js';
+import Styles from '../styles/Styles.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -73,36 +74,52 @@ export default class CreateNewLocation extends Component {
                 latitude: 0,
                 longitude: 0
             },
-            listLocation: global.allLocations,
+            listLocation: Array.from(global.allLocations),
             timeStart: '00:00',
             timeEnd: '00:00',
+
+            isCloseAllDay: false,
             monday: {
                 from: '00:00',
-                to: '00:00'
+                to: '00:00',
+
+                isCloseAllDay: false
             },
             tuesday: {
                 from: '00:00',
-                to: '00:00'
+                to: '00:00',
+
+                isCloseAllDay: false
             },
             wednesday: {
                 from: '00:00',
-                to: '00:00'
+                to: '00:00',
+
+                isCloseAllDay: false
             },
             thursday: {
                 from: '00:00',
-                to: '00:00'
+                to: '00:00',
+
+                isCloseAllDay: false
             },
             friday: {
                 from: '00:00',
-                to: '00:00'
+                to: '00:00',
+
+                isCloseAllDay: false
             },
             saturday: {
                 from: '00:00',
-                to: '00:00'
+                to: '00:00',
+
+                isCloseAllDay: false
             },
             sunday: {
                 from: '00:00',
-                to: '00:00'
+                to: '00:00',
+
+                isCloseAllDay: false
             },
             booleanMonday: true,
             booleanTuesday: false,
@@ -113,9 +130,7 @@ export default class CreateNewLocation extends Component {
             booleanSunday: false,
             isCreateSuccess: false
         };
-
     }
-
 
     componentWillMount() {
         this.setState({
@@ -237,18 +252,6 @@ export default class CreateNewLocation extends Component {
             body.append('phoneNumber', this.state.phoneNumber);
             body.append('website', this.state.website);
 
-            // cách làm nè ông append zô timeOpen 
-            // định dạng của mảng nè
-            body.append('timeOpen', JSON.stringify([
-              [{from:"6:00", to: "10:00"}, {from: "16:00", to: "19:00"}], // chủ nhật
-              [{from:"17:00", to: "21:00"}], // thứ 2
-              [{from:"19:00", to: "21:00"}], // thứ 3
-              [{from: "17:00", to: "20:00"}], // thứ 4
-              [{from: "17:00", to: "20:00"}],// thứ 5
-              [{from: "18:00", to: "20:00"}],// thứ 6
-              [{from: "8:00", to: "10:00"}, {from: "16:00", to: "20:00"}] // thứ 7
-            ]))
-
             this.state.departments.forEach(e => {
                 body.append('departments', e)
             })
@@ -259,7 +262,7 @@ export default class CreateNewLocation extends Component {
                 [this.state.wednesday], // thứ 4
                 [this.state.thursday],// thứ 5
                 [this.state.friday],// thứ 6
-                [this.state.saturday, { from: "16:00", to: "20:00" }] // thứ 7
+                [this.state.saturday] // thứ 7
             ]))
             this.state.listUploadImage.map(e => {
                 body.append('imageUrls', {
@@ -280,7 +283,7 @@ export default class CreateNewLocation extends Component {
                 this.setState({
                     spinner: !this.state.spinner,
                     isCreateSuccess: true
-                })
+                }, () => console.log(global.allLocations));
             }).catch(err => {
                 this.setState({
                     spinner: !this.state.spinner
@@ -302,14 +305,16 @@ export default class CreateNewLocation extends Component {
             this.setState({
                 monday: {
                     from: this.state.timeStart,
-                    to: this.state.timeEnd
+                    to: this.state.timeEnd,
+                    isCloseAllDay: false
                 }
             });
         } else if (this.state.booleanTuesday) {
             this.setState({
                 tuesday: {
                     from: this.state.timeStart,
-                    to: this.state.timeEnd
+                    to: this.state.timeEnd,
+                    isCloseAllDay: false
                 }
             });
         }
@@ -317,7 +322,8 @@ export default class CreateNewLocation extends Component {
             this.setState({
                 wednesday: {
                     from: this.state.timeStart,
-                    to: this.state.timeEnd
+                    to: this.state.timeEnd,
+                    isCloseAllDay: false
                 }
             });
         }
@@ -325,7 +331,8 @@ export default class CreateNewLocation extends Component {
             this.setState({
                 thursday: {
                     from: this.state.timeStart,
-                    to: this.state.timeEnd
+                    to: this.state.timeEnd,
+                    isCloseAllDay: false
                 }
             });
         }
@@ -333,7 +340,8 @@ export default class CreateNewLocation extends Component {
             this.setState({
                 friday: {
                     from: this.state.timeStart,
-                    to: this.state.timeEnd
+                    to: this.state.timeEnd,
+                    isCloseAllDay: false
                 }
             });
         }
@@ -341,7 +349,8 @@ export default class CreateNewLocation extends Component {
             this.setState({
                 saturday: {
                     from: this.state.timeStart,
-                    to: this.state.timeEnd
+                    to: this.state.timeEnd,
+                    isCloseAllDay: false
                 }
             });
         }
@@ -349,7 +358,73 @@ export default class CreateNewLocation extends Component {
             this.setState({
                 sunday: {
                     from: this.state.timeStart,
-                    to: this.state.timeEnd
+                    to: this.state.timeEnd,
+                    isCloseAllDay: false
+                }
+            });
+        }
+    }
+
+    onCheckCloseOrOpenAllDay() {
+        if (this.state.booleanMonday) {
+            this.setState({
+                monday: {
+                    from: '00:00',
+                    to: '00:00',
+                    isCloseAllDay: this.state.isCloseAllDay
+                }
+            });
+        } else if (this.state.booleanTuesday) {
+            this.setState({
+                tuesday: {
+                    from: '00:00',
+                    to: '00:00',
+                    isCloseAllDay: this.state.isCloseAllDay
+                }
+            });
+        }
+        else if (this.state.booleanWednesday) {
+            this.setState({
+                wednesday: {
+                    from: '00:00',
+                    to: '00:00',
+                    isCloseAllDay: this.state.isCloseAllDay
+                }
+            });
+        }
+        else if (this.state.booleanThursday) {
+            this.setState({
+                thursday: {
+                    from: '00:00',
+                    to: '00:00',
+                    isCloseAllDay: this.state.isCloseAllDay
+                }
+            });
+        }
+        else if (this.state.booleanFriday) {
+            this.setState({
+                friday: {
+                    from: '00:00',
+                    to: '00:00',
+                    isCloseAllDay: this.state.isCloseAllDay
+                }
+            });
+        }
+        else if (this.state.booleanSaturday) {
+            this.setState({
+                saturday: {
+                    from: '00:00',
+                    to: '00:00',
+                    isCloseAllDay: this.state.isCloseAllDay
+                }
+            });
+        }
+        else if (this.state.booleanSunday) {
+            this.setState({
+                sunday: {
+                    from: '00:00',
+                    to: '00:00',
+                    isCloseAllDay: this.state.isCloseAllDay
                 }
             });
         }
@@ -359,18 +434,20 @@ export default class CreateNewLocation extends Component {
         const { navigate } = this.props.navigation;
         const selectedItems = this.state.selectedItems;
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: AppColors.color }}>
+            <ScrollView style={{ flex: 1, backgroundColor: '#80DEEA' }}>
+                <Header
+                    innerContainerStyles={{ alignItems: 'center' }}
+                    outerContainerStyles={{ borderBottomWidth: 0 }}
+                    backgroundColor={AppColors.color}
+                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => navigate("RootDrawer") }}
+                    centerComponent={{ text: 'TẠO ĐỊA ĐIỂM CỦA BẠN', style: [Styles.header, { color: '#fff' }] }}
+                />
                 <View style={styles.container}>
                     <Spinner
                         visible={this.state.spinner}
                         textContent={'Đang xử lý'}
                         textStyle={{ color: 'white' }}
                     />
-                    <TouchableOpacity onPress={() => navigate("RootDrawer")}>
-                        <View style={styles.backButtonContainer}>
-                            <Icon name={'arrow-long-left'} size={27} color={'black'} />
-                        </View>
-                    </TouchableOpacity>
 
                     <View>
                         <Text h4 style={{ fontFamily: Font.textFont }}>Thông tin cơ bản</Text>
@@ -437,16 +514,16 @@ export default class CreateNewLocation extends Component {
                                 selectText="Chuyên khoa"
                                 searchInputPlaceholderText="Chọn chuyên khoa"
                                 onChangeInput={(text) => console.log(text)}
-                                altFontFamily="ProximaNova-Light"
+                                altFontFamily={Font.textFont}
                                 tagRemoveIconColor="#0097A7"
-                                tagBorderColor="white"
+                                tagBorderColor="black"
                                 tagTextColor="#424242"
                                 selectedItemTextColor={AppColors.color}
                                 selectedItemIconColor="#CCC"
                                 itemTextColor="#000"
                                 displayKey="name"
                                 searchInputStyle={{ color: '#grey' }}
-                                submitButtonColor="#0097A7"
+                                submitButtonColor={AppColors.color}
                                 submitButtonText="Đồng ý"
                             />
 
@@ -461,13 +538,13 @@ export default class CreateNewLocation extends Component {
                                 <ScrollView horizontal={true}>
                                     {
                                         this.state.booleanMonday ?
-                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: true, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.monday.from, timeEnd: this.state.monday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ isCloseAllDay: this.state.monday.isCloseAllDay, booleanMonday: true, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.monday.from, timeEnd: this.state.monday.to, })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ hai</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
                                                 </View>
                                             </TouchableOpacity> :
-                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: true, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.monday.from, timeEnd: this.state.monday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity onPress={() => this.setState({ isCloseAllDay: this.state.monday.isCloseAllDay, booleanMonday: true, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.monday.from, timeEnd: this.state.monday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ hai</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
@@ -477,14 +554,14 @@ export default class CreateNewLocation extends Component {
 
                                     {
                                         this.state.booleanTuesday ?
-                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: true, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.tuesday.from, timeEnd: this.state.tuesday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ isCloseAllDay: this.state.tuesday.isCloseAllDay, booleanMonday: false, booleanTuesday: true, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.tuesday.from, timeEnd: this.state.tuesday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Ba</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
                                                 </View>
                                             </TouchableOpacity>
                                             :
-                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: true, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.tuesday.from, timeEnd: this.state.tuesday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity onPress={() => this.setState({ isCloseAllDay: this.state.tuesday.isCloseAllDay, booleanMonday: false, booleanTuesday: true, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.tuesday.from, timeEnd: this.state.tuesday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Ba</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
@@ -494,14 +571,14 @@ export default class CreateNewLocation extends Component {
 
                                     {
                                         this.state.booleanWednesday ?
-                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: true, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.wednesday.from, timeEnd: this.state.wednesday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ isCloseAllDay: this.state.wednesday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: true, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.wednesday.from, timeEnd: this.state.wednesday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Tư</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
                                                 </View>
                                             </TouchableOpacity>
                                             :
-                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: true, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.wednesday.from, timeEnd: this.state.wednesday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity onPress={() => this.setState({ isCloseAllDay: this.state.wednesday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: true, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.wednesday.from, timeEnd: this.state.wednesday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Tư</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
@@ -511,14 +588,14 @@ export default class CreateNewLocation extends Component {
 
                                     {
                                         this.state.booleanThursday ?
-                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: true, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.thursday.from, timeEnd: this.state.thursday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ isCloseAllDay: this.state.thursday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: true, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.thursday.from, timeEnd: this.state.thursday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Năm</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
                                                 </View>
                                             </TouchableOpacity>
                                             :
-                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: true, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.thursday.from, timeEnd: this.state.thursday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity onPress={() => this.setState({ isCloseAllDay: this.state.thursday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: true, booleanFriday: false, booleanSaturday: false, booleanSunday: false, timeStart: this.state.thursday.from, timeEnd: this.state.thursday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Năm</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
@@ -528,14 +605,14 @@ export default class CreateNewLocation extends Component {
 
                                     {
                                         this.state.booleanFriday ?
-                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: true, booleanSaturday: false, booleanSunday: false, timeStart: this.state.friday.from, timeEnd: this.state.friday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ isCloseAllDay: this.state.friday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: true, booleanSaturday: false, booleanSunday: false, timeStart: this.state.friday.from, timeEnd: this.state.friday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Sáu</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
                                                 </View>
                                             </TouchableOpacity>
                                             :
-                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: true, booleanSaturday: false, booleanSunday: false, timeStart: this.state.friday.from, timeEnd: this.state.friday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity onPress={() => this.setState({ isCloseAllDay: this.state.friday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: true, booleanSaturday: false, booleanSunday: false, timeStart: this.state.friday.from, timeEnd: this.state.friday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Sáu</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
@@ -545,14 +622,14 @@ export default class CreateNewLocation extends Component {
 
                                     {
                                         this.state.booleanSaturday ?
-                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: true, booleanSunday: false, timeStart: this.state.saturday.from, timeEnd: this.state.saturday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ isCloseAllDay: this.state.saturday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: true, booleanSunday: false, timeStart: this.state.saturday.from, timeEnd: this.state.saturday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Bảy</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
                                                 </View>
                                             </TouchableOpacity>
                                             :
-                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: true, booleanSunday: false, timeStart: this.state.saturday.from, timeEnd: this.state.saturday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity onPress={() => this.setState({ isCloseAllDay: this.state.saturday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: true, booleanSunday: false, timeStart: this.state.saturday.from, timeEnd: this.state.saturday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Thứ Bảy</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
@@ -562,14 +639,14 @@ export default class CreateNewLocation extends Component {
 
                                     {
                                         this.state.booleanSunday ?
-                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: true, timeStart: this.state.sunday.from, timeEnd: this.state.sunday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity style={styles.backgroundDatePicker} onPress={() => this.setState({ isCloseAllDay: this.state.sunday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: true, timeStart: this.state.sunday.from, timeEnd: this.state.sunday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Chủ Nhật</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
                                                 </View>
                                             </TouchableOpacity>
                                             :
-                                            <TouchableOpacity onPress={() => this.setState({ booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: true, timeStart: this.state.sunday.from, timeEnd: this.state.sunday.to }, () => { this.onPickDateTime() })}>
+                                            <TouchableOpacity onPress={() => this.setState({ isCloseAllDay: this.state.sunday.isCloseAllDay, booleanMonday: false, booleanTuesday: false, booleanWednesday: false, booleanThursday: false, booleanFriday: false, booleanSaturday: false, booleanSunday: true, timeStart: this.state.sunday.from, timeEnd: this.state.sunday.to })}>
                                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center' }]}>
                                                     <Text style={styles.text}>Chủ Nhật</Text>
                                                     <IconMaterialIcons name={'expand-more'} size={27} color={'black'} />
@@ -611,7 +688,20 @@ export default class CreateNewLocation extends Component {
                                         <Text style={styles.text}>giờ</Text>
                                     </View>
                                 </View>
-
+                                <Text style={styles.text}>Hoặc chọn</Text>
+                                <View>
+                                    <CheckBox
+                                        center
+                                        title='Đóng cửa'
+                                        iconRight
+                                        iconType='material'
+                                        checkedIcon='clear'
+                                        uncheckedIcon='add'
+                                        checkedColor='red'
+                                        checked={this.state.isCloseAllDay}
+                                        onPress={() => this.setState({ isCloseAllDay: !this.state.isCloseAllDay }, () => this.onCheckCloseOrOpenAllDay())}
+                                    />
+                                </View>
                             </View>
                         </View>
                         {!this.state.ready ? null :
@@ -654,7 +744,7 @@ export default class CreateNewLocation extends Component {
                                     <MapView.Marker
                                         coordinate={this.state.markerNewLocation}
                                     />
-                                    {/* {this.state.listLocation.map(marker => (
+                                    {this.state.listLocation.map(marker => (
                                         <MapView.Marker
                                             coordinate={marker.coordinates}
                                             image={require('../img/hospitalMarker.png')}
@@ -666,7 +756,7 @@ export default class CreateNewLocation extends Component {
                                                 </View>
                                             </MapView.Callout>
                                         </MapView.Marker>
-                                    ))} */}
+                                    ))}
                                 </MapView>
                             </View>
                         }

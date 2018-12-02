@@ -22,6 +22,7 @@ import { IPServer } from "../Server/IPServer.js";
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Font } from '../styles/Font.js';
 import Icon from 'react-native-vector-icons/Entypo';
+import Styles from '../styles/Styles.js';
 const options = {
     title: "Chọn ảnh từ:",
     quality: 1,
@@ -123,10 +124,11 @@ export default class componentName extends Component {
                 </Modal>
                 <View style={{ height: "100%", zIndex: 2, backgroundColor: "#80DEEA" }}>
                     <Header
+                        innerContainerStyles={{ alignItems: 'center' }}
                         outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
-                        centerComponent={{ text: 'Thông tin người dùng', style: { color: '#fff', fontSize: 20 } }}
+                        centerComponent={{ text: 'THÔNG TIN NGƯỜI DÙNG', style: [Styles.header, { color: '#fff' }] }}
                     />
                     <TouchableOpacity >
                         <ImageBackground
@@ -208,9 +210,7 @@ export default class componentName extends Component {
 
 const styles = StyleSheet.create({
     container: {
-
-        backgroundColor: "red",
-        position: "relative"
+        flex: 1
     },
     line: {
         borderColor: "#E0E0E0",

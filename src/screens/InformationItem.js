@@ -27,9 +27,7 @@ export default class InformationItem extends Component {
                 icon: ''
             },
             calendar: '',
-            dataArray: [
-                { title: "Giờ làm việc", content: "Thứ hai: " + "Cả ngày \n" + "Thứ ba: " + "Cả ngày \n" + "Thứ Tư: " + "Cả ngày \n" + "Thứ Sáu: " + "Cả ngày \n" + "Thứ Thứ bảy: " + "Cả ngày \n" + "Chủ nhật: " + "Cả ngày \n" },
-            ],
+            dataArray: [],
             isFollowed: false,
             spinner: false,
             isVisibleModal: false
@@ -37,6 +35,40 @@ export default class InformationItem extends Component {
     }
 
     componentWillMount() {
+        let tempDateArray = [];
+        let tempContentDate = '';
+        for (let i = 1; i < this.state.item.timeOpen.length; i++) {
+            let date = null;
+            if (i == 1) {
+                date = 'Thứ hai';
+            }
+            else if (i == 2) {
+                date = 'Thứ ba';
+            }
+            else if (i == 3) {
+                date = 'Thứ tư';
+            }
+            else if (i == 4) {
+                date = 'Thứ năm';
+            }
+            else if (i == 5) {
+                date = 'Thứ sáu';
+            }
+            else if (i == 6) {
+                date = 'Thứ bảy';
+            }
+            if (this.state.item.timeOpen[i][0].isCloseAllDay) {
+                tempContentDate += date + ': Đóng cửa\n';
+            } else {
+                tempContentDate += (date + ": Từ " + this.state.item.timeOpen[i][0].from + " giờ đến " + this.state.item.timeOpen[i][0].to + " giờ\n");
+            }
+        }
+        if (this.state.item.timeOpen[0][0].isCloseAllDay) {
+            tempContentDate += 'Chủ nhật: Đóng cửa';
+        } else {
+            tempContentDate += ("Chủ nhật: Từ " + this.state.item.timeOpen[0][0].from + " giờ đến " + this.state.item.timeOpen[0][0].to + " giờ\n");
+        }
+        tempDateArray.push({ title: "Giờ  hoạt động", content: tempContentDate });
         for (let i = 0; i < this.state.user.follows.length; i++) {
             if (this.state.user.follows[i] == this.state.item._id) {
                 this.setState({ isFollowed: true })
@@ -70,7 +102,8 @@ export default class InformationItem extends Component {
             }
         ]
         this.setState({
-            listDefaultItem: listDefaultItemTemp
+            listDefaultItem: listDefaultItemTemp,
+            dataArray: tempDateArray
         })
     }
 
@@ -143,7 +176,7 @@ export default class InformationItem extends Component {
                     textStyle={{ color: 'white' }}
                 />
                 <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
-                    <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => global.navigate("NearByScreen", { booleanBackButton: true, destinationFromInformationItem: this.state.item.coordinates })}>
+                    <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => global.navigate("MapsScreen", { destinationFromInformationItem: this.state.item.coordinates })}>
                         <IconFontAwesome5 name={'directions'} size={50} color={AppColors.color} />
                         <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Chỉ đường</Text>
                     </TouchableOpacity>
@@ -179,9 +212,9 @@ export default class InformationItem extends Component {
                                     <View>
                                         {
                                             (l.describe != 'calendar') ?
-                                                <Text style={{ fontFamily: Font.textFont, color: 'black', fontSize: 19 }}>{l.detail}</Text>
+                                                <Text style={{ fontFamily: Font.textFont, fontSize: 18, marginLeft: '4.3%', color: 'black' }}>{l.detail}</Text>
                                                 :
-                                                <Accordion dataArray={this.state.dataArray} />
+                                                <Accordion contentStyle={{ fontFamily: Font.textFont, fontSize: 15 }} dataArray={this.state.dataArray} />
                                         }
                                     </View>
                                 }

@@ -139,13 +139,15 @@ export default class Login extends Component {
                         onPress={() => this.login()}>
                         <Text style={{ fontSize: 16, fontFamily: Font.textFont, fontWeight: 'bold' }}>Đăng nhập</Text>
                     </AwesomeButton>
-                    <View style={styles.rowView}>
-                        <TouchableOpacity style={{ marginTop: "3%" }}>
-                            <Text style={{ color: "white", fontFamily: Font.textFont }} > Forgot password?</Text>
+                    <View style={[styles.rowView, { justifyContent: 'center', marginTop: '1%' }]}>
+                        <TouchableOpacity style={{ marginTop: '1%' }}>
+                            <Text style={{ color: "white", fontFamily: Font.textFont, fontSize: 15 }} > Quên mật khẩu?</Text>
                         </TouchableOpacity>
-                        <Text style={styles.text}>|</Text>
-                        <TouchableOpacity onPress={() => navigate("RegisterScreen")} style={{ marginTop: "3%", marginLeft: "6%" }}>
-                            <Text style={{ color: "white", fontFamily: Font.textFont }}>Create an account</Text>
+                        <View style={{ marginLeft: '5%' }}>
+                            <Text style={[styles.text]}>|</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => navigate("RegisterScreen")} style={{ marginTop: '1%', marginRight: '4%' }}>
+                            <Text style={{ color: "white", fontFamily: Font.textFont, fontSize: 15 }}>Tạo tài khoản</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -7,6 +7,7 @@ import { change_url_image } from '../utils/Utils'
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 import { Font } from '../styles/Font.js';
+import Styles from '../styles/Styles.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -22,12 +23,12 @@ export default class BookMark extends Component {
 
     componentDidMount() {
         this.props.navigation.addListener(
-          'didFocus',
-          payload => {
-            this.componentWillMount();
-          }
+            'didFocus',
+            payload => {
+                this.componentWillMount();
+            }
         );
-      }
+    }
 
     componentWillMount() {
         this.setState({
@@ -62,10 +63,11 @@ export default class BookMark extends Component {
         return (
             <ScrollView>
                 <Header
+                    innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
-                    centerComponent={{ text: 'Đang theo dõi', style: { color: '#fff', fontSize: 20 } }}
+                    centerComponent={{ text: 'ĐANG THEO DÕI', style: [Styles.header, { color: '#fff' }] }}
                 />
                 <Spinner
                     visible={this.state.spinner}

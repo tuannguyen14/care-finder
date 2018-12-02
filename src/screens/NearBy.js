@@ -44,8 +44,7 @@ export default class NearBy extends Component {
             slideAnimationScrollView: new Animated.Value(10),
             slideAnimationExpandIcon: new Animated.Value(275),
             isHideScrollView: false,
-            visibleIconExpand: true,
-            booleanBackButton: this.props.navigation.state.params == undefined ? false : true
+            visibleIconExpand: true
         };
     }
 
@@ -195,8 +194,8 @@ export default class NearBy extends Component {
                         >
                             <MapView.Callout onPress={() => this.onDirection(marker.coordinates)}>
                                 <View style={{ alignItems: 'center' }}>
-                                    <Text style={{fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
-                                    <Text style={{fontFamily: Font.textFont,}}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
                                     <Button
                                         title='Dẫn đường'
                                         buttonStyle={{
@@ -230,12 +229,9 @@ export default class NearBy extends Component {
                         }}
                     />
                 </MapView>
-                {this.state.booleanBackButton ?
-                    <TouchableOpacity style={[styles.backButtonContainer]} onPress={() => goBack()}>
-                        <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
-                    </TouchableOpacity>
-                    : null
-                }
+                <TouchableOpacity style={[styles.backButtonContainer]} onPress={() => goBack()}>
+                    <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.expandButton} onPress={() => this.onExpand()}>
                     <Image
                         source={require('../img/Expand.png')}
@@ -243,7 +239,7 @@ export default class NearBy extends Component {
                     <ImageBackground
                         source={require('../img/square.png')}
                         style={{ height: 26, width: 36, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{fontFamily: Font.textFont,}}>{this.state.distanceExpand / 1000 + 'km'}</Text>
+                        <Text style={{ fontFamily: Font.textFont, }}>{this.state.distanceExpand / 1000 + 'km'}</Text>
                     </ImageBackground>
                 </TouchableOpacity>
 
@@ -270,13 +266,13 @@ export default class NearBy extends Component {
                         <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: listLocation })}>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
                                 <ImageBackground style={[styles.imageRating]}>
-                                    <Text style={{fontFamily: Font.textFont, color: 'white' }}>{(listLocation.totalRatingAvg + "").includes('.') ? listLocation.totalRatingAvg : listLocation.totalRatingAvg + '.0'}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(listLocation.totalRatingAvg + "").includes('.') ? listLocation.totalRatingAvg : listLocation.totalRatingAvg + '.0'}</Text>
                                 </ImageBackground>
                                 <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', }]}>
                                     <View>
                                         <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: 'black' }}>{listLocation.name}</Text>
                                         <Text numberOfLines={1} ellipsizeMode='tail'>{listLocation.address.street + ', ' + listLocation.address.ward + ', ' + listLocation.address.district + ', ' + listLocation.address.city}</Text>
-                                        <Text style={{fontFamily: Font.textFont,}}>{listLocation.distance}</Text>
+                                        <Text style={{ fontFamily: Font.textFont, }}>{listLocation.distance}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -288,19 +284,19 @@ export default class NearBy extends Component {
                             <View style={[styles.rowView, { justifyContent: 'space-between' }]}>
                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                     <Icon name={'eye'} size={15} color={'gray'} />
-                                    <Text style={{fontFamily: Font.textFont, marginLeft: '3%' }}>10</Text>
+                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>10</Text>
                                 </View>
                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                     <Icon name={'comment'} size={15} color={'gray'} />
-                                    <Text style={{fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.reviews.length}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.reviews.length}</Text>
                                 </View>
                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                     <Icon name={'camera'} size={15} color={'gray'} />
-                                    <Text style={{fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.imageUrls.length}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.imageUrls.length}</Text>
                                 </View>
                                 <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
                                     <Icon name={'star'} size={15} color={'gray'} />
-                                    <Text style={{fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.numberOfFollows}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.numberOfFollows}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>

@@ -8,6 +8,7 @@ import RatingItem from './RatingItem.js';
 import ListImagesItem from './ListImagesItem.js';
 import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
+import Styles from '../styles/Styles.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -29,14 +30,22 @@ export default class Item extends Component {
     }
 
     render() {
+        let name = null;
+        if (this.state.item.name.length > 23) {
+            name = this.state.item.name.substring(0, 23) + '...';
+        } else {
+            name = this.state.item.name;
+        }
+        name = name.toUpperCase();
         return (
             <Container>
                 <ScrollView>
                     <Header
+                        innerContainerStyles={{ alignItems: 'center' }}
                         outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
-                        centerComponent={{ text: this.state.item.name.substring(0, 23) + '...', style: { color: '#fff', fontSize: 20 } }}
+                        centerComponent={{ text: name, style: [Styles.header, { color: '#fff' }] }}
                     />
                     <View>
                         <FlatList
@@ -58,34 +67,48 @@ export default class Item extends Component {
 
                     <View style={[styles.line]} />
 
-                    <View style={{ marginLeft: '1%' }}>
-                        <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{this.state.item.name}</Text>
-                        <View style={styles.rowView}>
-                            <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
-                            <Rating
-                                type="heart"
-                                ratingCount={5}
-                                fractions={2}
-                                startingValue={this.state.item.totalRatingAvg}
-                                imageSize={23}
-                                readonly
-                                style={{ marginLeft: '1%' }}
-                            />
+                    <View style={[styles.rowView, { marginLeft: '1%' }]}>
+                        <View style={{ flex: 4 }}>
+                            <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{this.state.item.name}</Text>
+                            <View style={styles.rowView}>
+                                <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
+                                <Rating
+                                    type="heart"
+                                    ratingCount={5}
+                                    fractions={2}
+                                    startingValue={this.state.item.totalRatingAvg}
+                                    imageSize={23}
+                                    readonly
+                                    style={{ marginLeft: '1%' }}
+                                />
+                            </View>
+                            <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
                         </View>
-                        <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
+                        <View style={{ flex: 1 }}>
+                            {
+                                this.state.item.isOpen ?
+                                    <Image
+                                        source={require('../img/open.png')}
+                                        style={{ height: 64, width: 64 }} />
+                                    :
+                                    <Image
+                                        source={require('../img/close.png')}
+                                        style={{ height: 64, width: 64 }} />
+                            }
+                        </View>
                     </View>
 
                     <View style={[styles.line, { marginTop: '1%' }]} />
 
                     <ScrollView>
                         <Tabs>
-                            <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }} >
+                            <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF' }} textStyle={{ color: 'white' }} >
                                 <InformationItem item={this.state.item} updateNumberOfFollows={this.getNumberOfFollows} />
                             </Tab>
-                            <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                            <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF' }} textStyle={{ color: 'white' }}>
                                 <RatingItem item={this.state.item} ratingScore={this.getRatingScore} />
                             </Tab>
-                            <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF', fontWeight: 'normal' }}>
+                            <Tab heading="Ảnh" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF' }} textStyle={{ color: 'white' }}>
                                 <ListImagesItem item={this.state.item} />
                             </Tab>
                         </Tabs>

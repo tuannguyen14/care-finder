@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "react-navigation";
 import Home from "../screens/Home";
 import BookMark from "../screens/BookMark";
-import NearBy from "../screens/NearBy";
+import Maps from "../screens/Maps";
 import React, { Component } from 'react';
 import IconFoundation from 'react-native-vector-icons/Foundation';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -27,15 +27,15 @@ export const RootTab = createBottomTabNavigator(
                 )
             }
         },
-        // NearBy: {
-        //     screen: NearBy,
-        //     navigationOptions: {
-        //         tabBarLabel: "Bản đồ",
-        //         tabBarIcon: ({ tintColor }) => (
-        //             <IconFoundation name={'map'} color={tintColor} size={24} />
-        //         )
-        //     }
-        // }
+        Maps: {
+            screen: Maps,
+            navigationOptions: {
+                tabBarLabel: "Bản đồ",
+                tabBarIcon: ({ tintColor }) => (
+                    <IconFoundation name={'map'} color={tintColor} size={24} />
+                )
+            }
+        }
     },
     {
         tabBarOptions: {

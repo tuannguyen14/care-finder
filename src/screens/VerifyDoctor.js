@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, View, StyleSheet, FlatList, ScrollView, TouchableOpacity, Image } from "react-native";
-import { Text } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Entypo';
+import { Text, Header } from 'react-native-elements';
 import Toast from 'react-native-easy-toast'
 import Spinner from 'react-native-loading-spinner-overlay';
 import AwesomeButton from 'react-native-really-awesome-button';
@@ -9,6 +8,7 @@ import MultiSelect from 'react-native-multiple-select';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
+import Styles from '../styles/Styles.js';
 
 const ImagePicker = require("react-native-image-picker");
 
@@ -152,24 +152,25 @@ export default class componentName extends Component {
     render() {
         const selectedItems = this.state.selectedItems;
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: AppColors.color }}>
+            <ScrollView style={{ flex: 1, backgroundColor: '#80DEEA' }}>
+                <Header
+                    innerContainerStyles={{ alignItems: 'center' }}
+                    outerContainerStyles={{ borderBottomWidth: 0 }}
+                    backgroundColor={AppColors.color}
+                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => navigate("RootDrawer") }}
+                    centerComponent={{ text: 'XÁC THỰC TÀI KHOẢN BÁC SĨ', style: [Styles.header, { color: '#fff' }] }}
+                />
                 <View style={styles.container}>
                     <Spinner
                         visible={this.state.spinner}
                         textContent={'Đang xử lý'}
-                        textStyle={{ color: 'white' }}
                     />
-                    <TouchableOpacity onPress={() => navigate("RootDrawer")}>
-                        <View style={styles.backButtonContainer}>
-                            <Icon name={'arrow-long-left'} size={27} color={'white'} />
-                        </View>
-                    </TouchableOpacity>
 
                     <View>
                         <View style={{ alignItems: 'center' }}>
-                            <Text h4 style={{ color: 'white', fontFamily: Font.textFont }}>Hình ảnh chứng minh nhân dân</Text>
+                            <Text h4 style={{ color: 'black', fontFamily: Font.textFont, fontWeight: 'bold' }}>Hình ảnh chứng minh nhân dân</Text>
                         </View>
-                        <Text h5 style={{ fontSize: 19, color: 'white', fontFamily: Font.textFont }}>Mặt trước</Text>
+                        <Text h5 style={{ fontSize: 19, color: 'black', fontFamily: Font.textFont }}>Mặt trước</Text>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <TouchableOpacity onPress={() => this.onUploadIdentificationFontImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
                                 <Image
@@ -177,7 +178,7 @@ export default class componentName extends Component {
                                     source={{ uri: this.state.uploadIdentificationFontImage }} />
                             </TouchableOpacity>
                         </View>
-                        <Text h5 style={{ fontSize: 19, color: 'white', fontFamily: Font.textFont }}>Mặt sau</Text>
+                        <Text h5 style={{ fontSize: 19, color: 'black', fontFamily: Font.textFont }}>Mặt sau</Text>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <TouchableOpacity onPress={() => this.onUploadIdentificationBackImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
                                 <Image
@@ -188,8 +189,8 @@ export default class componentName extends Component {
                     </View>
 
                     <View>
-                        <View style={{ alignItems: 'center' }}>
-                            <Text h4 style={{ color: 'white', fontFamily: Font.textFont }} > Hình ảnh bằng cấp bác sĩ</Text>
+                        <View>
+                            <Text h4 style={{ color: 'black', fontFamily: Font.textFont }} > Hình ảnh bằng cấp bác sĩ</Text>
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <TouchableOpacity onPress={() => this.onUploadDiplomaImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
@@ -211,16 +212,16 @@ export default class componentName extends Component {
                             selectText="Chuyên khoa"
                             searchInputPlaceholderText="Chọn chuyên khoa"
                             onChangeInput={(text) => console.log(text)}
-                            altFontFamily="ProximaNova-Light"
+                            altFontFamily={Font.textFont}
                             tagRemoveIconColor="#0097A7"
-                            tagBorderColor="white"
+                            tagBorderColor="black"
                             tagTextColor="#424242"
                             selectedItemTextColor={AppColors.color}
                             selectedItemIconColor="#CCC"
                             itemTextColor="#000"
                             displayKey="name"
                             searchInputStyle={{ color: '#grey' }}
-                            submitButtonColor="#0097A7"
+                            submitButtonColor={AppColors.color}
                             submitButtonText="Đồng ý"
                         />
 
@@ -236,7 +237,7 @@ export default class componentName extends Component {
                                 backgroundColor={'white'}
                                 borderRadius={7}
                                 onPress={() => this.onSendVerify()}>
-                                <Text style={{ fontFamily: Font.textFont, fontSize: 17, fontWeight: 'bold' }}>Gửi xác thực</Text>
+                                <Text style={{ fontFamily: Font.textFont, fontSize: 17, fontWeight: 'bold', color: 'black' }}>Gửi xác thực</Text>
                             </AwesomeButton>
                         </View>
                     </View>

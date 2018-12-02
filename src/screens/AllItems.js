@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 import { Font } from '../styles/Font.js';
-
+import Styles from '../styles/Styles.js';
 let { width, height } = Dimensions.get("window");
 
 export default class AllItems extends Component {
@@ -23,10 +23,11 @@ export default class AllItems extends Component {
     return (
       <ScrollView style={{ flex: 1 }}>
         <Header
+          innerContainerStyles={{ alignItems: 'center' }}
           outerContainerStyles={{ borderBottomWidth: 0 }}
           backgroundColor={AppColors.color}
           leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
-          centerComponent={{ text: 'Địa điểm', style: { color: '#fff', fontSize: 20 } }}
+          centerComponent={{ text: 'ĐỊA ĐIỂM', style: { color: '#fff', fontSize: 20 } }}
         />
         <Modal animationType="slide" transparent={false} visible={this.state.visiblModalFilter} onRequestClose={() => this.setState({ modalVisible: !this.state.visiblModalFilter })}>
           <View></View>
@@ -49,6 +50,16 @@ export default class AllItems extends Component {
                 key={i}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => this.props.navigation.navigate("ItemScreen", { item: l })}>
                   <View style={[styles.rowView, { marginLeft: '3%', marginBottom: '1%' }]}>
+                    {
+                      l.isOpen ?
+                        <Image
+                          source={require('../img/open.png')}
+                          style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                        :
+                        <Image
+                          source={require('../img/close.png')}
+                          style={{ height: 64, width: 64, position: 'absolute', top: 0, right: 10, zIndex: 101 }} />
+                    }
                     <ImageBackground style={styles.imageRating}>
                       <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(l.totalRatingAvg + "").includes('.') ? l.totalRatingAvg : l.totalRatingAvg + '.0'}</Text>
                     </ImageBackground>

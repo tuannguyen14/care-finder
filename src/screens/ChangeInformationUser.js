@@ -31,6 +31,7 @@ export default class ChangeInformationUser extends Component {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAwareScrollView style={styles.container}>
                     <Header
+                        innerContainerStyles={{ alignItems: 'center' }}
                         outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
@@ -123,13 +124,13 @@ export default class ChangeInformationUser extends Component {
                                 <IconFontAwesome name={'male'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
                                 <CheckBox onPress={() => this.checkMale()} checked={this.state.male} color={AppColors.color} style={{ marginLeft: "0.5%" }} />
                                 <Body style={{ marginLeft: "3%" }}>
-                                    <Text style={{fontFamily: Font.textFont, color: AppColors.color }}>Nam</Text>
+                                    <Text style={{ fontFamily: Font.textFont, color: AppColors.color }}>Nam</Text>
                                 </Body>
 
                                 <IconFontAwesome name={'female'} size={27} color={AppColors.color} style={{ marginLeft: "3%" }} />
                                 <CheckBox onPress={() => this.checkFeMale()} checked={this.state.female} color={AppColors.color} style={{ marginLeft: "0.5%" }} />
                                 <Body style={{ marginLeft: "3%" }}>
-                                    <Text style={{fontFamily: Font.textFont, color: AppColors.color }}>Nữ</Text>
+                                    <Text style={{ fontFamily: Font.textFont, color: AppColors.color }}>Nữ</Text>
                                 </Body>
                             </ListItem>
                         </View>

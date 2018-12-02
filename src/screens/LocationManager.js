@@ -6,6 +6,7 @@ import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import { change_url_image } from '../utils/Utils'
+import Styles from '../styles/Styles.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -30,10 +31,11 @@ export default class LocationManager extends Component {
         return (
             <ScrollView style={styles.container}>
                 <Header
+                    innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
-                    centerComponent={{ text: 'Quản lý địa điểm', style: { color: '#fff', fontSize: 20 } }}
+                    centerComponent={{ text: 'QUẢN LÝ ĐỊA ĐIỂM', style: [Styles.header, { color: '#fff' }] }}
                 />
                 <FlatList
                     data={this.state.listLocation}

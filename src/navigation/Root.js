@@ -15,6 +15,7 @@ import BasicInformation from "../screens/EditLocation/BasicInformation";
 import Coordinatess from "../screens/EditLocation/Coordinates";
 import WorkingTime from "../screens/EditLocation/WorkingTime";
 import NearBy from "../screens/NearBy";
+import Maps from "../screens/Maps";
 import AllItems from "../screens/AllItems";
 import Verify from "../screens/Verify";
 import VerifyDoctor from "../screens/VerifyDoctor";
@@ -34,6 +35,7 @@ export const MainScreen = createStackNavigator({
   CoordinatesScreen: { screen: Coordinatess },
   WorkingTimeScreen: { screen: WorkingTime },
   NearByScreen: { screen: NearBy },
+  MapsScreen: { screen: Maps },
   AllItemsScreen: { screen: AllItems },
   VerifyDoctorScreen: { screen: VerifyDoctor }
 },
