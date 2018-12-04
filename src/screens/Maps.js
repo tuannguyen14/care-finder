@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet, View, TouchableOpacity, } from 'react-native';
+import { Dimensions, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { Text, Button, Header } from 'react-native-elements';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
@@ -111,24 +110,27 @@ export default class Maps extends Component {
                     {this.state.allLocations.map(marker => (
                         <MapView.Marker
                             coordinate={marker.coordinates}
-                            image={require('../img/hospitalMarker.png')}
+                            image
                         >
-                            <MapView.Callout onPress={() => this.onDirection(marker.coordinates)}>
-                                <View style={{ alignItems: 'center' }}>
-                                    <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
-                                    <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
-                                    <Button
-                                        title='Dẫn đường'
-                                        buttonStyle={{
-                                            backgroundColor: AppColors.color,
-                                            width: 130,
-                                            height: 25,
-                                            borderColor: "transparent",
-                                            borderWidth: 0,
-                                            borderRadius: 5
-                                        }}
-                                    />
-                                </View>
+                            <Image
+                                source={require('../img/markerHospital2.png')}
+                                style={{ width: 64, height: 64 }}
+                                resizeMode="contain"
+                            />
+                            <MapView.Callout style={{ height: 130, alignItems: 'center', justifyContent: 'center' }} onPress={() => this.onDirection(marker.coordinates)}>
+                                <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
+                                <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
+                                <Button
+                                    title='Dẫn đường'
+                                    buttonStyle={{
+                                        backgroundColor: AppColors.color,
+                                        width: 130,
+                                        height: 25,
+                                        borderColor: "transparent",
+                                        borderWidth: 0,
+                                        borderRadius: 5
+                                    }}
+                                />
                             </MapView.Callout>
                         </MapView.Marker>
                     ))}

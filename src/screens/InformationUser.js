@@ -48,6 +48,7 @@ export default class componentName extends Component {
         super(props);
         this.state = {
             user: global.user,
+            avatar: global.user.avatar,
             slideAnim: new Animated.Value(-200),
             zIndex: 1,
             visible: false
@@ -139,7 +140,7 @@ export default class componentName extends Component {
                             <View style={styles.containerTextImage}>
                                 <TouchableOpacity onPress={this.selectOptions}>
                                     <Image
-                                        source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
+                                        source={{ uri: this.state.avatar.includes('localhost') ? this.state.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.avatar }}
                                         style={styles.avatar}
                                     />
                                     <Icon style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={'white'} />

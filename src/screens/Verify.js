@@ -12,7 +12,7 @@ export default class Verify extends Component {
         this.state = {
             email: "ntd180295@gmail.com",
             password: "hahaha",
-            isValidCode: false,
+            isValidCode: true,
             timer: 60
         }
     }

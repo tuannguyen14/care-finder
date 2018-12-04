@@ -6,7 +6,6 @@ import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Picker } from 'native-base';
 import materialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-easy-toast'
-import { IPServer } from '../Server/IPServer.js';
 import { Fumi } from 'react-native-textinput-effects';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MapView from 'react-native-maps';
@@ -14,6 +13,7 @@ import AwesomeButton from 'react-native-really-awesome-button';
 import { AppColors } from '../styles/AppColors.js';
 import MultiSelect from 'react-native-multiple-select';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import { IPServer } from '../Server/IPServer.js';
 import { Font } from '../styles/Font.js';
 import Styles from '../styles/Styles.js';
 
@@ -654,7 +654,7 @@ export default class CreateNewLocation extends Component {
                                             </TouchableOpacity>
                                     }
                                 </ScrollView>
-                                <View style={styles.rowView}>
+                                <View style={[styles.rowView, { height: 30 }]}>
                                     <View style={[styles.rowView, { flex: 2, alignItems: 'center', justifyContent: 'center' }]}>
                                         <Text style={[styles.text, { fontSize: 17 }]}>Từ</Text>
                                         <View style={{ marginLeft: '3%', marginRight: '1.3%' }}>
@@ -688,7 +688,7 @@ export default class CreateNewLocation extends Component {
                                         <Text style={styles.text}>giờ</Text>
                                     </View>
                                 </View>
-                                <Text style={styles.text}>Hoặc chọn</Text>
+                                <Text style={[styles.text]}>Hoặc chọn</Text>
                                 <View>
                                     <CheckBox
                                         center

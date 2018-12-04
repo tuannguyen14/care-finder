@@ -151,6 +151,7 @@ export default class Login extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <View style={{ marginBottom: '37%' }} />
                 <Toast ref="toast" />
             </View >
             // </ImageBackground >
@@ -193,8 +194,7 @@ const styles = StyleSheet.create({
     },
     buttonGroup: {
         marginTop: "7%",
-        alignItems: 'center',
-        marginBottom: '25%'
+        alignItems: 'center'
     },
     text: {
         color: "white",

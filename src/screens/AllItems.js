@@ -54,11 +54,11 @@ export default class AllItems extends Component {
                       l.isOpen ?
                         <Image
                           source={require('../img/open.png')}
-                          style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                          style={styles.imageOpenClose} />
                         :
                         <Image
                           source={require('../img/close.png')}
-                          style={{ height: 64, width: 64, position: 'absolute', top: 0, right: 10, zIndex: 101 }} />
+                          style={styles.imageOpenClose} />
                     }
                     <ImageBackground style={styles.imageRating}>
                       <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(l.totalRatingAvg + "").includes('.') ? l.totalRatingAvg : l.totalRatingAvg + '.0'}</Text>
@@ -105,6 +105,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
+  },
+  imageOpenClose: {
+    height: 64,
+    width: 64,
+    position: 'absolute',
+    top: 47,
+    right: 0,
+    zIndex: 101
   },
   image: {
     width: width,

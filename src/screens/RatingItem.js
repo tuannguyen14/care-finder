@@ -29,7 +29,8 @@ export default class RatingItem extends Component {
             ratingQuality: 1,
             ratingAttitude: 1,
             contentPost: '',
-            informationUserComment: []
+            informationUserComment: [],
+            isRated: false
         };
     }
 
@@ -50,15 +51,20 @@ export default class RatingItem extends Component {
             Promise.all(promises)
                 .then((results) => {
                     results.forEach((e, i) => {
-                        arrayIdUserComment.push(e.data.user)
-                    })
+                        arrayIdUserComment.push(e.data.user);
+                        console.log(e.data.user._id);
+                        console.log(this.state.user.userId);
+                        if (e.data.user._id == this.state.user.userId) {
+                            this.setState({ isRated: true });
+                        }
+                    });
                     return arrayIdUserComment
                 }).then((array) => {
                     this.setState({
                         informationUserComment: array,
                         spinner: !this.state.spinner
                     })
-                })
+                });
         });
     }
 
@@ -254,13 +260,18 @@ export default class RatingItem extends Component {
                             onFinishRating={this.ratingCompleted}
                             style={{ marginLeft: '1%' }}
                         />
-                        <AwesomeButton
-                            width={width * 0.8}
-                            backgroundColor={AppColors.color}
-                            borderRadius={7}
-                            onPress={() => this.setState({ modalVisible: !this.state.modalVisible, ratingLocation: this.state.startingValueRating, ratingPrice: this.state.startingValueRating, ratingQuality: this.state.startingValueRating, ratingAttitude: this.state.startingValueRating })}>
-                            <Text style={{ fontFamily: Font.textFont, color: 'white', fontSize: 18 }}>Đánh giá</Text>
-                        </AwesomeButton>
+                        {
+                            this.state.isRated ?
+                                <Text h4>Đã đánh giá</Text>
+                                :
+                                <AwesomeButton
+                                    width={width * 0.8}
+                                    backgroundColor={AppColors.color}
+                                    borderRadius={7}
+                                    onPress={() => this.setState({ modalVisible: !this.state.modalVisible, ratingLocation: this.state.startingValueRating, ratingPrice: this.state.startingValueRating, ratingQuality: this.state.startingValueRating, ratingAttitude: this.state.startingValueRating })}>
+                                    <Text style={{ fontFamily: Font.textFont, color: 'white', fontSize: 18 }}>Đánh giá</Text>
+                                </AwesomeButton>
+                        }
                     </View>
                     <View style={[styles.line, { marginTop: '3%' }]} />
                 </View>
