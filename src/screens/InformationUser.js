@@ -125,7 +125,7 @@ export default class componentName extends Component {
                         imageUrls={[{ url: this.state.avatar }]}
                         index={this.state.index} />
                 </Modal>
-                <View style={{ height: "100%", zIndex: 2, backgroundColor: "#80DEEA" }}>
+                <View style={{ height: "100%", zIndex: 2, backgroundColor: "#E0F7FA" }}>
                     <Header
                         innerContainerStyles={{ alignItems: 'center' }}
                         outerContainerStyles={{ borderBottomWidth: 0 }}
