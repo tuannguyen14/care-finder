@@ -72,13 +72,20 @@ export default class componentName extends Component {
                     uri: response.uri,
                     type: 'image/jpg',
                     name: 'image.jpg'
-                })
+                });
                 axios.patch(IPServer.ip + '/user', body, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${global.token}`
                     }
-                })
+                }).then(response => {
+                    let objectUser = response.data.doc;
+                    objectUser.userId = global.userId;
+                    global.user = objectUser;
+                    this.setState({ user: global.user });
+                }).catch(err => {
+                    console.log(err)
+                });
             }
         });
     }
@@ -97,8 +104,6 @@ export default class componentName extends Component {
             toValue: 0,
             duration: 500
         }).start();
-
-        console.log('aaa')
     }
 
     slideDownAnim = () => {
@@ -112,7 +117,7 @@ export default class componentName extends Component {
     }
 
     render() {
-        const { navigate, goBack } = this.props.navigation;
+        const { navigate } = this.props.navigation;
         let bottom = this.state.slideAnim;
 
         console.log(this.state.user.avatar)
@@ -128,7 +133,7 @@ export default class componentName extends Component {
                         innerContainerStyles={{ alignItems: 'center' }}
                         outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
-                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
+                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => navigate('RootDrawer') }}
                         centerComponent={{ text: 'THÔNG TIN NGƯỜI DÙNG', style: [Styles.header, { color: '#fff' }] }}
                     />
                     <TouchableOpacity >
@@ -136,11 +141,11 @@ export default class componentName extends Component {
                             source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
                             style={styles.coverPhoto}
                         >
-                            <Text style={styles.textEditCoverPhoto}>{this.state.user.firstName} {this.state.user.lastName}</Text>
+                            <Text style={styles.textEditCoverPhoto}>{this.state.user.lastName} {this.state.user.firstName}</Text>
                             <View style={styles.containerTextImage}>
                                 <TouchableOpacity onPress={this.selectOptions}>
                                     <Image
-                                        source={{ uri: this.state.avatar.includes('localhost') ? this.state.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.avatar }}
+                                        source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.avatar }}
                                         style={styles.avatar}
                                     />
                                     <Icon style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={'white'} />

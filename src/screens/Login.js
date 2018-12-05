@@ -77,7 +77,7 @@ export default class Login extends Component {
     render() {
         const { navigate } = this.props.navigation;
         return (
-            <LinearGradient colors={['#B2EBF2', '#4DD0E1', '#00BCD4']} style={styles.container}>
+            <LinearGradient colors={['#E0F7FA','#B2EBF2', '#80DEEA', '#4DD0E1', '#26C6DA', '#00BCD4']} style={styles.container}>
                 <Spinner
                     visible={this.state.spinner}
                     textContent={'Đang xử lý'}
