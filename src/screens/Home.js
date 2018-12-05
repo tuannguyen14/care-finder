@@ -17,7 +17,7 @@ export default class Home extends Component {
     super(props);
     this.state = {
       user: global.user,
-      recentInteractiveLocation: [],
+      highestViewLocation: [],
       bestLocation: [],
       spinner: false
     };
@@ -42,7 +42,7 @@ export default class Home extends Component {
           for (let i in data) {
             if (data[i].timeOpen[dayOfWeek][0].isCloseAllDay) {
               data[i].isOpen = false;
-            } else if (hours < parseInt((data[i].timeOpen[dayOfWeek][0].from).substring(0, 2)) || hours > parseInt((data[i].timeOpen[dayOfWeek][0].to).substring(3, 5))) {
+            } else if (hours < parseInt((data[i].timeOpen[dayOfWeek][0].from).substring(0, 2)) || hours > parseInt((data[i].timeOpen[dayOfWeek][0].to).substring(0, 2))) {
               data[i].isOpen = false;
             } else if (hours == parseInt((data[i].timeOpen[dayOfWeek][0].from).substring(0, 2)) && minutes < parseInt((data[i].timeOpen[dayOfWeek][0].to).substring(3, 5))) {
               data[i].isOpen = false;
@@ -52,10 +52,11 @@ export default class Home extends Component {
               data[i].isOpen = true;
             }
           }
-          const dataSort = Array.from(response.data.doc);
+          const bestLocation = Array.from(data);
+          const highestViewLocation = Array.from(data);
           this.setState({
-            recentInteractiveLocation: data.sort((a, b) => parseFloat(b.countView) - parseFloat(a.countView)),
-            bestLocation: dataSort.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg)),
+            highestViewLocation: highestViewLocation.sort((a, b) => parseFloat(b.countView) - parseFloat(a.countView)),
+            bestLocation: bestLocation.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg)),
             spinner: !this.state.spinner
           })
           global.navigate = this.props.navigation.navigate;
@@ -117,9 +118,10 @@ export default class Home extends Component {
         />
         <View style={styles.searchBarContainer}>
           <SearchBar
+            containerStyle={{}}
             lightTheme
             round
-            searchIcon={{ size: 31 }}
+            searchIcon={{ size: 41 }}
             clearIcon={{ color: 'red' }}
             // onChangeText={someMethod}
             // onClear={someMethod}
@@ -147,11 +149,11 @@ export default class Home extends Component {
                     data.isOpen ?
                       <Image
                         source={require('../img/open.png')}
-                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                        style={styles.imageOpenClose} />
                       :
                       <Image
                         source={require('../img/close.png')}
-                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                        style={styles.imageOpenClose} />
                   }
                   <View style={{ zIndex: 100 }}>
                     <Card
@@ -181,7 +183,7 @@ export default class Home extends Component {
             </TouchableOpacity>
           </View>
           <FlatList
-            data={this.state.recentInteractiveLocation}
+            data={this.state.highestViewLocation}
             horizontal={true}
             renderItem={({ item: data }) => {
               return (
@@ -190,11 +192,11 @@ export default class Home extends Component {
                     data.isOpen ?
                       <Image
                         source={require('../img/open.png')}
-                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                        style={styles.imageOpenClose} />
                       :
                       <Image
                         source={require('../img/close.png')}
-                        style={{ height: 64, width: 64, position: 'absolute', top: 10, right: 10, zIndex: 101 }} />
+                        style={styles.imageOpenClose} />
                   }
                   <View style={{ zIndex: 100 }}>
                     <Card
@@ -222,8 +224,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white'
   },
-  searchBarContainer: {
-    margin: '3%',
+  imageOpenClose: {
+    height: 64,
+    width: 64,
+    position: 'absolute',
+    top: '23%',
+    right: '6%',
+    zIndex: 101
   },
   line: {
     backgroundColor: '#BDBDBD',

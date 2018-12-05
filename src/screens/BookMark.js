@@ -35,7 +35,7 @@ export default class BookMark extends Component {
             spinner: !this.state.spinner,
             listIdLocation: global.user.follows
         }, () => {
-            let listLocationFollowTemp = []
+            let listLocationFollowTemp = [];
             let promises = [];
             for (let i = 0; i < this.state.listIdLocation.length; i++) {
                 promises.push(axios.get(IPServer.ip + '/location/' + this.state.listIdLocation[i], {
@@ -44,6 +44,7 @@ export default class BookMark extends Component {
                     }
                 }));
             }
+            console.log(this.state.listIdLocation);
             Promise.all(promises)
                 .then((results) => {
                     results.forEach((locationData, i) => {

@@ -48,6 +48,7 @@ export default class componentName extends Component {
         super(props);
         this.state = {
             user: global.user,
+            avatar: global.user.avatar,
             slideAnim: new Animated.Value(-200),
             zIndex: 1,
             visible: false,
