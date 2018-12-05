@@ -5,6 +5,7 @@ import { Text } from 'react-native-elements';
 import { Fumi } from 'react-native-textinput-effects';
 import axios from 'axios';
 import Toast from 'react-native-easy-toast'
+import LinearGradient from 'react-native-linear-gradient';
 // import Register from './Register':
 import AwesomeButton from 'react-native-really-awesome-button';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -76,8 +77,7 @@ export default class Login extends Component {
     render() {
         const { navigate } = this.props.navigation;
         return (
-            // <ImageBackground source={require('../img/backgroundLogin.png')} style={styles.backgroundImage}>
-            <View style={styles.container}>
+            <LinearGradient colors={['#B2EBF2', '#4DD0E1', '#00BCD4']} style={styles.container}>
                 <Spinner
                     visible={this.state.spinner}
                     textContent={'Đang xử lý'}
@@ -153,8 +153,7 @@ export default class Login extends Component {
                 </View>
                 <View style={{ marginBottom: '37%' }} />
                 <Toast ref="toast" />
-            </View >
-            // </ImageBackground >
+            </LinearGradient>
         );
     }
 }
@@ -162,7 +161,6 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: AppColors.color,
         alignItems: 'center',
         justifyContent: 'center',
     },
