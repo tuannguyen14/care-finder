@@ -50,7 +50,8 @@ export default class componentName extends Component {
             user: global.user,
             slideAnim: new Animated.Value(-200),
             zIndex: 1,
-            visible: false
+            visible: false,
+            avatar: global.user.avatar
         };
     }
 
@@ -72,10 +73,11 @@ export default class componentName extends Component {
                     type: 'image/jpg',
                     name: 'image.jpg'
                 })
+                console.log(body)
                 axios.patch(IPServer.ip + '/user', body, {
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${global.token}`
+                      'Content-Type': 'multipart/form-data',
+                      'Authorization': `Bearer ${global.token}`
                     }
                 })
             }
@@ -139,7 +141,7 @@ export default class componentName extends Component {
                             <View style={styles.containerTextImage}>
                                 <TouchableOpacity onPress={this.selectOptions}>
                                     <Image
-                                        source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
+                                        source={{ uri: this.state.user.avatar }}
                                         style={styles.avatar}
                                     />
                                     <Icon style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={'white'} />
