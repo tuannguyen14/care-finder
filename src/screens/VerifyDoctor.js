@@ -128,7 +128,7 @@ export default class componentName extends Component {
             this.state.departments.forEach(e => {
                 body.append('departments', e)
             })
-            fetch(IPServer.ip + '/user/' + global.user.userId, {
+            fetch(IPServer.ip + '/user/verify/' + global.user.userId, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'multipart/form-data',
