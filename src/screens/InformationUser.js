@@ -119,8 +119,6 @@ export default class componentName extends Component {
     render() {
         const { navigate } = this.props.navigation;
         let bottom = this.state.slideAnim;
-
-        console.log(this.state.user.avatar)
         return (
             <View style={styles.container}>
                 <Modal visible={this.state.visible} transparent={true} onRequestClose={() => this.setState({ visible: false })}>
@@ -172,7 +170,7 @@ export default class componentName extends Component {
                             <Text style={styles.textState}>{this.state.user.follows.length}</Text>
                         </View>
 
-                        {/* <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
                             <Button
                                 title='Đổi thông tin'
                                 buttonStyle={{
@@ -185,7 +183,7 @@ export default class componentName extends Component {
                                 }}
                                 onPress={() => navigate("ChangeInformationUserScreen")}
                             />
-                        </View> */}
+                        </View>
                     </View>
 
                 </View>

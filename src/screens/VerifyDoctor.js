@@ -152,7 +152,7 @@ export default class componentName extends Component {
     render() {
         const selectedItems = this.state.selectedItems;
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: '#80DEEA' }}>
+            <ScrollView style={{ flex: 1, backgroundColor: '#E0F7FA' }}>
                 <Header
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
@@ -167,8 +167,8 @@ export default class componentName extends Component {
                     />
 
                     <View>
-                        <View style={{ alignItems: 'center' }}>
-                            <Text h4 style={{ color: 'black', fontFamily: Font.textFont, fontWeight: 'bold' }}>Hình ảnh chứng minh nhân dân</Text>
+                        <View style={{ width: width }}>
+                            <Text h4 style={{ color: 'black', fontFamily: Font.textFont, fontWeight: 'bold' }}>Hình chứng minh nhân dân</Text>
                         </View>
                         <Text h5 style={{ fontSize: 19, color: 'black', fontFamily: Font.textFont }}>Mặt trước</Text>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -189,10 +189,10 @@ export default class componentName extends Component {
                     </View>
 
                     <View>
-                        <View>
-                            <Text h4 style={{ color: 'black', fontFamily: Font.textFont }} > Hình ảnh bằng cấp bác sĩ</Text>
+                        <View >
+                            <Text h4 style={{ color: 'black', fontFamily: Font.textFont }} > Hình bằng cấp bác sĩ</Text>
                         </View>
-                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={{ alignItems: 'center' }}>
                             <TouchableOpacity onPress={() => this.onUploadDiplomaImage()} style={{ borderWidth: 1, width: width * 0.8 }}>
                                 <Image
                                     style={styles.imageUpload}
