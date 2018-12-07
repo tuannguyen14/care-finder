@@ -75,12 +75,20 @@ export default class componentName extends Component {
                     name: 'image.jpg'
                 })
                 console.log(body)
+                });
                 axios.patch(IPServer.ip + '/user', body, {
                     headers: {
                       'Content-Type': 'multipart/form-data',
                       'Authorization': `Bearer ${global.token}`
                     }
-                })
+                }).then(response => {
+                    let objectUser = response.data.doc;
+                    objectUser.userId = global.userId;
+                    global.user = objectUser;
+                    this.setState({ user: global.user });
+                }).catch(err => {
+                    console.log(err)
+                });
             }
         });
     }
@@ -99,8 +107,6 @@ export default class componentName extends Component {
             toValue: 0,
             duration: 500
         }).start();
-
-        console.log('aaa')
     }
 
     slideDownAnim = () => {
@@ -114,7 +120,7 @@ export default class componentName extends Component {
     }
 
     render() {
-        const { navigate, goBack } = this.props.navigation;
+        const { navigate } = this.props.navigation;
         let bottom = this.state.slideAnim;
 
         console.log(this.state.user.avatar)
@@ -130,7 +136,7 @@ export default class componentName extends Component {
                         innerContainerStyles={{ alignItems: 'center' }}
                         outerContainerStyles={{ borderBottomWidth: 0 }}
                         backgroundColor={AppColors.color}
-                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
+                        leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => navigate('RootDrawer') }}
                         centerComponent={{ text: 'THÔNG TIN NGƯỜI DÙNG', style: [Styles.header, { color: '#fff' }] }}
                     />
                     <TouchableOpacity >
@@ -138,7 +144,7 @@ export default class componentName extends Component {
                             source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
                             style={styles.coverPhoto}
                         >
-                            <Text style={styles.textEditCoverPhoto}>{this.state.user.firstName} {this.state.user.lastName}</Text>
+                            <Text style={styles.textEditCoverPhoto}>{this.state.user.lastName} {this.state.user.firstName}</Text>
                             <View style={styles.containerTextImage}>
                                 <TouchableOpacity onPress={this.selectOptions}>
                                     <Image

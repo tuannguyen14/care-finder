@@ -12,7 +12,7 @@ class MainDrawer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: global.user,
+            user: {},
             id: '',
             listSettingsItem: {
                 name: '',
@@ -27,6 +27,7 @@ class MainDrawer extends Component {
     }
 
     componentWillMount() {
+        this.setState({ user: global.user });
         const listDefaultItemTemp = [
             {
                 icon: 'person',
@@ -64,11 +65,19 @@ class MainDrawer extends Component {
         })
     }
 
+    componentDidMount() {
+        this.props.navigation.addListener(
+            'didFocus',
+            payload => {
+                this.componentWillMount();
+            }
+        );
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
-
                 <View>
                     <ImageBackground
                         source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
