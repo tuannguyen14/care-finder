@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity, Image, Imag
 import { Text, Header } from 'react-native-elements';
 import { List, ListItem } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 import { Font } from '../styles/Font.js';
@@ -13,10 +14,40 @@ export default class AllItems extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listAllItems: this.props.navigation.state.params.allLocations,
+      user: {},
+      listAllItems: {},
       label: this.props.navigation.state.params.label,
       visiblModalFilter: false
     };
+  }
+
+  onOpenDetailItem(data) {
+    if ((this.state.user.userId) !== (data._idDoctor)) {
+      axios({
+        method: 'get',
+        url: IPServer.ip + '/location/' + data._id,
+        responseType: 'stream'
+      });
+    }
+    let numberOFView = data.countView + 1;
+    data.countView = numberOFView
+    this.props.navigation.navigate("ItemScreen", { item: data });
+  }
+
+  componentWillMount() {
+    this.setState({
+      user: global.user,
+      listAllItems: this.props.navigation.state.params.allLocations
+    });
+  }
+
+  componentDidMount() {
+    this.props.navigation.addListener(
+      'didFocus',
+      payload => {
+        this.componentWillMount();
+      }
+    );
   }
 
   render() {
@@ -48,7 +79,7 @@ export default class AllItems extends Component {
               <ListItem
                 style={{ marginLeft: 0, marginTop: 0 }}
                 key={i}>
-                <TouchableOpacity style={{ flex: 1 }} onPress={() => this.props.navigation.navigate("ItemScreen", { item: l })}>
+                <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onOpenDetailItem(l)} >
                   <View style={[styles.rowView, { marginLeft: '3%', marginBottom: '1%' }]}>
                     {
                       l.isOpen ?

@@ -29,6 +29,9 @@ export default class Item extends Component {
         this.setState({ item: newItem });
     }
 
+    getNumberOfViewer() {
+    }
+
     render() {
         let name = null;
         if (this.state.item.name.length > 23) {

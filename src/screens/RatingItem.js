@@ -96,7 +96,7 @@ export default class RatingItem extends Component {
                         let arrayIdUserComment = this.state.informationUserComment;
                         arrayIdUserComment.push(this.state.user);
                         this.props.ratingScore(response.data.doc);
-                        this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: response.data.doc.reviews, informationUserComment: arrayIdUserComment, item: response.data.doc, spinner: !this.state.spinner });
+                        this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: response.data.doc.reviews, informationUserComment: arrayIdUserComment, item: response.data.doc, spinner: !this.state.spinner, isRated: true });
                     }).catch(err => {
                         console.log(err)
                     });
