@@ -74,8 +74,7 @@ export default class componentName extends Component {
                     type: 'image/jpg',
                     name: 'image.jpg'
                 })
-                console.log(body)
-                });
+                
                 axios.patch(IPServer.ip + '/user', body, {
                     headers: {
                       'Content-Type': 'multipart/form-data',

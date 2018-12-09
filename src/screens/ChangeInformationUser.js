@@ -11,6 +11,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
 import { Font } from '../styles/Font.js';
+import Toast from 'react-native-easy-toast'
+import Dialog, { SlideAnimation, DialogContent, DialogButton } from 'react-native-popup-dialog';
 
 let { width, height } = Dimensions.get("window");
 
@@ -21,7 +23,7 @@ export default class ChangeInformationUser extends Component {
             firstName: "",
             lastName: "",
             email: "",
-            password: "",
+            newPassword: "",
             confirmPassword: "",
             phoneNumber: "",
             oldPassword: "",
@@ -29,41 +31,65 @@ export default class ChangeInformationUser extends Component {
             female: false,
             showToast: false,
             spinner: false,
-            user: global.user
+            user: global.user,
+            visible: false,
+            informationButton:false,
+            passwordButton: false,
+            passwordErrorMessage: false,
+            informationErrorMessage: false
         };
     }
 
     onChangeInformation() {
         this.setState({ spinner: !this.state.spinner }, () => {
-            let body = {
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                phoneNumber: this.state.phoneNumber,
-                email: this.state.email,
-                password: this.state.password,
-                gender: this.state.male ? 'Nam' : 'Nữ'
-            };
-            if (this.state.newPassword == this.state.confirmPassword) {
-                axios.post(IPServer.ip + '/user/' + this.state.user.userId, body, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${global.token}`
-                    }
-                })
-                    .then(response => {
-                        this.setState({
-                            spinner: !this.state.spinner
-                        }, () => {
-                        });
-                    }).catch(err => {
-                        this.setState({
-                            spinner: !this.state.spinner
-                        }, () => {
-                        });
-                        console.log(err)
-                    });
+            let body = {}
+            console.log(this.state.visible)
+            if(this.state.firstName !=="") {
+              body.firstName = this.state.firstName
             }
-        });
+            if(this.state.lastName !== "") {
+              body.lastName = this.state.lastName
+            }
+
+            if(this.state.phoneNumber !== "") {
+              body.phoneNumber = this.state.phoneNumber
+            }
+            
+            if(this.state.email !== "") {
+              body.email = this.state.email
+            }
+
+            body.gender = this.state.male ? 'Nam': 'Nữ'
+            
+            axios.patch(IPServer.ip + '/user/' + this.state.user.userId, body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${global.token}`
+                }
+            })
+                .then(response => {
+                   let objectUser = response.data.doc;
+                    objectUser.userId = this.state.user.userId;
+                    global.user = objectUser;
+                    console.log(global.user)
+                    this.setState({
+                        spinner: !this.state.spinner,
+                        visible: true,
+                        informationButton: true
+                    }, () => {
+                      
+                    });
+                    
+                }).catch(err => {
+                    this.setState({
+                        spinner: !this.state.spinner
+                    }, () => {
+
+                    });
+                    console.log(err)
+                });
+            }
+        );
     }
 
     onChangePassWord() {
@@ -72,31 +98,36 @@ export default class ChangeInformationUser extends Component {
                 oldPassword: this.state.oldPassword,
                 newPassword: this.state.newPassword
             };
-            if (this.state.newPassword == this.state.confirmPassword) {
-                axios.post(IPServer.ip + '/user/password/' + this.state.user.userId, body, {
+            if (this.state.newPassword === this.state.confirmPassword) {
+                axios.patch(IPServer.ip + '/user/password/' + this.state.user.userId, body, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${global.token}`
                     }
                 })
                     .then(response => {
+                        
                         this.setState({
-                            spinner: !this.state.spinner
+                            spinner: !this.state.spinner,
+                            visible: true,
+                            passwordButton: true
                         }, () => {
                         });
                     }).catch(err => {
                         this.setState({
-                            spinner: !this.state.spinner
+                            spinner: !this.state.spinner,
+                            passwordErrorMessage: true
                         }, () => {
+                              
                         });
-                        console.log(err)
+                        
                     });
             }
         });
     }
 
     render() {
-        const { goBack } = this.props.navigation;
+        const { navigate, goBack } = this.props.navigation;
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ScrollView style={styles.container}>
@@ -219,6 +250,12 @@ export default class ChangeInformationUser extends Component {
                             <Text style={{ fontFamily: 'Berkshireswash-Regular', color: 'white', fontSize: 26 }}>Đổi mật khẩu</Text>
                             <View style={{ width: height * 0.15, borderBottomWidth: 1, marginLeft: '1.5%', borderBottomColor: 'white' }} />
                         </View>
+                        <View>
+                          {this.state.passwordErrorMessage ? 
+                            <Text style={{color: 'red'}}>Mật khẩu cũ sai</Text>
+                            : null  
+                          }
+                        </View>
                         <View >
                             <Fumi
                                 style={styles.fumi}
@@ -237,7 +274,7 @@ export default class ChangeInformationUser extends Component {
 
                             <Fumi
                                 style={styles.fumi}
-                                label={'Mật khẩu'}
+                                label={'Mật khẩu mới'}
                                 labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
                                 inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                                 autoCorrect={false}
@@ -247,7 +284,7 @@ export default class ChangeInformationUser extends Component {
                                 returnKeyType={"next"}
                                 iconSize={21}
                                 secureTextEntry
-                                onChangeText={password => this.setState({ password })}
+                                onChangeText={newPassword => this.setState({ newPassword })}
                             />
 
                             <Fumi
@@ -274,9 +311,38 @@ export default class ChangeInformationUser extends Component {
                                 onPress={() => this.onChangePassWord()}>
                                 <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Đổi mật khẩu</Text>
                             </AwesomeButton>
+
                         </View>
+                        
                     </View>
+                    <Dialog
+                      width="0.8"
+                      visible={this.state.visible}
+                      dialogAnimation={new SlideAnimation({
+                        slideFrom: 'bottom',
+                      })}
+                      actions={[
+                        <DialogButton
+                          text="Tiếp tục sửa thông tin"
+                          textStyle={styles.dialogButtonText}
+                          onPress={() => this.setState({visible:false, informationButton: false, passwordButton: false})}
+                        />,
+                        <DialogButton
+                          text="Quay về màn hình chính"
+                          textStyle={[styles.dialogButtonText, {color: 'blue'}]}
+                          onPress={() => {this.setState({visible:false, informationButton: false, passwordButton: false}, () => {
+                            navigate('RootDrawer')
+                          })}}
+                        />,
+                      ]}
+                    >
+                      <DialogContent>
+                        {this.state.informationButton? <Text style={styles.dialogContent}>Thay đổi thông tin user thành công</Text> : null}
+                        {this.state.passwordButton? <Text style={styles.dialogContent}>Thay đổi password thành công</Text> : null}
+                      </DialogContent>
+                    </Dialog>
                 </ScrollView>
+               
             </TouchableWithoutFeedback>
         );
     }
@@ -318,5 +384,13 @@ const styles = StyleSheet.create({
         height: 70,
         marginTop: '5%',
         borderRadius: 100
+    },
+    dialogContent: {
+      fontSize: 20,
+      marginTop: 15,
+    },
+    dialogButtonText: {
+      color: 'black',
+      margin: 2
     }
 });
