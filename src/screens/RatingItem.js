@@ -18,7 +18,7 @@ export default class RatingItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: global.user,
+            user: {},
             item: this.props.item,
             reviews: this.props.item.reviews,
             modalVisible: false,
@@ -39,6 +39,9 @@ export default class RatingItem extends Component {
         this.setState({
             spinner: !this.state.spinner
         }, () => {
+            if (global.isLogin) {
+                this.state.user = global.user;
+            }
             let arrayIdUserComment = [];
             let promises = [];
             for (let id in this.state.reviews) {
@@ -52,10 +55,10 @@ export default class RatingItem extends Component {
                 .then((results) => {
                     results.forEach((e, i) => {
                         arrayIdUserComment.push(e.data.user);
-                        console.log(e.data.user._id);
-                        console.log(this.state.user.userId);
-                        if (e.data.user._id == this.state.user.userId) {
-                            this.setState({ isRated: true });
+                        if (global.isLogin) {
+                            if (e.data.user._id == this.state.user.userId) {
+                                this.setState({ isRated: true });
+                            }
                         }
                     });
                     return arrayIdUserComment
@@ -159,7 +162,7 @@ export default class RatingItem extends Component {
                             <Avatar
                                 large
                                 rounded
-                                source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
+                                source={{ uri: !global.isLogin ? 'https://image.flaticon.com/icons/svg/74/74472.svg' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
                                 onPress={() => console.log("Works!")}
                                 activeOpacity={0.7}
                             />
@@ -245,32 +248,26 @@ export default class RatingItem extends Component {
                         <Avatar
                             large
                             rounded
-                            source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
+                            source={{ uri: !global.isLogin ? 'https://image.flaticon.com/icons/svg/74/74472.svg' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
                             onPress={() => console.log("Works!")}
                             activeOpacity={0.7}
                         />
                         <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Xếp hạng và đánh giá</Text>
                         <Text style={{ fontFamily: Font.textFont, }}>Chia sẽ trải nghiệm của bạn để giúp đỡ người khác</Text>
-                        <Rating
-                            type="heart"
-                            ratingCount={5}
-                            fractions={0}
-                            startingValue={this.state.startingValueRating}
-                            imageSize={40}
-                            onFinishRating={this.ratingCompleted}
-                            style={{ marginLeft: '1%' }}
-                        />
                         {
-                            this.state.isRated ?
-                                <Text h4>Đã đánh giá</Text>
+                            global.isLogin ?
+                                this.state.isRated ?
+                                    <Text h4>Đã đánh giá</Text>
+                                    :
+                                    <AwesomeButton
+                                        width={width * 0.8}
+                                        backgroundColor={AppColors.color}
+                                        borderRadius={7}
+                                        onPress={() => this.setState({ modalVisible: !this.state.modalVisible, ratingLocation: this.state.startingValueRating, ratingPrice: this.state.startingValueRating, ratingQuality: this.state.startingValueRating, ratingAttitude: this.state.startingValueRating })}>
+                                        <Text style={{ fontFamily: Font.textFont, color: 'white', fontSize: 18 }}>Đánh giá</Text>
+                                    </AwesomeButton>
                                 :
-                                <AwesomeButton
-                                    width={width * 0.8}
-                                    backgroundColor={AppColors.color}
-                                    borderRadius={7}
-                                    onPress={() => this.setState({ modalVisible: !this.state.modalVisible, ratingLocation: this.state.startingValueRating, ratingPrice: this.state.startingValueRating, ratingQuality: this.state.startingValueRating, ratingAttitude: this.state.startingValueRating })}>
-                                    <Text style={{ fontFamily: Font.textFont, color: 'white', fontSize: 18 }}>Đánh giá</Text>
-                                </AwesomeButton>
+                                <Text h4>Đăng nhập để sử dụng tính năng</Text>
                         }
                     </View>
                     <View style={[styles.line, { marginTop: '3%' }]} />

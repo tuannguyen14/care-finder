@@ -225,7 +225,7 @@ export default class Register extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: AppColors.color,
+        backgroundColor: AppColors.backgroundColors,
     },
     backButtonContainer: {
         margin: "5%"

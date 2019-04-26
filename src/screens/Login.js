@@ -12,6 +12,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
+import io from 'socket.io-client';
 
 var jwtDecode = require('jwt-decode');
 
@@ -29,6 +30,10 @@ export default class Login extends Component {
             spinner: false
         }
     }
+
+    // componentDidMount() {
+    //     this.socket = io('http://localhost:3000');
+    // }
 
     login = async () => {
         this.setState({
@@ -53,6 +58,10 @@ export default class Login extends Component {
                         let objectUser = response.data;
                         objectUser.userId = jwtDecode(global.token).userId;
                         global.user = objectUser;
+                        // const socket = io('http://10.20.195.218:3000');
+                        // socket.on('connect', () => {
+                        // });
+                        global.isLogin = true;
                         this.setState({
                             spinner: !this.state.spinner
                         }, () => {
@@ -76,7 +85,7 @@ export default class Login extends Component {
         const { navigate } = this.props.navigation;
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <LinearGradient colors={['#E0F7FA', '#B2EBF2', '#80DEEA', '#4DD0E1', '#26C6DA', '#00BCD4']} style={styles.container}>
+                <LinearGradient colors={['#ffcdd2', '#ef9a9a', '#e57373', '#ef5350', '#f44336']} style={styles.container}>
                     <Spinner
                         visible={this.state.spinner}
                         textContent={'Đang xử lý'}
@@ -85,16 +94,6 @@ export default class Login extends Component {
                     <View style={styles.containerLogo}>
                         <Text style={styles.logo}> Care Finder </Text>
                     </View>
-                    {/* <View style={[styles.rowView]} >
-                    <TouchableOpacity style={[styles.tabContainer, { borderBottomColor: this.state.tabLogicColor }]} onPress={() => this.setState({ tabRegisterColor: AppColors.color, tabLogicColor: 'white' })}>
-                        <Text h5>ĐĂNG NHẬP</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.tabContainer, { borderBottomColor: this.state.tabRegisterColor }]} onPress={() => this.setState({ tabRegisterColor: 'white', tabLogicColor: AppColors.color })}>
-                        <Text h5>ĐĂNG KÝ</Text>
-                    </TouchableOpacity>
-                </View> */}
-                    {
-                    }
                     <View style={[styles.rowView, { alignItems: 'center', marginBottom: '3%', marginTop: '1%' }]}>
                         <View style={{ width: height * 0.15, borderBottomWidth: 1, marginRight: '1.5%', borderBottomColor: 'white' }} />
                         <Text style={{ fontFamily: 'Berkshireswash-Regular', color: 'white', fontSize: 26 }}>Đăng nhập</Text>

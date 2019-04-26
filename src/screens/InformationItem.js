@@ -20,7 +20,7 @@ export default class InformationItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: global.user,
+            user: {},
             item: this.props.item,
             listDefaultItem: {
                 name: '',
@@ -35,6 +35,15 @@ export default class InformationItem extends Component {
     }
 
     componentWillMount() {
+        if (global.isLogin) {
+            this.state.user = global.user;
+            for (let i = 0; i < this.state.user.follows.length; i++) {
+                if (this.state.user.follows[i] == this.state.item._id) {
+                    this.setState({ isFollowed: true })
+                }
+            }
+            alert('111')
+        }
         let tempDateArray = [];
         let tempContentDate = '';
         for (let i = 1; i < this.state.item.timeOpen.length; i++) {
@@ -69,11 +78,6 @@ export default class InformationItem extends Component {
             tempContentDate += ("Chủ nhật: Từ " + this.state.item.timeOpen[0][0].from + " giờ đến " + this.state.item.timeOpen[0][0].to + " giờ\n");
         }
         tempDateArray.push({ title: "Giờ  hoạt động", content: tempContentDate });
-        for (let i = 0; i < this.state.user.follows.length; i++) {
-            if (this.state.user.follows[i] == this.state.item._id) {
-                this.setState({ isFollowed: true })
-            }
-        }
         const listDefaultItemTemp = [
             {
                 describe: 'address',
@@ -108,27 +112,32 @@ export default class InformationItem extends Component {
     }
 
     onFollow() {
-        const body =
-        {
-            idLocation: this.state.item._id,
-            _idUser: this.state.user.userId
-        };
-        axios.post(IPServer.ip + '/location/follow/' + this.state.item._id, body, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => {
-                let temp = this.state.item;
-                temp.numberOfFollows++;
-                let tempFollowArray = global.user.follows;
-                tempFollowArray.push(this.state.item._id);
-                global.user.follows = tempFollowArray;
-                this.props.updateNumberOfFollows(temp);
-                this.setState({ isFollowed: true })
-            }).catch(err => {
-                console.log(err)
+        if (global.isLogin) {
+            const body =
+            {
+                idLocation: this.state.item._id,
+                _idUser: this.state.user.userId
+            };
+            axios.post(IPServer.ip + '/location/follow/' + this.state.item._id, body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             })
+                .then(response => {
+                    let temp = this.state.item;
+                    temp.numberOfFollows++;
+                    let tempFollowArray = global.user.follows;
+                    tempFollowArray.push(this.state.item._id);
+                    global.user.follows = tempFollowArray;
+                    this.props.updateNumberOfFollows(temp);
+                    this.setState({ isFollowed: true })
+                }).catch(err => {
+                    console.log(err)
+                })
+        }
+        else {
+            //warning
+        }
     }
 
     onModifyFollow() {
@@ -136,35 +145,40 @@ export default class InformationItem extends Component {
     }
 
     onUnFollow() {
-        const body =
-        {
-            idLocation: this.state.item._id,
-            _idUser: this.state.user.userId
-        };
-        axios.post(IPServer.ip + '/location/unfollow/' + this.state.item._id, body, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => {
-                let temp = this.state.item;
-                temp.numberOfFollows--;
-                axios.get(IPServer.ip + '/me', {
-                    headers: {
-                        "Authorization": `Bearer ${global.token}`
-                    },
-                }).then(response => {
-                    let objectUser = response.data;
-                    objectUser.userId = jwtDecode(global.token).userId;
-                    global.user = objectUser;
+        if (global.isLogin) {
+            const body =
+            {
+                idLocation: this.state.item._id,
+                _idUser: this.state.user.userId
+            };
+            axios.post(IPServer.ip + '/location/unfollow/' + this.state.item._id, body, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => {
+                    let temp = this.state.item;
+                    temp.numberOfFollows--;
+                    axios.get(IPServer.ip + '/me', {
+                        headers: {
+                            "Authorization": `Bearer ${global.token}`
+                        },
+                    }).then(response => {
+                        let objectUser = response.data;
+                        objectUser.userId = jwtDecode(global.token).userId;
+                        global.user = objectUser;
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                    this.props.updateNumberOfFollows(temp);
+                    this.setState({ isFollowed: false, isVisibleModal: false })
                 }).catch(err => {
                     console.log(err)
                 })
-                this.props.updateNumberOfFollows(temp);
-                this.setState({ isFollowed: false, isVisibleModal: false })
-            }).catch(err => {
-                console.log(err)
-            })
+        }
+        else {
+            //warning
+        }
     }
 
     render() {
@@ -176,7 +190,7 @@ export default class InformationItem extends Component {
                     textStyle={{ color: 'white' }}
                 />
                 <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
-                    <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => global.navigate("MapsScreen", { destinationFromInformationItem: this.state.item.coordinates })}>
+                    <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => global.navigate("MapsScreen", { destinationFromInformationItem: this.state.item.coordinates, isFromInformationItem: true })}>
                         <IconFontAwesome5 name={'directions'} size={50} color={AppColors.color} />
                         <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Chỉ đường</Text>
                     </TouchableOpacity>

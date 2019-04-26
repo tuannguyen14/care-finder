@@ -66,12 +66,14 @@ export default class Home extends Component {
   }
 
   openDetailItem(rowData) {
-    if ((this.state.user.userId) !== (rowData._idDoctor)) {
-      axios({
-        method: 'get',
-        url: IPServer.ip + '/location/' + rowData._id,
-        responseType: 'stream'
-      });
+    if (global.isLogin) {
+      if ((this.state.user.userId) !== (rowData._idDoctor)) {
+        axios({
+          method: 'get',
+          url: IPServer.ip + '/location/' + rowData._id,
+          responseType: 'stream'
+        });
+      }
     }
     this.props.navigation.navigate("ItemScreen", { item: rowData });
   }

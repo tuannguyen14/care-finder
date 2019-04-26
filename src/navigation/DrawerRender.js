@@ -27,42 +27,44 @@ class MainDrawer extends Component {
     }
 
     componentWillMount() {
-        this.setState({ user: global.user });
-        const listDefaultItemTemp = [
-            {
-                icon: 'person',
-                name: 'Thông tin người dùng',
-                navigation: 'InformationUserScreen'
-            },
-            {
-                icon: 'sentiment-dissatisfied',
-                name: 'Đăng xuất'
-            }
-        ]
-        const listUtilitiesItem = [
-            {
-                icon: 'check',
-                name: 'Xác thực tài khoản bác sĩ',
-                navigation: 'VerifyDoctorScreen'
-            }
-        ];
-        if (this.state.user.permission === 'DOCTOR') {
-            listUtilitiesItem.push(
+        if (global.isLogin) {
+            this.setState({ user: global.user });
+            const listDefaultItemTemp = [
                 {
-                    icon: 'assistant-photo',
-                    name: 'Tạo địa điểm',
-                    navigation: 'CreateNewLocationScreen'
+                    icon: 'person',
+                    name: 'Thông tin người dùng',
+                    navigation: 'InformationUserScreen'
                 },
                 {
-                    icon: 'edit-location',
-                    name: 'Quản lý địa điểm',
-                    navigation: 'LocationManagerScreen'
-                });
+                    icon: 'sentiment-dissatisfied',
+                    name: 'Đăng xuất'
+                }
+            ]
+            const listUtilitiesItem = [
+                {
+                    icon: 'check',
+                    name: 'Xác thực tài khoản bác sĩ',
+                    navigation: 'VerifyDoctorScreen'
+                }
+            ];
+            if (this.state.user.permission === 'DOCTOR') {
+                listUtilitiesItem.push(
+                    {
+                        icon: 'assistant-photo',
+                        name: 'Tạo địa điểm',
+                        navigation: 'CreateNewLocationScreen'
+                    },
+                    {
+                        icon: 'edit-location',
+                        name: 'Quản lý địa điểm',
+                        navigation: 'LocationManagerScreen'
+                    });
+            }
+            this.setState({
+                listSettingsItem: listDefaultItemTemp,
+                listUtilitiesItem: listUtilitiesItem
+            })
         }
-        this.setState({
-            listSettingsItem: listDefaultItemTemp,
-            listUtilitiesItem: listUtilitiesItem
-        })
     }
 
     componentDidMount() {
@@ -74,10 +76,9 @@ class MainDrawer extends Component {
         );
     }
 
-    render() {
-        const { navigate } = this.props.navigation;
+    createUILogged = () => {
         return (
-            <View style={styles.container}>
+            <View>
                 <View>
                     <ImageBackground
                         source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
@@ -138,6 +139,21 @@ class MainDrawer extends Component {
                         </View>
                     </View>
                 </View>
+            </View>
+        );
+    }
+
+
+    render() {
+        const { navigate } = this.props.navigation;
+        return (
+            <View style={styles.container}>
+                {
+                    global.isLogin ?
+                        <createUILogged />
+                        :
+                        <Text>Đăng nhập để sử dụng tính năng</Text>
+                }
             </View>
         );
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   createStackNavigator,
 } from "react-navigation";
+import Welcome from "../screens/Welcome";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
 import { RootDrawer } from "./RootDrawer";
@@ -18,6 +19,7 @@ import Verify from "../screens/Verify";
 import VerifyDoctor from "../screens/VerifyDoctor";
 
 export const MainScreen = createStackNavigator({
+  WelcomeScreen: { screen: Welcome },
   LoginScreen: { screen: Login },
   RegisterScreen: { screen: Register },
   VerifyScreen: { screen: Verify },

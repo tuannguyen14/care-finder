@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { Dimensions, StyleSheet, View, TouchableOpacity, Image, Icon } from 'react-native';
 import { Text, Button, Header } from 'react-native-elements';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -37,12 +37,18 @@ export default class Maps extends Component {
             destination: {
                 latitude: 0,
                 longitude: 0
-            }
+            },
+            isFromInformationItem: false
         };
     }
 
     componentWillMount() {
         this.getCurrentLocation();
+        if (this.props.navigation.state.params != undefined) {
+            if (this.props.navigation.state.params.isFromInformationItem != undefined) {
+                this.setState({ isFromInformationItem: true })
+            }
+        }
     }
 
     componentWillUnmount() {
@@ -90,13 +96,19 @@ export default class Maps extends Component {
         const { goBack } = this.props.navigation;
         return (
             <View style={styles.container}>
-                <Header
-                    innerContainerStyles={{ alignItems: 'center' }}
-                    outerContainerStyles={{ borderBottomWidth: 0 }}
-                    backgroundColor={AppColors.color}
-                    leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
-                    centerComponent={{ text: 'BẢN ĐỒ', style: [Styles.header, { color: '#fff' }] }}
-                />
+                {
+                    this.state.isFromInformationItem
+                        ?
+                        null
+                        :
+                        <Header
+                            innerContainerStyles={{ alignItems: 'center' }}
+                            outerContainerStyles={{ borderBottomWidth: 0 }}
+                            backgroundColor={AppColors.color}
+                            leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
+                            centerComponent={{ text: 'BẢN ĐỒ', style: [Styles.header, { color: '#fff' }] }}
+                        />
+                }
                 <MapView
                     ref={(el) => (this.map = el)}
                     style={styles.map}
@@ -120,7 +132,7 @@ export default class Maps extends Component {
                             <MapView.Callout style={{ height: 130, alignItems: 'center', justifyContent: 'center' }} onPress={() => this.onDirection(marker.coordinates)}>
                                 <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
                                 <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
-                                <Button
+                                {/* <Button
                                     title='Dẫn đường'
                                     buttonStyle={{
                                         backgroundColor: AppColors.color,
@@ -130,7 +142,7 @@ export default class Maps extends Component {
                                         borderWidth: 0,
                                         borderRadius: 5
                                     }}
-                                />
+                                /> */}
                             </MapView.Callout>
                         </MapView.Marker>
                     ))}
@@ -145,9 +157,15 @@ export default class Maps extends Component {
                         }}
                     />
                 </MapView>
-                <TouchableOpacity style={[styles.backButtonContainer]} onPress={() => goBack()}>
-                    <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
-                </TouchableOpacity>
+                {
+                    this.state.isFromInformationItem
+                        ?
+                        <TouchableOpacity style={[styles.backButtonContainer]} onPress={() => goBack()}>
+                            <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
+                        </TouchableOpacity>
+                        :
+                        null
+                }
             </View >
 
         );
@@ -168,5 +186,11 @@ const styles = StyleSheet.create({
     },
     rowView: {
         flexDirection: 'row'
-    }
+    },
+
+    backButtonContainer: {
+        position: 'absolute',
+        top: '3%',
+        left: '5%'
+    },
 });

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList } from "react-native";
+import { View, StyleSheet, Dimensions, Image, ScrollView, FlatList, TouchableOpacity } from "react-native";
 import { Header, Text, Rating } from 'react-native-elements';
 import { Container, Tab, Tabs } from 'native-base';
 import { AppColors } from '../styles/AppColors.js';
 import InformationItem from './InformationItem.js';
 import RatingItem from './RatingItem.js';
 import ListImagesItem from './ListImagesItem.js';
+import IconEntypo from 'react-native-vector-icons/Entypo';
 import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
 import Styles from '../styles/Styles.js';
@@ -51,6 +52,16 @@ export default class Item extends Component {
                         centerComponent={{ text: name, style: [Styles.header, { color: '#fff' }] }}
                     />
                     <View>
+                        {
+                            this.state.item.isOpen ?
+                                <Image
+                                    source={require('../img/open.png')}
+                                    style={styles.imageOpenClose} />
+                                :
+                                <Image
+                                    source={require('../img/close.png')}
+                                    style={styles.imageOpenClose} />
+                        }
                         <FlatList
                             data={this.state.item.imageUrls}
                             horizontal={true}
@@ -87,18 +98,10 @@ export default class Item extends Component {
                             </View>
                             <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
                         </View>
-                        <View style={{ flex: 1 }}>
-                            {
-                                this.state.item.isOpen ?
-                                    <Image
-                                        source={require('../img/open.png')}
-                                        style={{ height: 64, width: 64 }} />
-                                    :
-                                    <Image
-                                        source={require('../img/close.png')}
-                                        style={{ height: 64, width: 64 }} />
-                            }
-                        </View>
+                        <TouchableOpacity style={[styles.centerContainer, { flex: 1 }]} onPress={() => this.onFollow()}>
+                            <IconEntypo name={'new-message'} size={50} color={AppColors.color} />
+                            <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Nhắn tin</Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={[styles.line, { marginTop: '1%' }]} />
@@ -129,6 +132,14 @@ const styles = StyleSheet.create({
     },
     rowView: {
         flexDirection: 'row'
+    },
+    imageOpenClose: {
+        height: 64,
+        width: 64,
+        position: 'absolute',
+        top: '1%',
+        right: '1%',
+        zIndex: 101
     },
     line: {
         backgroundColor: '#BDBDBD',

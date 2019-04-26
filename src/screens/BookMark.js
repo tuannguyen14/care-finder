@@ -33,30 +33,35 @@ export default class BookMark extends Component {
     componentWillMount() {
         this.setState({
             spinner: !this.state.spinner,
-            listIdLocation: global.user.follows
         }, () => {
-            let listLocationFollowTemp = [];
-            let promises = [];
-            for (let i = 0; i < this.state.listIdLocation.length; i++) {
-                promises.push(axios.get(IPServer.ip + '/location/' + this.state.listIdLocation[i], {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                }));
-            }
-            console.log(this.state.listIdLocation);
-            Promise.all(promises)
-                .then((results) => {
-                    results.forEach((locationData, i) => {
-                        listLocationFollowTemp.push(locationData.data.doc);
-                    })
-                    return listLocationFollowTemp
-                }).then((arrayLocationReturn) => {
-                    this.setState({
-                        listLocationFollow: arrayLocationReturn,
-                        spinner: !this.state.spinner
-                    })
+            if (global.isLogin) {
+                this.setState({
+                    listIdLocation: global.user.follows
                 });
+                let listLocationFollowTemp = [];
+                let promises = [];
+                for (let i = 0; i < this.state.listIdLocation.length; i++) {
+                    promises.push(axios.get(IPServer.ip + '/location/' + this.state.listIdLocation[i], {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    }));
+                }
+                console.log(this.state.listIdLocation);
+                Promise.all(promises)
+                    .then((results) => {
+                        results.forEach((locationData, i) => {
+                            listLocationFollowTemp.push(locationData.data.doc);
+                        })
+                        return listLocationFollowTemp
+                    }).then((arrayLocationReturn) => {
+                        this.setState({
+                            listLocationFollow: arrayLocationReturn,
+                            spinner: !this.state.spinner
+                        })
+                    });
+
+            }
         });
     }
 

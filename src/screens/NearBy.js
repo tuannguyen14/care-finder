@@ -196,7 +196,7 @@ export default class NearBy extends Component {
                                 <View style={{ alignItems: 'center' }}>
                                     <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
                                     <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
-                                    <Button
+                                    {/* <Button
                                         title='Dẫn đường'
                                         buttonStyle={{
                                             backgroundColor: AppColors.color,
@@ -206,7 +206,7 @@ export default class NearBy extends Component {
                                             borderWidth: 0,
                                             borderRadius: 5
                                         }}
-                                    />
+                                    /> */}
                                 </View>
                             </MapView.Callout>
                         </MapView.Marker>
