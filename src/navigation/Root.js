@@ -17,6 +17,7 @@ import Maps from "../screens/Maps";
 import AllItems from "../screens/AllItems";
 import Verify from "../screens/Verify";
 import VerifyDoctor from "../screens/VerifyDoctor";
+import Search from "../screens/Search"
 
 export const MainScreen = createStackNavigator({
   WelcomeScreen: { screen: Welcome },
@@ -33,7 +34,8 @@ export const MainScreen = createStackNavigator({
   NearByScreen: { screen: NearBy },
   MapsScreen: { screen: Maps },
   AllItemsScreen: { screen: AllItems },
-  VerifyDoctorScreen: { screen: VerifyDoctor }
+  VerifyDoctorScreen: { screen: VerifyDoctor },
+  SearchScreen: {screen: Search}
 },
   {
     headerMode: 'none'
