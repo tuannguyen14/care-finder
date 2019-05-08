@@ -1,25 +1,32 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
-import { List, ListItem, SearchBar, Card } from "react-native-elements";
-
-import axios from 'axios';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
+import { List, ListItem, SearchBar, Card, Icon } from "react-native-elements";
+import _ from "lodash";
 
 // create a component
 class Search extends Component {
   state = {
     search: '',
-    location: global.allLocations,
+    data: global.allLocations,
     loading: false,
-    error: null
+    error: null,
+    fullData: global.allLocations,
+    query: ''
   };
 
-  updateSearch = search => {
-    this.setState({ search });
-  };
+
+  handleSearch = (text) => {
+    console.log("text", text)
+    const formatQuery = text.toLowerCase();
+    const data = _.filter(this.state.fullData, location => {
+      return location.name.toLowerCase().includes(formatQuery)
+    })
+    this.setState({query: text, data})
+  }
 
   renderHeader = () => {
-    return <SearchBar placeholder="Type Here..." lightTheme round />;
+    return <SearchBar placeholder="Type Here..." lightTheme round onChangeText={this.handleSearch} />;
   };
 
   renderFooter = () => {
@@ -47,32 +54,40 @@ class Search extends Component {
           backgroundColor: "#CED0CE",
           marginLeft: "14%"
         }}
-      />
+      ></View>
     );
   };
 
   render() {
-    const { search } = this.state;
+
     const { goBack } = this.props.navigation;
-    console.log(this.state.location)
+    console.log(this.state.data)
     return (
-      <View >
+      <SafeAreaView>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={() => {goBack()}} style={{marginTop: "3%"}}>
+            <Icon  name="arrow-back"/>
+          </TouchableOpacity>
+          <View style={{flex: 1, width: "92%"}}>
+            <SearchBar placeholder="Type Here..." lightTheme round onChangeText={this.handleSearch} />
+          </View>
+
+        </View>
         <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
           <FlatList
-            data={this.state.location}
+            data={this.state.data}
             renderItem={({ item }) => (
               <Card 
-                image={item.imageUrls[0]}
+                image={{uri: item.imageUrls[0]}}
                 title={item.name}
               />
             )}
             keyExtractor={item => item._id}
             ItemSeparatorComponent={this.renderSeparator}
-            ListHeaderComponent={this.renderHeader}
             ListFooterComponent={this.renderFooter}
           />
         </List>
-      </View>
+      </SafeAreaView>
     );
   }
 }
