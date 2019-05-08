@@ -45,6 +45,11 @@ class MainDrawer extends Component {
                     icon: 'check',
                     name: 'Xác thực tài khoản bác sĩ',
                     navigation: 'VerifyDoctorScreen'
+                },
+                {
+                    icon: 'check',
+                    name: 'Đặt lịch khám',
+                    navigation: 'BookingScreen'
                 }
             ];
             if (this.state.user.permission === 'DOCTOR') {
@@ -150,7 +155,7 @@ class MainDrawer extends Component {
             <View style={styles.container}>
                 {
                     global.isLogin ?
-                        <createUILogged />
+                        this.createUILogged()
                         :
                         <Text>Đăng nhập để sử dụng tính năng</Text>
                 }

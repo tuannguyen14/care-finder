@@ -132,7 +132,7 @@ export default class Maps extends Component {
                             <MapView.Callout style={{ height: 130, alignItems: 'center', justifyContent: 'center' }} onPress={() => this.onDirection(marker.coordinates)}>
                                 <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
                                 <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
-                                {/* <Button
+                                <Button
                                     title='Dẫn đường'
                                     buttonStyle={{
                                         backgroundColor: AppColors.color,
@@ -142,7 +142,7 @@ export default class Maps extends Component {
                                         borderWidth: 0,
                                         borderRadius: 5
                                     }}
-                                /> */}
+                                />
                             </MapView.Callout>
                         </MapView.Marker>
                     ))}
