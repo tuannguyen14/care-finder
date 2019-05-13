@@ -33,7 +33,7 @@ export default class Booking extends Component {
             dateBooking: '2019-05-13'
         };
         axios.post(IPServer.ip + '/location/getBookingTime', body).then((response) => {
-            this.setState({ dataBookingTime: response.data.timeBooking })
+            this.setState({ dataBookingTime: response.data.timeBooking.time })
             console.log(response);
         }).catch(err => {
             console.log(err)
@@ -98,7 +98,7 @@ export default class Booking extends Component {
                         onPress: () => this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm })
                     }}
                 />
-                {/* <ScrollView style={{ marginBottom: '3%' }}>
+                <ScrollView style={{ marginBottom: '3%' }}>
                     {
                         this.state.dataBookingTime.map((l, i) => (
                             <View style={{ backgroundColor: l.userId == '' ? 'green' : 'red' }}>
@@ -110,7 +110,7 @@ export default class Booking extends Component {
                             </View>
                         ))
                     }
-                </ScrollView> */}
+                </ScrollView>
                 <Dialog
                     visible={this.state.dialogVisibleMessage}
                     onTouchOutside={() => this.setState({ dialogVisibleMessage: false })} >
