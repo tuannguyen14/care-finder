@@ -18,7 +18,7 @@ export default class RatingItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: {},
+            user: global.user,
             item: this.props.item,
             reviews: this.props.item.reviews,
             modalVisible: false,
@@ -39,9 +39,7 @@ export default class RatingItem extends Component {
         this.setState({
             spinner: !this.state.spinner
         }, () => {
-            if (global.isLogin) {
-                this.state.user = global.user;
-            }
+            this.state.user = global.user;
             let arrayIdUserComment = [];
             let promises = [];
             for (let id in this.state.reviews) {
@@ -150,6 +148,8 @@ export default class RatingItem extends Component {
                     textContent={'Đang xử lý'}
                     textStyle={{ color: 'white' }}
                 />
+                {
+                    global.isLogin ?
                 <Modal animationType="slide" transparent={false} visible={this.state.modalVisible} onRequestClose={() => this.setState({ modalVisible: !this.state.modalVisible })}>
                     <View style={{ flex: 1 }}>
                         <Header
@@ -160,9 +160,9 @@ export default class RatingItem extends Component {
                         />
                         <View style={{ alignItems: 'center', marginLeft: '3%', marginRight: '1%' }}>
                             <Avatar
-                                large
+                                size="xlarge"
                                 rounded
-                                source={{ uri: !global.isLogin ? 'https://image.flaticon.com/icons/svg/74/74472.svg' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
+                                source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
                                 onPress={() => console.log("Works!")}
                                 activeOpacity={0.7}
                             />
@@ -234,7 +234,9 @@ export default class RatingItem extends Component {
                         </View>
                     </View>
                 </Modal>
-
+                :
+                null
+            }
                 <View>
                     {
                         this.createRatingoneToFive()
@@ -246,9 +248,9 @@ export default class RatingItem extends Component {
 
                     <View style={[styles.centerContainer]}>
                         <Avatar
-                            large
+                            size="large"
                             rounded
-                            source={{ uri: !global.isLogin ? 'https://image.flaticon.com/icons/svg/74/74472.svg' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
+                            source={{ uri: !global.isLogin ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5k0pKpVdogRyyt06oALOEU9_cdmBCTifjoGQxnePlNbnNVzrT' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
                             onPress={() => console.log("Works!")}
                             activeOpacity={0.7}
                         />
@@ -267,7 +269,13 @@ export default class RatingItem extends Component {
                                         <Text style={{ fontFamily: Font.textFont, color: 'white', fontSize: 18 }}>Đánh giá</Text>
                                     </AwesomeButton>
                                 :
-                                <Text h4>Đăng nhập để sử dụng tính năng</Text>
+                                <AwesomeButton
+                                    width={width * 0.8}
+                                    backgroundColor={AppColors.backgroundColor}
+                                    borderRadius={7}
+                                    onPress={() => navigate('LoginScreen')}>
+                                    <Text style={{ fontSize: 16, fontFamily: Font.textFont, fontWeight: 'bold' }}>Đăng nhập</Text>
+                                </AwesomeButton>
                         }
                     </View>
                     <View style={[styles.line, { marginTop: '3%' }]} />
@@ -293,7 +301,7 @@ export default class RatingItem extends Component {
                                             < View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1, padding: '1%' }]} >
                                                 <View style={{ marginLeft: '3%' }}>
                                                     <Avatar
-                                                        medium
+                                                        size="medium"
                                                         rounded
                                                         source={{ uri: this.state.informationUserComment[index].avatar.includes('localhost') ? this.state.informationUserComment[index].avatar.replace('http://localhost:3000', IPServer.ip) : this.state.informationUserComment[index].avatar }}
                                                         onPress={() => console.log("Works!")}
@@ -301,7 +309,7 @@ export default class RatingItem extends Component {
                                                     />
                                                 </View>
                                                 <View style={{ marginLeft: '3%' }}>
-                                                    <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold' }}>{this.state.informationUserComment[index].firstName + ' ' + this.state.informationUserComment[index].lastName}</Text>
+                                                    <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 23 }}>{this.state.informationUserComment[index].firstName + ' ' + this.state.informationUserComment[index].lastName}</Text>
                                                     < Rating
                                                         type="heart"
                                                         readonly

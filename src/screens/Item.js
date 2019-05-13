@@ -33,6 +33,10 @@ export default class Item extends Component {
     getNumberOfViewer() {
     }
 
+    onBook() {
+        this.props.navigation.navigate('BookingScreen', { location: this.state.item });
+    }
+
     render() {
         let name = null;
         if (this.state.item.name.length > 23) {
@@ -98,9 +102,13 @@ export default class Item extends Component {
                             </View>
                             <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Có {this.state.item.numberOfFollows} theo dõi</Text>
                         </View>
-                        <TouchableOpacity style={[styles.centerContainer, { flex: 1 }]} onPress={() => this.onFollow()}>
+                        {/* <TouchableOpacity style={[styles.centerContainer, { flex: 1 }]} onPress={() => this.onFollow()}>
                             <IconEntypo name={'new-message'} size={50} color={AppColors.color} />
                             <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Nhắn tin</Text>
+                        </TouchableOpacity> */}
+                        <TouchableOpacity style={[styles.centerContainer,{marginLeft: '1%'}]} onPress={() => this.onBook()}>
+                            <IconEntypo name={'calendar'} size={50} color={AppColors.color} />
+                            <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Đặt lịch khám</Text>
                         </TouchableOpacity>
                     </View>
 

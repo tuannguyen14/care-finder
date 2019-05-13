@@ -42,7 +42,6 @@ export default class InformationItem extends Component {
                     this.setState({ isFollowed: true })
                 }
             }
-            alert('111')
         }
         let tempDateArray = [];
         let tempContentDate = '';

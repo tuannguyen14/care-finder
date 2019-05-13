@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import {
-    View,
-    StyleSheet,
-    ImageBackground
-} from "react-native";
+import { Dimensions, View, StyleSheet, ImageBackground } from "react-native";
 import { Text, Avatar, ListItem } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
+import AwesomeButton from 'react-native-really-awesome-button';
+import { Font } from '../styles/Font.js';
+
+let { width, height } = Dimensions.get("window");
 
 // create a component
 class MainDrawer extends Component {
@@ -45,11 +45,6 @@ class MainDrawer extends Component {
                     icon: 'check',
                     name: 'Xác thực tài khoản bác sĩ',
                     navigation: 'VerifyDoctorScreen'
-                },
-                {
-                    icon: 'check',
-                    name: 'Đặt lịch khám',
-                    navigation: 'BookingScreen'
                 }
             ];
             if (this.state.user.permission === 'DOCTOR') {
@@ -91,7 +86,7 @@ class MainDrawer extends Component {
                     >
                         <View style={styles.containerTextImage}>
                             <Avatar
-                                large
+                                size="large"
                                 rounded
                                 source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
                                 onPress={() => console.log("Works!")}
@@ -157,7 +152,15 @@ class MainDrawer extends Component {
                     global.isLogin ?
                         this.createUILogged()
                         :
-                        <Text>Đăng nhập để sử dụng tính năng</Text>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: '6%' }}>
+                            <AwesomeButton
+                                width={width * 0.5}
+                                backgroundColor={AppColors.backgroundColor}
+                                borderRadius={7}
+                                onPress={() => navigate('LoginScreen')}>
+                                <Text style={{ fontSize: 16, fontFamily: Font.textFont, fontWeight: 'bold' }}>Đăng nhập</Text>
+                            </AwesomeButton>
+                        </View>
                 }
             </View>
         );

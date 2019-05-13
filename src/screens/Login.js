@@ -6,7 +6,6 @@ import { Fumi } from 'react-native-textinput-effects';
 import axios from 'axios';
 import Toast from 'react-native-easy-toast'
 import LinearGradient from 'react-native-linear-gradient';
-// import Register from './Register':
 import AwesomeButton from 'react-native-really-awesome-button';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { AppColors } from '../styles/AppColors.js';

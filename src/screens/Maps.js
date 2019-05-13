@@ -14,8 +14,8 @@ let { width, height } = Dimensions.get("window");
 const GOOGLE_MAPS_APIKEY = 'AIzaSyDqZFsw9dShNF6QROftqbN6o4dsDUDcHtw';
 const geolib = require('geolib');
 const ASPECT_RATIO = width / height;
-const LATITUDE = 0;
-const LONGITUDE = 0;
+const LATITUDE = 11.0558;
+const LONGITUDE = 106.667;
 const LATITUDE_DELTA = 0.03;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
@@ -64,23 +64,23 @@ export default class Maps extends Component {
     }
 
     getCurrentLocation() {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                this.setState({
-                    region: new MapView.AnimatedRegion({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA
-                    }),
-                    origin: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    }
-                });
-            },
-            error => console.log(error.message)
-        );
+        // navigator.geolocation.getCurrentPosition(
+        //     position => {
+        //         this.setState({
+        //             region: new MapView.AnimatedRegion({
+        //                 latitude: position.coords.latitude,
+        //                 longitude: position.coords.longitude,
+        //                 latitudeDelta: LATITUDE_DELTA,
+        //                 longitudeDelta: LONGITUDE_DELTA
+        //             }),
+        //             origin: {
+        //                 latitude: position.coords.latitude,
+        //                 longitude: position.coords.longitude,
+        //             }
+        //         });
+        //     },
+        //     error => console.log(error.message)
+        // );
     }
 
     onDirection(destinationCoordinate) {
@@ -146,16 +146,6 @@ export default class Maps extends Component {
                             </MapView.Callout>
                         </MapView.Marker>
                     ))}
-                    <MapViewDirections
-                        origin={this.state.origin}
-                        destination={this.state.destination}
-                        apikey={GOOGLE_MAPS_APIKEY}
-                        strokeWidth={3}
-                        strokeColor="hotpink"
-                        onError={(errorMessage) => {
-                            console.log(errorMessage);
-                        }}
-                    />
                 </MapView>
                 {
                     this.state.isFromInformationItem
