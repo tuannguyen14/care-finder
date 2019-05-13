@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { List, ListItem, SearchBar, Card, Icon } from "react-native-elements";
 import _ from "lodash";
 
@@ -58,6 +58,11 @@ class Search extends Component {
     );
   };
 
+  openDetailItem(rowData) {
+
+    this.props.navigation.navigate("ItemScreen", { item: rowData });
+  }
+
   render() {
 
     const { goBack } = this.props.navigation;
@@ -65,7 +70,7 @@ class Search extends Component {
     return (
       <SafeAreaView>
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity onPress={() => {goBack()}} style={{marginTop: "3%"}}>
+          <TouchableOpacity onPress={() => {goBack()}} style={{marginTop: "4%"}}>
             <Icon  name="arrow-back"/>
           </TouchableOpacity>
           <View style={{flex: 1, width: "92%"}}>
@@ -77,10 +82,22 @@ class Search extends Component {
           <FlatList
             data={this.state.data}
             renderItem={({ item }) => (
-              <Card 
-                image={{uri: item.imageUrls[0]}}
-                title={item.name}
-              />
+              <TouchableOpacity onPress={() => this.openDetailItem(item)}>
+                <Card >
+                  <View style={styles.card}>
+                    <Image
+                      resizeMode="cover"
+                      style={styles.image}
+                      source={{uri: item.imageUrls[0]}}
+                    />
+                    <View style={{marginLeft: "3%", flexWrap: "wrap", flex:1 }}>
+                      <Text style={styles.title}>{item.name}</Text>
+                      <Text>{`${item.address.street}, ${item.address.ward}, ${item.address.district}, ${item.address.city}`}</Text>
+                    </View>
+                  </View>
+                </Card>
+              </TouchableOpacity>
+              
             )}
             keyExtractor={item => item._id}
             ItemSeparatorComponent={this.renderSeparator}
@@ -104,6 +121,18 @@ const styles = StyleSheet.create({
     flex:1,
     flexDirection: 'row',
     marginTop: 25
+  },
+  image: {
+    width:56,
+    height:56
+  },
+  card: {
+    flexDirection: "row"
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 16,
+
   }
 });
 
