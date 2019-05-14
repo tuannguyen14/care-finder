@@ -6,6 +6,7 @@ import { ListItem } from 'react-native-elements'
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import axios from 'axios';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 import Modal from "react-native-modal";
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
@@ -30,7 +31,8 @@ export default class InformationItem extends Component {
             dataArray: [],
             isFollowed: false,
             spinner: false,
-            isVisibleModal: false
+            isVisibleModal: false,
+            dialogVisibleConfirm: false
         };
     }
 
@@ -110,6 +112,11 @@ export default class InformationItem extends Component {
         })
     }
 
+    onLogin() {
+        this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm });
+        this.props.navigate('LoginScreen')
+    }
+
     onFollow() {
         if (global.isLogin) {
             const body =
@@ -135,7 +142,7 @@ export default class InformationItem extends Component {
                 })
         }
         else {
-            //warning
+            this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm })
         }
     }
 
@@ -188,6 +195,20 @@ export default class InformationItem extends Component {
                     textContent={'Đang xử lý'}
                     textStyle={{ color: 'white' }}
                 />
+                <ConfirmDialog
+                    title='Bạn chưa đăng nhập!'
+                    message="Bạn có muốn đăng nhập không?"
+                    visible={this.state.dialogVisibleConfirm}
+                    onTouchOutside={() => this.setState({ dialogVisibleConfirm: false })}
+                    positiveButton={{
+                        title: "Đồng ý!",
+                        onPress: () => this.onLogin()
+                    }}
+                    negativeButton={{
+                        title: "Thoát",
+                        onPress: () => this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm })
+                    }}
+                />
                 <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
                     <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => global.navigate("MapsScreen", { destinationFromInformationItem: this.state.item.coordinates, isFromInformationItem: true })}>
                         <IconFontAwesome5 name={'directions'} size={50} color={AppColors.color} />
@@ -211,7 +232,6 @@ export default class InformationItem extends Component {
                                 <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Theo dõi</Text>
                             </TouchableOpacity>
                     }
-
                 </View>
                 <View style={[styles.line, { marginTop: '1%' }]} />
                 <View style={{ height: height }}>

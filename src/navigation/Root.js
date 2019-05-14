@@ -36,8 +36,8 @@ export const MainScreen = createStackNavigator({
   MapsScreen: { screen: Maps },
   AllItemsScreen: { screen: AllItems },
   VerifyDoctorScreen: { screen: VerifyDoctor },
-  SearchScreen: {screen: Search},
-  BookingScreen: {screen: Booking}
+  SearchScreen: { screen: Search },
+  BookingScreen: { screen: Booking }
 },
   {
     headerMode: 'none'

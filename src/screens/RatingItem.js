@@ -150,93 +150,89 @@ export default class RatingItem extends Component {
                 />
                 {
                     global.isLogin ?
-                <Modal animationType="slide" transparent={false} visible={this.state.modalVisible} onRequestClose={() => this.setState({ modalVisible: !this.state.modalVisible })}>
-                    <View style={{ flex: 1 }}>
-                        <Header
-                            backgroundColor={AppColors.color}
-                            leftComponent={{ icon: 'clear', color: '#fff', size: 31, onPress: () => this.setState({ modalVisible: !this.state.modalVisible }) }}
-                            centerComponent={{ text: this.state.item.name.substring(0, 23) + '...', style: { color: '#fff', fontSize: 20 } }}
-                            rightComponent={{ icon: 'send', color: '#fff', size: 31, onPress: () => this.onPostComment() }}
-                        />
-                        <View style={{ alignItems: 'center', marginLeft: '3%', marginRight: '1%' }}>
-                            <Avatar
-                                size="xlarge"
-                                rounded
-                                source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
-                                onPress={() => console.log("Works!")}
-                                activeOpacity={0.7}
-                            />
-                            <Text style={{ fontFamily: Font.textFont, color: 'black' }}>{this.state.user.lastName + " " + this.state.user.firstName}</Text>
-                            <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingLocation}</Text>
-                                <Slider
-                                    style={styles.sliderRating}
-                                    value={this.state.ratingLocation == 0 ? this.state.startingValueRating : this.state.ratingLocation}
-                                    step={1}
-                                    onValueChange={(ratingLocation) => this.setState({ ratingLocation })}
-                                    minimumValue={1}
-                                    maximumValue={5}
-                                    thumbTintColor={AppColors.color} />
-                                <Text style={styles.nameTextSliderRating}>Vị trí</Text>
+                        <Modal animationType="slide" transparent={false} visible={this.state.modalVisible} onRequestClose={() => this.setState({ modalVisible: !this.state.modalVisible })}>
+                            <View style={{ flex: 1 }}>
+                                <Header
+                                    backgroundColor={AppColors.color}
+                                    leftComponent={{ icon: 'clear', color: '#fff', size: 31, onPress: () => this.setState({ modalVisible: !this.state.modalVisible }) }}
+                                    centerComponent={{ text: this.state.item.name.substring(0, 23) + '...', style: { color: '#fff', fontSize: 20 } }}
+                                    rightComponent={{ icon: 'send', color: '#fff', size: 31, onPress: () => this.onPostComment() }}
+                                />
+                                <View style={{ alignItems: 'center', marginLeft: '3%', marginRight: '1%' }}>
+                                    <Image
+                                        source={{ uri: !global.isLogin ? 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
+                                        style={styles.avatar} />
+                                    <Text style={{ fontFamily: Font.textFont, color: 'black' }}>{this.state.user.lastName + " " + this.state.user.firstName}</Text>
+                                    <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                        <Text style={styles.nameTextSliderRating}>{this.state.ratingLocation}</Text>
+                                        <Slider
+                                            style={styles.sliderRating}
+                                            value={this.state.ratingLocation == 0 ? this.state.startingValueRating : this.state.ratingLocation}
+                                            step={1}
+                                            onValueChange={(ratingLocation) => this.setState({ ratingLocation })}
+                                            minimumValue={1}
+                                            maximumValue={5}
+                                            thumbTintColor={AppColors.color} />
+                                        <Text style={styles.nameTextSliderRating}>Vị trí</Text>
+                                    </View>
+                                    <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                        <Text style={styles.nameTextSliderRating}>{this.state.ratingPrice}</Text>
+                                        <Slider
+                                            style={styles.sliderRating}
+                                            value={this.state.ratingPrice == 0 ? this.state.startingValueRating : this.state.ratingPrice}
+                                            step={1}
+                                            onValueChange={(ratingPrice) => this.setState({ ratingPrice })}
+                                            minimumValue={1}
+                                            maximumValue={5}
+                                            thumbTintColor={AppColors.color} />
+                                        <Text style={styles.nameTextSliderRating}>Giá cả</Text>
+                                    </View>
+                                    <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                        <Text style={styles.nameTextSliderRating}>{this.state.ratingAttitude}</Text>
+                                        <Slider
+                                            style={styles.sliderRating}
+                                            value={this.state.ratingAttitude}
+                                            step={1}
+                                            onValueChange={(ratingAttitude) => this.setState({ ratingAttitude })}
+                                            minimumValue={1}
+                                            maximumValue={5}
+                                            thumbTintColor={AppColors.color} />
+                                        <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thái độ</Text>
+                                    </View>
+                                    <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                        <Text style={styles.nameTextSliderRating}>{this.state.ratingQuality}</Text>
+                                        <Slider
+                                            style={styles.sliderRating}
+                                            value={this.state.ratingQuality}
+                                            step={1}
+                                            onValueChange={(ratingQuality) => this.setState({ ratingQuality })}
+                                            minimumValue={1}
+                                            maximumValue={5}
+                                            thumbTintColor={AppColors.color} />
+                                        <Text style={styles.nameTextSliderRating}> Dịch vụ</Text>
+                                    </View>
+                                    <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]} borderColor={AppColors.color}>
+                                        <Icon name={'text-document'} size={27} />
+                                        <Input
+                                            style={{ color: "black", marginLeft: "3%" }}
+                                            placeholder="Chia sẽ trải nghiệm của bạn về địa điểm này"
+                                            value={this.state.contentPost}
+                                            autoCorrect={false}
+                                            multiline={true}
+                                            keyboardType="email-address"
+                                            onChangeText={contentPost => this.setState({ contentPost })} />
+                                    </InputGroup>
+                                    {
+                                        this.state.errorContentInput ?
+                                            <Text style={{ fontFamily: Font.textFont, color: 'red' }}>Bình luận ít nhất phải có 5 ký tự!</Text> :
+                                            null
+                                    }
+                                </View>
                             </View>
-                            <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingPrice}</Text>
-                                <Slider
-                                    style={styles.sliderRating}
-                                    value={this.state.ratingPrice == 0 ? this.state.startingValueRating : this.state.ratingPrice}
-                                    step={1}
-                                    onValueChange={(ratingPrice) => this.setState({ ratingPrice })}
-                                    minimumValue={1}
-                                    maximumValue={5}
-                                    thumbTintColor={AppColors.color} />
-                                <Text style={styles.nameTextSliderRating}>Giá cả</Text>
-                            </View>
-                            <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingAttitude}</Text>
-                                <Slider
-                                    style={styles.sliderRating}
-                                    value={this.state.ratingAttitude}
-                                    step={1}
-                                    onValueChange={(ratingAttitude) => this.setState({ ratingAttitude })}
-                                    minimumValue={1}
-                                    maximumValue={5}
-                                    thumbTintColor={AppColors.color} />
-                                <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thái độ</Text>
-                            </View>
-                            <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <Text style={styles.nameTextSliderRating}>{this.state.ratingQuality}</Text>
-                                <Slider
-                                    style={styles.sliderRating}
-                                    value={this.state.ratingQuality}
-                                    step={1}
-                                    onValueChange={(ratingQuality) => this.setState({ ratingQuality })}
-                                    minimumValue={1}
-                                    maximumValue={5}
-                                    thumbTintColor={AppColors.color} />
-                                <Text style={styles.nameTextSliderRating}> Dịch vụ</Text>
-                            </View>
-                            <InputGroup style={[styles.inputGroup, { marginTop: '3%' }]} borderColor={AppColors.color}>
-                                <Icon name={'text-document'} size={27} />
-                                <Input
-                                    style={{ color: "black", marginLeft: "3%" }}
-                                    placeholder="Chia sẽ trải nghiệm của bạn về địa điểm này"
-                                    value={this.state.contentPost}
-                                    autoCorrect={false}
-                                    multiline={true}
-                                    keyboardType="email-address"
-                                    onChangeText={contentPost => this.setState({ contentPost })} />
-                            </InputGroup>
-                            {
-                                this.state.errorContentInput ?
-                                    <Text style={{ fontFamily: Font.textFont, color: 'red' }}>Bình luận ít nhất phải có 5 ký tự!</Text> :
-                                    null
-                            }
-                        </View>
-                    </View>
-                </Modal>
-                :
-                null
-            }
+                        </Modal>
+                        :
+                        null
+                }
                 <View>
                     {
                         this.createRatingoneToFive()
@@ -247,13 +243,9 @@ export default class RatingItem extends Component {
                     <View style={[styles.line]} />
 
                     <View style={[styles.centerContainer]}>
-                        <Avatar
-                            size="large"
-                            rounded
-                            source={{ uri: !global.isLogin ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5k0pKpVdogRyyt06oALOEU9_cdmBCTifjoGQxnePlNbnNVzrT' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
-                            onPress={() => console.log("Works!")}
-                            activeOpacity={0.7}
-                        />
+                        <Image
+                            source={{ uri: !global.isLogin ? 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png' : (this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar) }}
+                            style={styles.avatar} />
                         <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Xếp hạng và đánh giá</Text>
                         <Text style={{ fontFamily: Font.textFont, }}>Chia sẽ trải nghiệm của bạn để giúp đỡ người khác</Text>
                         {
@@ -334,6 +326,11 @@ export default class RatingItem extends Component {
 }
 
 const styles = StyleSheet.create({
+    avatar: {
+        height: 80,
+        width: 80,
+        borderRadius: 40,
+    },
     image: {
         height: height * 0.3,
         width: width

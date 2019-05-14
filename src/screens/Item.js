@@ -6,6 +6,7 @@ import { AppColors } from '../styles/AppColors.js';
 import InformationItem from './InformationItem.js';
 import RatingItem from './RatingItem.js';
 import ListImagesItem from './ListImagesItem.js';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
@@ -19,7 +20,9 @@ export default class Item extends Component {
         super(props);
         this.state = {
             item: this.props.navigation.state.params.item,
+            dialogVisibleConfirm: false
         };
+        console.log(this.props.navigation.navigate)
     }
 
     getRatingScore = (newItem) => {
@@ -34,7 +37,16 @@ export default class Item extends Component {
     }
 
     onBook() {
-        this.props.navigation.navigate('BookingScreen', { location: this.state.item });
+        if (global.isLogin) {
+            this.props.navigation.navigate('BookingScreen', { location: this.state.item });
+        } else {
+            this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm });
+        }
+    }
+
+    onLogin() {
+        this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm });
+        this.props.navigation.navigate('LoginScreen')
     }
 
     render() {
@@ -54,6 +66,20 @@ export default class Item extends Component {
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
                         centerComponent={{ text: name, style: [Styles.header, { color: '#fff' }] }}
+                    />
+                    <ConfirmDialog
+                        title='Bạn chưa đăng nhập!'
+                        message="Bạn có muốn đăng nhập không?"
+                        visible={this.state.dialogVisibleConfirm}
+                        onTouchOutside={() => this.setState({ dialogVisibleConfirm: false })}
+                        positiveButton={{
+                            title: "Đồng ý!",
+                            onPress: () => this.onLogin()
+                        }}
+                        negativeButton={{
+                            title: "Thoát",
+                            onPress: () => this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm })
+                        }}
                     />
                     <View>
                         {
@@ -106,7 +132,7 @@ export default class Item extends Component {
                             <IconEntypo name={'new-message'} size={50} color={AppColors.color} />
                             <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Nhắn tin</Text>
                         </TouchableOpacity> */}
-                        <TouchableOpacity style={[styles.centerContainer,{marginLeft: '1%'}]} onPress={() => this.onBook()}>
+                        <TouchableOpacity style={[styles.centerContainer, { marginLeft: '1%' }]} onPress={() => this.onBook()}>
                             <IconEntypo name={'calendar'} size={50} color={AppColors.color} />
                             <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Đặt lịch khám</Text>
                         </TouchableOpacity>
@@ -117,7 +143,7 @@ export default class Item extends Component {
                     <ScrollView>
                         <Tabs>
                             <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF' }} textStyle={{ color: 'white' }} >
-                                <InformationItem item={this.state.item} updateNumberOfFollows={this.getNumberOfFollows} />
+                                <InformationItem item={this.state.item} navigate={this.props.navigation.navigate} updateNumberOfFollows={this.getNumberOfFollows} />
                             </Tab>
                             <Tab heading="Đánh giá" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF' }} textStyle={{ color: 'white' }}>
                                 <RatingItem item={this.state.item} ratingScore={this.getRatingScore} />

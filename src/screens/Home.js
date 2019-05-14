@@ -17,7 +17,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: global.user,
+      user: null,
       highestViewLocation: [],
       bestLocation: [],
       spinner: false,
@@ -57,6 +57,7 @@ export default class Home extends Component {
           const bestLocation = Array.from(data);
           const highestViewLocation = Array.from(data);
           this.setState({
+            user: global.user,
             highestViewLocation: highestViewLocation.sort((a, b) => parseFloat(b.countView) - parseFloat(a.countView)),
             bestLocation: bestLocation.sort((a, b) => parseFloat(b.totalRatingAvg) - parseFloat(a.totalRatingAvg)),
             spinner: !this.state.spinner
@@ -109,121 +110,121 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <Header
-            innerContainerStyles={{ alignItems: 'center' }}
-            outerContainerStyles={{ borderBottomWidth: 0 }}
-            backgroundColor={AppColors.color}
-            leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
-            centerComponent={{ text: 'TRANG CHÍNH', style: [Styles.header, { color: '#fff' }] }}
-          />
+          innerContainerStyles={{ alignItems: 'center' }}
+          outerContainerStyles={{ borderBottomWidth: 0 }}
+          backgroundColor={AppColors.color}
+          leftComponent={{ icon: 'menu', color: '#fff', size: 31, onPress: () => this.props.navigation.openDrawer() }}
+          centerComponent={{ text: 'TRANG CHÍNH', style: [Styles.header, { color: '#fff' }] }}
+        />
         <View style={styles.searchBarContainer}>
-            <SearchBar
-              ref={search => this.search = search}
-              containerStyle={{}}
-              lightTheme
-              round
-              onFocus={() => {this.props.navigation.navigate("SearchScreen");}}
-              searchIcon={{ size: 41 }}
-              clearIcon={{ color: 'red' }}
+          <SearchBar
+            ref={search => this.search = search}
+            containerStyle={{}}
+            lightTheme
+            round
+            onFocus={() => { this.props.navigation.navigate("SearchScreen"); }}
+            searchIcon={{ size: 41 }}
+            clearIcon={{ color: 'red' }}
 
-              placeholder='Tìm kiếm tên phòng khám...' />
+            placeholder='Tìm kiếm tên phòng khám...' />
         </View>
 
-            <ScrollView style={{zIndex:3}}>  
-            <Spinner
-              visible={this.state.spinner}
-              textContent={'Đang xử lý'}
-              textStyle={{ color: 'white' }}
-            />
-  
-            <View style={styles.line} />
-  
-            <View style={{ flex: 1 }}>
-              <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
-                <Text style={{ fontFamily: Font.textFont, marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Đánh giá cao</Text>
-                <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => this.onOpenAllItemsSreen(this.state.bestLocation, 'Đánh giá cao nhất')}>
-                  <Text h5>Thêm</Text>
-                  <Icon name={'expand-more'} size={27} color={'black'} />
-                </TouchableOpacity>
-              </View>
-  
-              <FlatList
-                  data={this.state.bestLocation}
-                  horizontal={true}
-                  renderItem={({ item: data }) => {
-                    return (
-                      <TouchableOpacity style={[styles.cardContainer]} onPress={() => this.openDetailItem(data)}>
-                        {
-                          data.isOpen ?
-                            <Image
-                              source={require('../img/open.png')}
-                              style={styles.imageOpenClose} />
-                            :
-                            <Image
-                              source={require('../img/close.png')}
-                              style={styles.imageOpenClose} />
-                        }
-                        <View style={{ zIndex: 100 }}>
-                          <Card
-                            title={data.name}
-                            image={{ uri: change_url_image(data.imageUrls[0]) }}
-                            imageStyle={styles.imageCard}>
-                            <Text style={{ fontFamily: Font.textFont, }}>
-                              {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
-                            </Text>
-                          </Card>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  }}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-              <View style={{ width: width, height: 3, backgroundColor: '#BDBDBD', marginTop: '3%' }} />
-  
-              <View style={{ width: width, height: height * 0.7, marginBottom: '10%' }}>
-  
-                <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
-                  <Text style={{ fontFamily: Font.textFont, marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Được xem nhiều</Text>
-                  <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => this.onOpenAllItemsSreen(this.state.bestLocation, 'Được xem nhiều nhất')}>
-                    <Text h5>Thêm</Text>
-                    <Icon name={'expand-more'} size={27} color={'black'} />
-                  </TouchableOpacity>
-                </View>
-              <FlatList
-                data={this.state.highestViewLocation}
-                horizontal={true}
-                renderItem={({ item: data }) => {
-                  return (
-                    <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(data)}>
-                      {
-                        data.isOpen ?
-                          <Image
-                            source={require('../img/open.png')}
-                            style={styles.imageOpenClose} />
-                          :
-                          <Image
-                            source={require('../img/close.png')}
-                            style={styles.imageOpenClose} />
-                      }
-                      <View style={{ zIndex: 100 }}>
-                        <Card
-                          title={data.name}
-                          image={{ uri: change_url_image(data.imageUrls[0]) }}
-                          imageStyle={styles.imageCard}>
-                          <Text style={{ fontFamily: Font.textFont, }}>
-                            {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
-                          </Text>
-                        </Card>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                }}
-                keyExtractor={(item, index) => index.toString()}
-              />
+        <ScrollView style={{ zIndex: 3 }}>
+          <Spinner
+            visible={this.state.spinner}
+            textContent={'Đang xử lý'}
+            textStyle={{ color: 'white' }}
+          />
+
+          <View style={styles.line} />
+
+          <View style={{ flex: 1 }}>
+            <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
+              <Text style={{ fontFamily: Font.textFont, marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Đánh giá cao</Text>
+              <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => this.onOpenAllItemsSreen(this.state.bestLocation, 'Đánh giá cao nhất')}>
+                <Text h5>Thêm</Text>
+                <Icon name={'expand-more'} size={27} color={'black'} />
+              </TouchableOpacity>
             </View>
-          </ScrollView >
-      
-        
+
+            <FlatList
+              data={this.state.bestLocation}
+              horizontal={true}
+              renderItem={({ item: data }) => {
+                return (
+                  <TouchableOpacity style={[styles.cardContainer]} onPress={() => this.openDetailItem(data)}>
+                    {
+                      data.isOpen ?
+                        <Image
+                          source={require('../img/open.png')}
+                          style={styles.imageOpenClose} />
+                        :
+                        <Image
+                          source={require('../img/close.png')}
+                          style={styles.imageOpenClose} />
+                    }
+                    <View style={{ zIndex: 100 }}>
+                      <Card
+                        title={data.name}
+                        image={{ uri: change_url_image(data.imageUrls[0]) }}
+                        imageStyle={styles.imageCard}>
+                        <Text style={{ fontFamily: Font.textFont, }}>
+                          {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
+                        </Text>
+                      </Card>
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+          <View style={{ width: width, height: 3, backgroundColor: '#BDBDBD', marginTop: '3%' }} />
+
+          <View style={{ width: width, height: height * 0.7, marginBottom: '10%' }}>
+
+            <View style={[styles.rowView, { flex: 1, alignItems: 'center' }]}>
+              <Text style={{ fontFamily: Font.textFont, marginLeft: '4%', fontWeight: 'bold', flex: 5 }}>Được xem nhiều</Text>
+              <TouchableOpacity style={[styles.childRowView, { flex: 1 }]} onPress={() => this.onOpenAllItemsSreen(this.state.bestLocation, 'Được xem nhiều nhất')}>
+                <Text h5>Thêm</Text>
+                <Icon name={'expand-more'} size={27} color={'black'} />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={this.state.highestViewLocation}
+              horizontal={true}
+              renderItem={({ item: data }) => {
+                return (
+                  <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(data)}>
+                    {
+                      data.isOpen ?
+                        <Image
+                          source={require('../img/open.png')}
+                          style={styles.imageOpenClose} />
+                        :
+                        <Image
+                          source={require('../img/close.png')}
+                          style={styles.imageOpenClose} />
+                    }
+                    <View style={{ zIndex: 100 }}>
+                      <Card
+                        title={data.name}
+                        image={{ uri: change_url_image(data.imageUrls[0]) }}
+                        imageStyle={styles.imageCard}>
+                        <Text style={{ fontFamily: Font.textFont, }}>
+                          {data.address.street + ', ' + data.address.ward + ', ' + data.address.district + ', ' + data.address.city}
+                        </Text>
+                      </Card>
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        </ScrollView >
+
+
       </View>
     );
   }

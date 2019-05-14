@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, View, StyleSheet, ImageBackground } from "react-native";
+import { Dimensions, View, StyleSheet, ImageBackground, Image } from "react-native";
 import { Text, Avatar, ListItem } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
 import AwesomeButton from 'react-native-really-awesome-button';
@@ -85,13 +85,9 @@ class MainDrawer extends Component {
                         style={styles.coverPhoto}
                     >
                         <View style={styles.containerTextImage}>
-                            <Avatar
-                                size="large"
-                                rounded
+                            <Image
                                 source={{ uri: this.state.user.avatar.includes('localhost') ? this.state.user.avatar.replace('http://localhost:3000', IPServer.ip) : this.state.user.avatar }}
-                                onPress={() => console.log("Works!")}
-                                activeOpacity={0.7}
-                            />
+                                style={styles.avatar} />
                             <Text style={[styles.textShadow, { color: 'white', fontSize: 19 }]}>
                                 {this.state.user.lastName + " " + this.state.user.firstName}
                             </Text>
@@ -172,6 +168,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#FFFFFF"
+    }, avatar: {
+        height: 80,
+        width: 80,
+        borderRadius: 40,
     },
     coverPhoto: {
         width: "100%",
