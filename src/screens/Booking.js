@@ -19,6 +19,7 @@ export default class Booking extends Component {
         this.state = {
             location: this.props.navigation.state.params.location,
             dataBookingTime: this.props.navigation.state.params.dataBookingTime,
+            today: '',
             dialogVisibleConfirm: false,
             spinner: false,
             indexBooking: 0,
@@ -53,20 +54,21 @@ export default class Booking extends Component {
             let arrayTime = e.time.split(':');
             let h = arrayTime[0];
             let m = arrayTime[1];
-            if (parseInt(h) >= parseInt(hours)) {
+            if (parseInt(h) == parseInt(hours)) {
                 if (parseInt(m) > parseInt(minutes)) {
-                    console.log(parseInt(m) + '---' +  parseInt(minutes))
                     return e;
                 }
+            } else if (parseInt(h) > parseInt(hours)) {
+                return e;
             }
         });
         this.setState({
+            today: this.state.dataBookingTime.timeBooking.date,
             dataBookingTime: dataBookingTimeValid
         })
     }
 
     onBook() {
-        let today = new Date();
         this.setState({
             spinner: false
         }, () => {
@@ -74,9 +76,10 @@ export default class Booking extends Component {
             {
                 idPatient: global.user.userId,
                 idLocation: this.state.location._id,
-                date: today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + today.getDate(),
+                date: this.state.today,
                 time: this.state.dataBookingTime[this.state.indexBooking].time
             };
+            console.log(body)
             axios.post(IPServer.ip + '/reservation', body).then((response) => {
                 let dataBookingTimeTemp = this.state.dataBookingTime;
                 dataBookingTimeTemp[this.state.indexBooking] = { userId: global.user.userId, time: this.state.dataBookingTime[this.state.indexBooking].time };
@@ -85,6 +88,7 @@ export default class Booking extends Component {
                     dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
                     spinner: !this.state.spinner
                 }, () => {
+                    console.log(response)
                     this.props.navigation.navigate('QRCodeScreen', { url: response.data.url });
                 });
             }).catch(err => {

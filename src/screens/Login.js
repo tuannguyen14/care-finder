@@ -57,6 +57,7 @@ export default class Login extends Component {
                         let objectUser = response.data;
                         objectUser.userId = jwtDecode(global.token).userId;
                         global.user = objectUser;
+                        console.log(global.user);
                         // const socket = io('http://10.20.195.218:3000');
                         // socket.on('connect', () => {
                         // });

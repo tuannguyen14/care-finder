@@ -25,7 +25,6 @@ export default class BookingDate extends Component {
         this.setState({
             listDateItem
         });
-        console.log(listDateItem)
     }
 
     getDay(day) {
@@ -58,7 +57,6 @@ export default class BookingDate extends Component {
             idLocation: this.state.location._id,
             dateBooking: dateFormat
         };
-        console.log(body)
         axios.post(IPServer.ip + '/location/getBookingTime', body).then((response) => {
             console.log(response);
             this.props.navigation.navigate('BookingScreen', { location: this.state.location, dataBookingTime: response.data });
