@@ -145,6 +145,16 @@ export default class Maps extends Component {
                                 />
                             </MapView.Callout>
                         </MapView.Marker>
+                        <MapViewDirections
+                            origin={this.state.origin}
+                            destination={this.state.destination}
+                            apikey={GOOGLE_MAPS_APIKEY}
+                            strokeWidth={3}
+                            strokeColor="hotpink"
+                            onError={(errorMessage) => {
+                                console.log(errorMessage);
+                            }}
+                        />
                     ))}
                 </MapView>
                 {
