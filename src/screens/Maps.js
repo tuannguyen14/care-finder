@@ -64,23 +64,23 @@ export default class Maps extends Component {
     }
 
     getCurrentLocation() {
-        // navigator.geolocation.getCurrentPosition(
-        //     position => {
-        //         this.setState({
-        //             region: new MapView.AnimatedRegion({
-        //                 latitude: position.coords.latitude,
-        //                 longitude: position.coords.longitude,
-        //                 latitudeDelta: LATITUDE_DELTA,
-        //                 longitudeDelta: LONGITUDE_DELTA
-        //             }),
-        //             origin: {
-        //                 latitude: position.coords.latitude,
-        //                 longitude: position.coords.longitude,
-        //             }
-        //         });
-        //     },
-        //     error => console.log(error.message)
-        // );
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                this.setState({
+                    region: new MapView.AnimatedRegion({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA
+                    }),
+                    origin: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    }
+                });
+            },
+            error => console.log(error.message)
+        );
     }
 
     onDirection(destinationCoordinate) {
