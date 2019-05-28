@@ -11,6 +11,7 @@ import IconEntypo from 'react-native-vector-icons/Entypo';
 import { Font } from '../styles/Font.js';
 import { IPServer } from '../Server/IPServer.js';
 import Styles from '../styles/Styles.js';
+import axios from 'axios';
 
 let { width, height } = Dimensions.get("window");
 
@@ -22,7 +23,6 @@ export default class Item extends Component {
             item: this.props.navigation.state.params.item,
             dialogVisibleConfirm: false
         };
-        console.log(this.props.navigation.navigate)
     }
 
     getRatingScore = (newItem) => {
@@ -38,7 +38,7 @@ export default class Item extends Component {
 
     onBook() {
         if (global.isLogin) {
-            this.props.navigation.navigate('BookingScreen', { location: this.state.item });
+            this.props.navigation.navigate('BookingDateScreen', { location: this.props.navigation.state.params.item });
         } else {
             this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm });
         }

@@ -18,74 +18,95 @@ export default class Booking extends Component {
         super(props);
         this.state = {
             location: this.props.navigation.state.params.location,
-            dataBookingTime: [],
+            dataBookingTime: this.props.navigation.state.params.dataBookingTime,
             dialogVisibleConfirm: false,
-            dialogVisibleMessage: false,
             spinner: false,
             indexBooking: 0,
             currentDateInLocation: [],
-            closedDate: false
+            messageTime: '',
+            isBooked: false,
+            closedDate: false,
+            dataBookingTimeValid: []
         }
     }
 
     componentWillMount() {
         let today = new Date();
-        let dateFormat = today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + today.getDate();
-        this.generateCurrentDate(dateFormat);
-    }
+        let hours = today.getHours();
+        let minutes = today.getMinutes();
 
-    generateCurrentDate(dateFormat) {
-        const body =
-        {
-            idLocation: this.state.location._id,
-            dateBooking: dateFormat
-        };
-        axios.post(IPServer.ip + '/location/getBookingTime', body).then((response) => {
-            if (response.data.status == 'Closed Today') {
-                return true
+        let dataBookingTime = this.state.dataBookingTime;
+        dataBookingTime.timeBooking.time.forEach(element => {
+            if (element.userId === global.user.userId) {
+                this.setState({
+                    isBooked: true
+                })
             }
-            else {
-                this.setState({ dataBookingTime: response.data.timeBooking.time })
-            }
-        }).catch(err => {
-            console.log(err)
         });
+
+        if (this.state.dataBookingTime.timeBooking.status != undefined) {
+            this.setState({
+                closedDate: true
+            })
+        }
+        let dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time.filter((e, i) => {
+            let arrayTime = e.time.split(':');
+            let h = arrayTime[0];
+            let m = arrayTime[1];
+            if (parseInt(h) >= parseInt(hours)) {
+                if (parseInt(m) < parseInt(minutes)) {
+                    return e;
+                }
+            }
+        });
+        this.setState({
+            dataBookingTime: dataBookingTimeValid
+        })
     }
 
     onBook() {
         let today = new Date();
         this.setState({
-            spinner: !this.state.spinner
+            spinner: false
         }, () => {
-            if (this.state.dataBookingTime[this.state.indexBooking].userId != '') {
-                this.refs.toast.show('Thời gian đã được đặt!');
+            const body =
+            {
+                idPatient: global.user.userId,
+                idLocation: this.state.location._id,
+                date: today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + today.getDate(),
+                time: this.state.dataBookingTime[this.state.indexBooking].time
+            };
+            axios.post(IPServer.ip + '/reservation', body).then((response) => {
+                let dataBookingTimeTemp = this.state.dataBookingTime;
+                dataBookingTimeTemp[this.state.indexBooking] = { userId: global.user.userId, time: this.state.dataBookingTime[this.state.indexBooking].time };
                 this.setState({
+                    dataBookingTime: dataBookingTimeTemp,
                     dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
+                    spinner: !this.state.spinner
+                }, () => {
+                    this.props.navigation.navigate('QRCodeScreen', { url: response.data.url });
                 });
-            } else {
-                const body =
-                {
-                    idPatient: global.user.userId,
-                    idLocation: this.state.location._id,
-                    date: today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + today.getDate(),
-                    time: this.state.dataBookingTime[this.state.indexBooking].time
-                };
-                axios.post(IPServer.ip + '/reservation', body).then((response) => {
-                    console.log(response);
-                }).catch(err => {
-                    console.log(err)
-                });
-                this.setState({
-                    dialogVisibleMessage: !this.state.dialogVisibleMessage,
-                    dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
-                });
-            }
+            }).catch(err => {
+                console.log(err)
+            });
             this.setState({
                 spinner: !this.state.spinner
             });
         });
     }
 
+    onCheck(i, time) {
+
+        if (this.state.dataBookingTime[i].userId != '') {
+            this.refs.toast.show('Thời gian đã được đặt!');
+        } else {
+            if (this.state.isBooked) {
+                this.refs.toast.show('Bạn đã đặt lịch ngày hôm nay rồi!');
+            } else {
+                this.setState({ messageTime: "Bạn có muốn đặt " + time + " giờ không?", dialogVisibleConfirm: !this.state.dialogVisibleConfirm, indexBooking: i });
+            }
+        }
+    }
 
     render() {
         const { goBack } = this.props.navigation;
@@ -104,7 +125,7 @@ export default class Booking extends Component {
                     textStyle={{ color: 'white' }}
                 />
                 <ConfirmDialog
-                    message="Bạn có muốn đặt giờ này không?"
+                    message={this.state.messageTime}
                     visible={this.state.dialogVisibleConfirm}
                     onTouchOutside={() => this.setState({ dialogVisibleConfirm: false })}
                     positiveButton={{
@@ -125,27 +146,19 @@ export default class Booking extends Component {
                         <ScrollView style={{ marginBottom: '3%' }}>
                             {
                                 this.state.dataBookingTime.map((l, i) => (
-                                    <View style={{ backgroundColor: l.userId == '' ? 'green' : 'red' }}>
+                                    < View style={{ backgroundColor: l.userId == '' ? 'green' : 'red' }}>
                                         <ListItem
                                             key={i}
                                             title={l.time}
-                                            onPress={() => this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm, indexBooking: i })}
+                                            onPress={() => this.onCheck(i, l.time)}
                                         />
                                     </View>
                                 ))
                             }
                         </ScrollView>
                 }
-
-                <Dialog
-                    visible={this.state.dialogVisibleMessage}
-                    onTouchOutside={() => this.setState({ dialogVisibleMessage: false })} >
-                    <View>
-                        <Text style={{ fontSize: 21 }}>Đặt thành công!</Text>
-                    </View>
-                </Dialog>
                 <Toast ref="toast" />
-            </View>
+            </View >
         )
     }
 }

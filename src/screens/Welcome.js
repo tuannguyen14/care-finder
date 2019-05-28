@@ -29,7 +29,7 @@ export default class componentName extends Component {
                     <TouchableOpacity onPress={() => navigate('LoginScreen')}>
                         <Text style={styles.textButton}>Đăng nhập</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.openRootDrawer()} style={{ marginTop: '5%' }}>
+                    <TouchableOpacity onPress={() => this.openRootDrawer()} style={{ marginTop: '3%' }}>
                         <Text style={styles.textButton}>Để sau</Text>
                     </TouchableOpacity>
                 </View>
@@ -50,8 +50,9 @@ const styles = StyleSheet.create({
     },
     cointainerButton: {
         position: 'absolute',
-        bottom: '3%',
-        left: '42%'
+        left: 0,
+        right: 0,
+        bottom: '3%'
     },
     textButton: {
         color: 'white',

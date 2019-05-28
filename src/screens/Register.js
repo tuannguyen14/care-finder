@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Dimensions, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { ListItem } from 'native-base';
-import { CheckBox } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Entypo';
+    import { CheckBox } from 'react-native-elements';
+    import Icon from 'react-native-vector-icons/Entypo';
 import { Fumi } from 'react-native-textinput-effects';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import AwesomeButton from 'react-native-really-awesome-button';

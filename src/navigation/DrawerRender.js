@@ -3,7 +3,10 @@ import { Dimensions, View, StyleSheet, ImageBackground, Image } from "react-nati
 import { Text, Avatar, ListItem } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
 import AwesomeButton from 'react-native-really-awesome-button';
+
+import { IPServer } from '../Server/IPServer.js';
 import { Font } from '../styles/Font.js';
+import axios from 'axios';
 
 let { width, height } = Dimensions.get("window");
 
@@ -43,6 +46,11 @@ class MainDrawer extends Component {
             const listUtilitiesItem = [
                 {
                     icon: 'check',
+                    name: 'Số thứ tự',
+                    navigation: 'QRCodeScreen'
+                },
+                {
+                    icon: 'check',
                     name: 'Xác thực tài khoản bác sĩ',
                     navigation: 'VerifyDoctorScreen'
                 }
@@ -76,7 +84,17 @@ class MainDrawer extends Component {
         );
     }
 
+    onQRCode(navigation) {
+        axios.get(IPServer.ip + '/reservation/' + global.user.userId).then((response) => {
+            console.log(response.data.imageOfReservation)
+            this.props.navigation.navigate(navigation, { url: response.data.imageOfReservation });
+        }).catch(err => {
+            console.log(err)
+        });
+    }
+
     createUILogged = () => {
+        const { navigate } = this.props.navigation;
         return (
             <View>
                 <View>
@@ -110,7 +128,7 @@ class MainDrawer extends Component {
                                         hideChevron={true}
                                         title={l.name}
                                         leftIcon={{ name: l.icon, color: AppColors.color, style: { marginLeft: '10%' } }}
-                                        onPress={() => navigate(l.navigation)}
+                                        onPress={() => l.navigation != 'QRCodeScreen' ? navigate(l.navigation) : this.onQRCode(l.navigation)}
                                     />
                                 ))
                             }

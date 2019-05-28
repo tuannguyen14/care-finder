@@ -1,15 +1,15 @@
 import React, { Component, } from 'react';
 import { Dimensions, View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler, Image } from 'react-native';
-import { Header, SearchBar, Card, Text } from 'react-native-elements'
+import { Header, SearchBar, Card, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import { change_url_image } from '../utils/Utils'
 import Spinner from 'react-native-loading-spinner-overlay';
+import { NavigationActions } from 'react-navigation';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
 import Styles from '../styles/Styles.js';
-
 
 let { width, height } = Dimensions.get("window");
 

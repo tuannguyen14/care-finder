@@ -17,8 +17,10 @@ import Maps from "../screens/Maps";
 import AllItems from "../screens/AllItems";
 import Verify from "../screens/Verify";
 import VerifyDoctor from "../screens/VerifyDoctor";
-import Search from "../screens/Search"
-import Booking from "../screens/Booking"
+import Search from "../screens/Search";
+import BookingDate from "../screens/BookingDate";
+import Booking from "../screens/Booking";
+import QRCode from "../screens/QRCode"
 
 export const MainScreen = createStackNavigator({
   WelcomeScreen: { screen: Welcome },
@@ -37,7 +39,9 @@ export const MainScreen = createStackNavigator({
   AllItemsScreen: { screen: AllItems },
   VerifyDoctorScreen: { screen: VerifyDoctor },
   SearchScreen: { screen: Search },
-  BookingScreen: { screen: Booking }
+  BookingDateScreen: { screen: BookingDate },
+  BookingScreen: { screen: Booking },
+  QRCodeScreen: { screen: QRCode }
 },
   {
     headerMode: 'none'
