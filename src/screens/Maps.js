@@ -35,10 +35,11 @@ export default class Maps extends Component {
                 longitude: 0
             },
             destination: {
-                latitude: 0,
-                longitude: 0
+                latitude: null,
+                longitude: null
             },
-            isFromInformationItem: false
+            isFromInformationItem: false,
+            isOnClickDirection: false
         };
     }
 
@@ -85,6 +86,7 @@ export default class Maps extends Component {
 
     onDirection(destinationCoordinate) {
         this.setState({
+            isOnClickDirection: true,
             destination: {
                 latitude: destinationCoordinate.latitude,
                 longitude: destinationCoordinate.longitude,
@@ -145,17 +147,23 @@ export default class Maps extends Component {
                                 />
                             </MapView.Callout>
                         </MapView.Marker>
-                        <MapViewDirections
-                            origin={this.state.origin}
-                            destination={this.state.destination}
-                            apikey={GOOGLE_MAPS_APIKEY}
-                            strokeWidth={3}
-                            strokeColor="hotpink"
-                            onError={(errorMessage) => {
-                                console.log(errorMessage);
-                            }}
-                        />
                     ))}
+                    {
+                        this.state.isOnClickDirection ?
+                            <MapViewDirections
+                                origin={this.state.origin}
+                                destination={this.state.destination}
+                                apikey={GOOGLE_MAPS_APIKEY}
+                                strokeWidth={3}
+                                strokeColor="hotpink"
+                                onError={(errorMessage) => {
+                                    console.log(errorMessage);
+                                }}
+                            />
+                            :
+                            null
+                    }
+
                 </MapView>
                 {
                     this.state.isFromInformationItem

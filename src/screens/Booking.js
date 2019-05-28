@@ -54,7 +54,8 @@ export default class Booking extends Component {
             let h = arrayTime[0];
             let m = arrayTime[1];
             if (parseInt(h) >= parseInt(hours)) {
-                if (parseInt(m) < parseInt(minutes)) {
+                if (parseInt(m) > parseInt(minutes)) {
+                    console.log(parseInt(m) + '---' +  parseInt(minutes))
                     return e;
                 }
             }

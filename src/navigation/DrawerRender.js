@@ -45,7 +45,7 @@ class MainDrawer extends Component {
             ]
             const listUtilitiesItem = [
                 {
-                    icon: 'check',
+                    icon: 'query-builder',
                     name: 'Số thứ tự',
                     navigation: 'QRCodeScreen'
                 },

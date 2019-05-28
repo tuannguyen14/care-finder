@@ -19,9 +19,9 @@ export default class BookingDate extends Component {
     componentWillMount() {
         let today = new Date();
         let listDateItem = [];
-        listDateItem.push({ 'day': this.getDay(today.getDay()), 'fullDate': today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + today.getDate() });
-        listDateItem.push({ 'day': this.getDay(today.getDay() + 1), 'fullDate': today.getFullYear() + 1 + "-" + parseInt(today.getMonth() + 1) + "-" + today.getDate() });
-        listDateItem.push({ 'day': this.getDay(today.getDay() + 2), 'fullDate': today.getFullYear() + 2 + "-" + parseInt(today.getMonth() + 1) + "-" + today.getDate() });
+        listDateItem.push({ 'day': this.getDay(today.getDay()), 'fomatDateUI': parseInt(today.getDate()) + "-" + parseInt(today.getMonth() + 1) + "-" + today.getFullYear(), 'fomatDateDB': today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate()) });
+        listDateItem.push({ 'day': this.getDay(today.getDay() + 1), 'fomatDateUI': parseInt(today.getDate() + 1) + "-" + parseInt(today.getMonth() + 1) + "-" + today.getFullYear(), 'fomatDateDB': today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate() + 1) });
+        listDateItem.push({ 'day': this.getDay(today.getDay() + 2), 'fomatDateUI': parseInt(today.getDate() + 2) + "-" + parseInt(today.getMonth() + 1) + "-" + today.getFullYear(), 'fomatDateDB': today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate() + 2) });
         this.setState({
             listDateItem
         });
@@ -85,11 +85,11 @@ export default class BookingDate extends Component {
                             leftAvatar={{ source: { uri: l.avatar_url } }}
                             title={
                                 <View>
-                                    <Text style={{ fontFamily: Font.textFont, fontSize: 18, marginLeft: '4.3%', color: 'black' }}>{l.day + ' ' + l.fullDate}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, fontSize: 18, marginLeft: '4.3%', color: 'black' }}>{l.day + ' ' + l.fomatDateUI}</Text>
                                 </View>
                             }
                             leftIcon={{ name: l.icon, color: AppColors.color }}
-                            onPress={() => this.onBooking(l.fullDate)}
+                            onPress={() => this.onBooking(l.fomatDateDB)}
                         />
                     ))
                 }
