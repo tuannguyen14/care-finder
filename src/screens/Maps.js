@@ -129,7 +129,7 @@ export default class Maps extends Component {
                                 style={{ width: 64, height: 64 }}
                                 resizeMode="contain"
                             />
-                            <MapView.Callout style={{ height: 130, alignItems: 'center', justifyContent: 'center' }} onPress={() => this.onDirection(marker.coordinates)}>
+                            <MapView.Callout style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => this.onDirection(marker.coordinates)}>
                                 <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{marker.name}</Text>
                                 <Text style={{ fontFamily: Font.textFont, }}>{marker.address.street + ', ' + marker.address.ward + ', ' + marker.address.district + ', ' + marker.address.city}</Text>
                                 <Button
