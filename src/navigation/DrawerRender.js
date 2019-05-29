@@ -40,7 +40,8 @@ class MainDrawer extends Component {
                 },
                 {
                     icon: 'sentiment-dissatisfied',
-                    name: 'Đăng xuất'
+                    name: 'Đăng xuất',
+                    navigation: 'WelcomeScreen'
                 }
             ]
             const listUtilitiesItem = [
@@ -149,7 +150,7 @@ class MainDrawer extends Component {
                                         hideChevron={true}
                                         title={l.name}
                                         leftIcon={{ name: l.icon, color: AppColors.color, style: { marginLeft: '10%' } }}
-                                        onPress={() => navigate(l.navigation)}
+                                        onPress={() => l.navigation == 'WelcomeScreen' ? replace(l.navigation) : navigate(l.navigation)}
                                     />
                                 ))
                             }
