@@ -33,7 +33,7 @@ export default class ChangeInformationUser extends Component {
             spinner: false,
             user: global.user,
             visible: false,
-            informationButton:false,
+            informationButton: false,
             passwordButton: false,
             passwordErrorMessage: false,
             informationErrorMessage: false
@@ -44,23 +44,23 @@ export default class ChangeInformationUser extends Component {
         this.setState({ spinner: !this.state.spinner }, () => {
             let body = {}
             console.log(this.state.visible)
-            if(this.state.firstName !=="") {
-              body.firstName = this.state.firstName
+            if (this.state.firstName !== "") {
+                body.firstName = this.state.firstName
             }
-            if(this.state.lastName !== "") {
-              body.lastName = this.state.lastName
-            }
-
-            if(this.state.phoneNumber !== "") {
-              body.phoneNumber = this.state.phoneNumber
-            }
-            
-            if(this.state.email !== "") {
-              body.email = this.state.email
+            if (this.state.lastName !== "") {
+                body.lastName = this.state.lastName
             }
 
-            body.gender = this.state.male ? 'Nam': 'Nữ'
-            
+            if (this.state.phoneNumber !== "") {
+                body.phoneNumber = this.state.phoneNumber
+            }
+
+            if (this.state.email !== "") {
+                body.email = this.state.email
+            }
+
+            body.gender = this.state.male ? 'Nam' : 'Nữ'
+
             axios.patch(IPServer.ip + '/user/' + this.state.user.userId, body, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export default class ChangeInformationUser extends Component {
                 }
             })
                 .then(response => {
-                   let objectUser = response.data.doc;
+                    let objectUser = response.data.doc;
                     objectUser.userId = this.state.user.userId;
                     global.user = objectUser;
                     console.log(global.user)
@@ -77,9 +77,9 @@ export default class ChangeInformationUser extends Component {
                         visible: true,
                         informationButton: true
                     }, () => {
-                      
+
                     });
-                    
+
                 }).catch(err => {
                     this.setState({
                         spinner: !this.state.spinner
@@ -88,7 +88,7 @@ export default class ChangeInformationUser extends Component {
                     });
                     console.log(err)
                 });
-            }
+        }
         );
     }
 
@@ -106,7 +106,7 @@ export default class ChangeInformationUser extends Component {
                     }
                 })
                     .then(response => {
-                        
+
                         this.setState({
                             spinner: !this.state.spinner,
                             visible: true,
@@ -118,9 +118,9 @@ export default class ChangeInformationUser extends Component {
                             spinner: !this.state.spinner,
                             passwordErrorMessage: true
                         }, () => {
-                              
+
                         });
-                        
+
                     });
             }
         });
@@ -251,10 +251,10 @@ export default class ChangeInformationUser extends Component {
                             <View style={{ width: height * 0.15, borderBottomWidth: 1, marginLeft: '1.5%', borderBottomColor: 'white' }} />
                         </View>
                         <View>
-                          {this.state.passwordErrorMessage ? 
-                            <Text style={{color: 'red'}}>Mật khẩu cũ sai</Text>
-                            : null  
-                          }
+                            {this.state.passwordErrorMessage ?
+                                <Text style={{ color: 'red' }}>Mật khẩu cũ sai</Text>
+                                : null
+                            }
                         </View>
                         <View >
                             <Fumi
@@ -313,36 +313,38 @@ export default class ChangeInformationUser extends Component {
                             </AwesomeButton>
 
                         </View>
-                        
+
                     </View>
                     <Dialog
-                      width="0.8"
-                      visible={this.state.visible}
-                      dialogAnimation={new SlideAnimation({
-                        slideFrom: 'bottom',
-                      })}
-                      actions={[
-                        <DialogButton
-                          text="Tiếp tục sửa thông tin"
-                          textStyle={styles.dialogButtonText}
-                          onPress={() => this.setState({visible:false, informationButton: false, passwordButton: false})}
-                        />,
-                        <DialogButton
-                          text="Quay về màn hình chính"
-                          textStyle={[styles.dialogButtonText, {color: 'blue'}]}
-                          onPress={() => {this.setState({visible:false, informationButton: false, passwordButton: false}, () => {
-                            navigate('RootDrawer')
-                          })}}
-                        />,
-                      ]}
+                        width="0.8"
+                        visible={this.state.visible}
+                        dialogAnimation={new SlideAnimation({
+                            slideFrom: 'bottom',
+                        })}
+                        actions={[
+                            <DialogButton
+                                text="Tiếp tục sửa thông tin"
+                                textStyle={styles.dialogButtonText}
+                                onPress={() => this.setState({ visible: false, informationButton: false, passwordButton: false })}
+                            />,
+                            <DialogButton
+                                text="Quay về màn hình chính"
+                                textStyle={[styles.dialogButtonText, { color: 'blue' }]}
+                                onPress={() => {
+                                    this.setState({ visible: false, informationButton: false, passwordButton: false }, () => {
+                                        navigate('RootDrawer')
+                                    })
+                                }}
+                            />,
+                        ]}
                     >
-                      <DialogContent>
-                        {this.state.informationButton? <Text style={styles.dialogContent}>Thay đổi thông tin user thành công</Text> : null}
-                        {this.state.passwordButton? <Text style={styles.dialogContent}>Thay đổi password thành công</Text> : null}
-                      </DialogContent>
+                        <DialogContent>
+                            {this.state.informationButton ? <Text style={styles.dialogContent}>Thay đổi thông tin user thành công</Text> : null}
+                            {this.state.passwordButton ? <Text style={styles.dialogContent}>Thay đổi password thành công</Text> : null}
+                        </DialogContent>
                     </Dialog>
                 </ScrollView>
-               
+
             </TouchableWithoutFeedback>
         );
     }
@@ -351,7 +353,7 @@ export default class ChangeInformationUser extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: AppColors.color,
+        backgroundColor: AppColors.backgroundColor,
     },
     backButtonContainer: {
         margin: "5%"
@@ -386,11 +388,11 @@ const styles = StyleSheet.create({
         borderRadius: 100
     },
     dialogContent: {
-      fontSize: 20,
-      marginTop: 15,
+        fontSize: 20,
+        marginTop: 15,
     },
     dialogButtonText: {
-      color: 'black',
-      margin: 2
+        color: 'black',
+        margin: 2
     }
 });

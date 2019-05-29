@@ -27,9 +27,9 @@ export default class componentName extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            uploadIdentificationFontImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
-            uploadIdentificationBackImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
-            uploadDiplomaImage: 'https://www.thinknextgen.com/edu_image/default-no-image.png',
+            uploadIdentificationFontImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu3c-Ikr_KGzhkUnrgQ1mB_HPdMIeTei-oNet_-5wNLeKzrpWP',
+            uploadIdentificationBackImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu3c-Ikr_KGzhkUnrgQ1mB_HPdMIeTei-oNet_-5wNLeKzrpWP',
+            uploadDiplomaImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu3c-Ikr_KGzhkUnrgQ1mB_HPdMIeTei-oNet_-5wNLeKzrpWP',
             spinner: false,
             selectedItems: [],
             departments: []
@@ -152,7 +152,7 @@ export default class componentName extends Component {
     render() {
         const selectedItems = this.state.selectedItems;
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: '#E0F7FA' }}>
+            <ScrollView style={{ flex: 1, backgroundColor: AppColors.backgroundColor }}>
                 <Header
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}

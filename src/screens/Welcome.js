@@ -12,11 +12,11 @@ export default class componentName extends Component {
 
     openRootDrawer() {
         global.isLogin = false;
-        this.props.navigation.navigate('RootDrawer')
+        this.props.navigation.replace('RootDrawer')
     }
 
     render() {
-        const { navigate } = this.props.navigation;
+        const { replace } = this.props.navigation;
         return (
             <ImageBackground source={require('../img/background.png')} style={{ width: '100%', height: '100%' }}>
                 <View style={[styles.centerContain, { marginTop: '6%' }]}>
@@ -26,7 +26,7 @@ export default class componentName extends Component {
                     <Text style={styles.logo}> Care Finder </Text>
                 </View>
                 <View style={[styles.centerContain, styles.cointainerButton]}>
-                    <TouchableOpacity onPress={() => navigate('LoginScreen')}>
+                    <TouchableOpacity onPress={() => replace('LoginScreen')}>
                         <Text style={styles.textButton}>Đăng nhập</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.openRootDrawer()} style={{ marginTop: '3%' }}>

@@ -74,11 +74,11 @@ export default class componentName extends Component {
                     type: 'image/jpg',
                     name: 'image.jpg'
                 })
-                
+
                 axios.patch(IPServer.ip + '/user', body, {
                     headers: {
-                      'Content-Type': 'multipart/form-data',
-                      'Authorization': `Bearer ${global.token}`
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${global.token}`
                     }
                 }).then(response => {
                     let objectUser = response.data.doc;
@@ -172,7 +172,7 @@ export default class componentName extends Component {
                             <Text style={styles.textState}>{this.state.user.follows.length}</Text>
                         </View>
 
-                        {/* <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
                             <Button
                                 title='Đổi thông tin'
                                 buttonStyle={{
@@ -185,7 +185,7 @@ export default class componentName extends Component {
                                 }}
                                 onPress={() => navigate("ChangeInformationUserScreen")}
                             />
-                        </View> */}
+                        </View>
                     </View>
 
                 </View>

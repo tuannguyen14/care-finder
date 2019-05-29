@@ -8,7 +8,6 @@ import Toast from 'react-native-easy-toast';
 import axios from 'axios';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
-import { Font } from '../styles/Font.js';
 import Styles from '../styles/Styles.js';
 
 let { width, height } = Dimensions.get("window");
@@ -21,6 +20,7 @@ export default class Booking extends Component {
             dataBookingTime: this.props.navigation.state.params.dataBookingTime,
             today: '',
             dialogVisibleConfirm: false,
+            dialogVisibleHelp: false,
             spinner: false,
             indexBooking: 0,
             currentDateInLocation: [],
@@ -122,6 +122,7 @@ export default class Booking extends Component {
                     backgroundColor={AppColors.color}
                     leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
                     centerComponent={{ text: 'ĐẶT LỊCH KHÁM', style: [Styles.header, { color: '#fff' }] }}
+                    rightComponent={{ icon: 'help', color: '#fff', size: 31, onPress: () => this.setState({ dialogVisibleHelp: true }) }}
                 />
                 <Spinner
                     visible={this.state.spinner}
@@ -141,16 +142,30 @@ export default class Booking extends Component {
                         onPress: () => this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm })
                     }}
                 />
+                <Dialog
+                    visible={this.state.dialogVisibleHelp}
+                    onTouchOutside={() => this.setState({ dialogVisibleHelp: false })} >
+                    <View style={{ alignItems: 'baseline' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', margin: '1%' }}>
+                            <View style={{ height: 32, width: 32, backgroundColor: '#98ee99' }} />
+                            <Text style={{ fontSize: 19 }}>Mở cửa</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', margin: '1%' }}>
+                            <View style={{ height: 32, width: 32, backgroundColor: '#ff867c' }} />
+                            <Text style={{ fontSize: 19 }}>Đóng cửa</Text>
+                        </View>
+                    </View>
+                </Dialog>
                 {
                     this.state.closedDate ?
-                        <View style={{ width: width, backgroundColor: 'red' }}>
+                        <View style={{ width: width, backgroundColor: '#ff867c' }}>
                             <Text style={{ fontSize: 21 }}>Đóng cửa ngày hôm nay!</Text>
                         </View>
                         :
                         <ScrollView style={{ marginBottom: '3%' }}>
                             {
                                 this.state.dataBookingTime.map((l, i) => (
-                                    < View style={{ backgroundColor: l.userId == '' ? 'green' : 'red' }}>
+                                    < View style={{ backgroundColor: l.userId == '' ? '#98ee99' : '#ff867c' }}>
                                         <ListItem
                                             key={i}
                                             title={l.time}

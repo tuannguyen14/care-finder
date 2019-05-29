@@ -65,7 +65,7 @@ export default class Login extends Component {
                         this.setState({
                             spinner: !this.state.spinner
                         }, () => {
-                            this.props.navigation.navigate("RootDrawer");
+                            this.props.navigation.replace("RootDrawer");
                         });
                     }).catch(err => {
                         console.log(err)

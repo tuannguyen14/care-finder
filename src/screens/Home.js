@@ -1,5 +1,5 @@
 import React, { Component, } from 'react';
-import { Dimensions, View, StyleSheet, FlatList, TouchableOpacity, ScrollView, BackHandler, Image } from 'react-native';
+import { Dimensions, View, StyleSheet, FlatList, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Header, SearchBar, Card, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
@@ -89,7 +89,6 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.props.navigation.addListener(
       'didFocus',
       payload => {
@@ -97,14 +96,7 @@ export default class Home extends Component {
       }
     );
   }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
-  }
-
-  handleBackButton() {
-    return true;
-  }
+  
 
   render() {
     return (
