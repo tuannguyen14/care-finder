@@ -32,40 +32,41 @@ export default class Booking extends Component {
     }
 
     componentWillMount() {
-        let today = new Date();
-        let hours = today.getHours();
-        let minutes = today.getMinutes();
-
-        let dataBookingTime = this.state.dataBookingTime;
-        dataBookingTime.timeBooking.time.forEach(element => {
-            if (element.userId === global.user.userId) {
-                this.setState({
-                    isBooked: true
-                })
-            }
-        });
-
-        if (this.state.dataBookingTime.timeBooking.status != undefined) {
+        console.log(this.state.dataBookingTime.status)
+        if (this.state.dataBookingTime.status == "Closed Today") {
             this.setState({
                 closedDate: true
             })
-        }
-        let dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time.filter((e, i) => {
-            let arrayTime = e.time.split(':');
-            let h = arrayTime[0];
-            let m = arrayTime[1];
-            if (parseInt(h) == parseInt(hours)) {
-                if (parseInt(m) > parseInt(minutes)) {
+        } else {
+            let today = new Date();
+            let hours = today.getHours();
+            let minutes = today.getMinutes();
+
+            let dataBookingTime = this.state.dataBookingTime;
+            dataBookingTime.timeBooking.time.forEach(element => {
+                if (element.userId === global.user.userId) {
+                    this.setState({
+                        isBooked: true
+                    })
+                }
+            });
+            let dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time.filter((e, i) => {
+                let arrayTime = e.time.split(':');
+                let h = arrayTime[0];
+                let m = arrayTime[1];
+                if (parseInt(h) == parseInt(hours)) {
+                    if (parseInt(m) > parseInt(minutes)) {
+                        return e;
+                    }
+                } else if (parseInt(h) > parseInt(hours)) {
                     return e;
                 }
-            } else if (parseInt(h) > parseInt(hours)) {
-                return e;
-            }
-        });
-        this.setState({
-            today: this.state.dataBookingTime.timeBooking.date,
-            dataBookingTime: dataBookingTimeValid
-        })
+            });
+            this.setState({
+                today: this.state.dataBookingTime.timeBooking.date,
+                dataBookingTime: dataBookingTimeValid
+            })
+        }
     }
 
     onBook() {
@@ -79,7 +80,6 @@ export default class Booking extends Component {
                 date: this.state.today,
                 time: this.state.dataBookingTime[this.state.indexBooking].time
             };
-            console.log(body)
             axios.post(IPServer.ip + '/reservation', body).then((response) => {
                 let dataBookingTimeTemp = this.state.dataBookingTime;
                 dataBookingTimeTemp[this.state.indexBooking] = { userId: global.user.userId, time: this.state.dataBookingTime[this.state.indexBooking].time };
@@ -88,8 +88,7 @@ export default class Booking extends Component {
                     dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
                     spinner: !this.state.spinner
                 }, () => {
-                    console.log(response)
-                    this.props.navigation.navigate('QRCodeScreen', { url: response.data.url });
+                    this.props.navigation.navigate('QRCodeScreen', { url: response.data.url, location: this.state.location, dateBooking: this.state.today, time: this.state.dataBookingTime[this.state.indexBooking].time });
                 });
             }).catch(err => {
                 console.log(err)
@@ -145,7 +144,7 @@ export default class Booking extends Component {
                 {
                     this.state.closedDate ?
                         <View style={{ width: width, backgroundColor: 'red' }}>
-                            <Text>Đóng cửa ngày hôm nay!</Text>
+                            <Text style={{ fontSize: 21 }}>Đóng cửa ngày hôm nay!</Text>
                         </View>
                         :
                         <ScrollView style={{ marginBottom: '3%' }}>

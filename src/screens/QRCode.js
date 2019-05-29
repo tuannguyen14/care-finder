@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Dimensions, View, Image, Text } from 'react-native';
 import { Header } from 'react-native-elements';
+import axios from 'axios';
+import AwesomeButton from 'react-native-really-awesome-button';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
 import Styles from '../styles/Styles.js';
-import AwesomeButton from 'react-native-really-awesome-button';
+import { IPServer } from '../Server/IPServer.js';
 
 let { width, height } = Dimensions.get("window");
 
@@ -12,7 +14,10 @@ export default class QRCode extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: this.props.navigation.state.params.url
+            url: this.props.navigation.state.params.url,
+            location: this.props.navigation.state.params.location,
+            dateBooking: this.props.navigation.state.params.dateBooking,
+            time: this.props.navigation.state.params.time
         }
     }
 
@@ -21,15 +26,15 @@ export default class QRCode extends Component {
         {
             idPatient: global.user.userId,
             idLocation: this.state.location._id,
-            dateBooking: dateFormat
+            date: this.state.dateBooking,
+            time: this.state.time
         };
-        console.log(body)
-        // axios.post(IPServer.ip + '/reservation/cancel', body).then((response) => {
-        //     console.log(response);
-        //     this.props.navigation.navigate('BookingScreen', { location: this.state.location, dataBookingTime: response.data });
-        // }).catch(err => {
-        //     console.log(err)
-        // });
+        axios.post(IPServer.ip + '/reservation/cancel', body).then((response) => {
+            console.log(response);
+            this.props.navigation.navigate('RootDrawer');
+        }).catch(err => {
+            console.log(err)
+        });
     }
 
     render() {

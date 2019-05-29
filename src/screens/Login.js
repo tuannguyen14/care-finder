@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { Text } from 'react-native-elements';
 import { Fumi } from 'react-native-textinput-effects';
 import axios from 'axios';
-import Toast from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast';
 import LinearGradient from 'react-native-linear-gradient';
 import AwesomeButton from 'react-native-really-awesome-button';
 import Spinner from 'react-native-loading-spinner-overlay';

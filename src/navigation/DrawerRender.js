@@ -3,7 +3,7 @@ import { Dimensions, View, StyleSheet, ImageBackground, Image } from "react-nati
 import { Text, Avatar, ListItem } from 'react-native-elements';
 import { AppColors } from '../styles/AppColors.js';
 import AwesomeButton from 'react-native-really-awesome-button';
-
+import Toast from 'react-native-easy-toast';
 import { IPServer } from '../Server/IPServer.js';
 import { Font } from '../styles/Font.js';
 import axios from 'axios';
@@ -86,8 +86,11 @@ class MainDrawer extends Component {
 
     onQRCode(navigation) {
         axios.get(IPServer.ip + '/reservation/' + global.user.userId).then((response) => {
-            console.log(response.data.imageOfReservation)
-            this.props.navigation.navigate(navigation, { url: response.data.imageOfReservation });
+            if (response.data.imageOfReservation == '') {
+                this.refs.toast.show('Bạn chưa đặt lịch!');
+            } else {
+                this.props.navigation.navigate(navigation, { url: response.data.imageOfReservation, location: global.user.ticketInfo.location, dateBooking: global.user.ticketInfo.date, time: global.user.ticketInfo.time });
+            }
         }).catch(err => {
             console.log(err)
         });
@@ -153,6 +156,7 @@ class MainDrawer extends Component {
                         </View>
                     </View>
                 </View>
+                <Toast ref="toast" />
             </View>
         );
     }
