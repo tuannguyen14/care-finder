@@ -434,7 +434,7 @@ export default class CreateNewLocation extends Component {
         const { navigate } = this.props.navigation;
         const selectedItems = this.state.selectedItems;
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: '#E0F7FA' }}>
+            <ScrollView style={{ flex: 1, backgroundColor: AppColors.backgroundColor }}>
                 <Header
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}

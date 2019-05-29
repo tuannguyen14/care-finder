@@ -98,7 +98,7 @@ class MainDrawer extends Component {
     }
 
     createUILogged = () => {
-        const { navigate } = this.props.navigation;
+        const { navigate, replace } = this.props.navigation;
         return (
             <View>
                 <View>
