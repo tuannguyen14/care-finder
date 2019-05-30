@@ -52,43 +52,48 @@ export default class componentName extends Component {
             slideAnim: new Animated.Value(-200),
             zIndex: 1,
             visible: false,
-            avatar: global.user.avatar
+            avatar: global.user.avatar,
+            spinner: false
         };
     }
 
     changeAvatar = () => {
         ImagePicker.showImagePicker(options, response => {
-            if (response.didCancel) {
-                console.log("User cancelled image picker");
-            } else if (response.error) {
-                console.log("ImagePicker Error: ", response.error);
-            } else if (response.customButton) {
-                console.log("User tapped custom button: ", response.customButton);
-            } else {
-                this.setState({
-                    avatar: response.uri
-                })
-                const body = new FormData();
-                body.append('avatar', {
-                    uri: response.uri,
-                    type: 'image/jpg',
-                    name: 'image.jpg'
-                })
+            this.setState({
+                spinner: !this.state.spinner
+            }, () => {
+                if (response.didCancel) {
+                    console.log("User cancelled image picker");
+                } else if (response.error) {
+                    console.log("ImagePicker Error: ", response.error);
+                } else if (response.customButton) {
+                    console.log("User tapped custom button: ", response.customButton);
+                } else {
+                    this.setState({
+                        avatar: response.uri
+                    })
+                    const body = new FormData();
+                    body.append('avatar', {
+                        uri: response.uri,
+                        type: 'image/jpg',
+                        name: 'image.jpg'
+                    })
 
-                axios.patch(IPServer.ip + '/user', body, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${global.token}`
-                    }
-                }).then(response => {
-                    let objectUser = response.data.doc;
-                    objectUser.userId = global.userId;
-                    global.user = objectUser;
-                    this.setState({ user: global.user });
-                }).catch(err => {
-                    console.log(err)
-                });
-            }
+                    axios.patch(IPServer.ip + '/user', body, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': `Bearer ${global.token}`
+                        }
+                    }).then(response => {
+                        let objectUser = response.data.doc;
+                        objectUser.userId = global.userId;
+                        global.user = objectUser;
+                        this.setState({ user: global.user, spinner: !this.state.spinner });
+                    }).catch(err => {
+                        console.log(err)
+                    });
+                }
+            });
         });
     }
 
@@ -135,6 +140,11 @@ export default class componentName extends Component {
                         backgroundColor={AppColors.color}
                         leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => navigate('RootDrawer') }}
                         centerComponent={{ text: 'THÔNG TIN NGƯỜI DÙNG', style: [Styles.header, { color: '#fff' }] }}
+                    />
+                    <Spinner
+                        visible={this.state.spinner}
+                        textContent={'Đang xử lý'}
+                        textStyle={{ color: 'white' }}
                     />
                     <TouchableOpacity >
                         <ImageBackground
