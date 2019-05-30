@@ -58,7 +58,6 @@ export default class BookingDate extends Component {
             dateBooking: dateFormat
         };
         axios.post(IPServer.ip + '/location/getBookingTime', body).then((response) => {
-            console.log(response);
             this.props.navigation.navigate('BookingScreen', { location: this.state.location, dataBookingTime: response.data });
         }).catch(err => {
             console.log(err)

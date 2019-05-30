@@ -32,7 +32,6 @@ export default class Booking extends Component {
     }
 
     componentWillMount() {
-        console.log(this.state.dataBookingTime.status)
         if (this.state.dataBookingTime.status == "Closed Today") {
             this.setState({
                 closedDate: true
@@ -43,6 +42,7 @@ export default class Booking extends Component {
             let minutes = today.getMinutes();
 
             let dataBookingTime = this.state.dataBookingTime;
+            console.log(dataBookingTime);
             dataBookingTime.timeBooking.time.forEach(element => {
                 if (element.userId === global.user.userId) {
                     this.setState({
@@ -50,18 +50,25 @@ export default class Booking extends Component {
                     })
                 }
             });
-            let dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time.filter((e, i) => {
-                let arrayTime = e.time.split(':');
-                let h = arrayTime[0];
-                let m = arrayTime[1];
-                if (parseInt(h) == parseInt(hours)) {
-                    if (parseInt(m) > parseInt(minutes)) {
+            let dateFormat = today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate());
+            let dataBookingTimeValid = [];
+            console.log(dataBookingTime.timeBooking.date + '------------' + dateFormat);
+            if (dataBookingTime.timeBooking.date == dateFormat) {
+                dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time.filter((e, i) => {
+                    let arrayTime = e.time.split(':');
+                    let h = arrayTime[0];
+                    let m = arrayTime[1];
+                    if (parseInt(h) == parseInt(hours)) {
+                        if (parseInt(m) > parseInt(minutes)) {
+                            return e;
+                        }
+                    } else if (parseInt(h) > parseInt(hours)) {
                         return e;
                     }
-                } else if (parseInt(h) > parseInt(hours)) {
-                    return e;
-                }
-            });
+                });
+            } else {
+                dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time;
+            }
             this.setState({
                 today: this.state.dataBookingTime.timeBooking.date,
                 dataBookingTime: dataBookingTimeValid
