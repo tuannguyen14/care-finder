@@ -5,6 +5,8 @@ import {
 import Welcome from "../screens/Welcome";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
+import ForgotPassword from "../screens/ForgotPassword";
+import ForgotPasswordChangePassword from "../screens/ForgotPasswordChangePassword";
 import { RootDrawer } from "./RootDrawer";
 import Item from "../screens/Item";
 import InformationItem from "../screens/InformationItem";
@@ -26,6 +28,8 @@ export const MainScreen = createStackNavigator({
   WelcomeScreen: { screen: Welcome },
   LoginScreen: { screen: Login },
   RegisterScreen: { screen: Register },
+  ForgotPasswordScreen: { screen: ForgotPassword },
+  ForgotPasswordChangePasswordScreen: { screen: ForgotPasswordChangePassword },
   VerifyScreen: { screen: Verify },
   RootDrawer: { screen: RootDrawer },
   ItemScreen: { screen: Item },

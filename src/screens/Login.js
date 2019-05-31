@@ -139,7 +139,7 @@ export default class Login extends Component {
                             <Text style={{ fontSize: 16, fontFamily: Font.textFont, fontWeight: 'bold' }}>Đăng nhập</Text>
                         </AwesomeButton>
                         <View style={[styles.rowView, { justifyContent: 'center', marginTop: '1%' }]}>
-                            <TouchableOpacity style={{ marginTop: '1%' }}>
+                            <TouchableOpacity onPress={() => navigate("ForgotPasswordScreen")} style={{ marginTop: '1%' }}>
                                 <Text style={{ color: "white", fontFamily: Font.textFont, fontSize: 15 }} > Quên mật khẩu?</Text>
                             </TouchableOpacity>
                             <View style={{ marginLeft: '5%' }}>

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Dimensions, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { ListItem } from 'native-base';
-    import { CheckBox } from 'react-native-elements';
-    import Icon from 'react-native-vector-icons/Entypo';
+import { CheckBox } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Entypo';
 import { Fumi } from 'react-native-textinput-effects';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import AwesomeButton from 'react-native-really-awesome-button';
@@ -21,11 +21,11 @@ export default class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: "Tuan",
-            lastName: "Nguyen",
-            email: "tuan123@gmail.com",
-            password: "admin123",
-            phoneNumber: "0963448001",
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            phoneNumber: "",
             male: false,
             female: false,
             showToast: false,
@@ -57,7 +57,7 @@ export default class Register extends Component {
                         spinner: !this.state.spinner
                     }, () => {
                         let user = response.data.createdUser;
-                        this.props.navigation.navigate('VerifyScreen', { user });
+                        this.props.navigation.navigate('VerifyScreen', { 'user': user, root: 'Register' });
                     });
                 }).catch(err => {
                     this.refs.toast.show('Đăng ký thất bại');
