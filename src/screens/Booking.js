@@ -155,11 +155,11 @@ export default class Booking extends Component {
                     <View style={{ alignItems: 'baseline' }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', margin: '1%' }}>
                             <View style={{ height: 32, width: 32, backgroundColor: '#98ee99' }} />
-                            <Text style={{ fontSize: 19 }}>Mở cửa</Text>
+                            <Text style={{ fontSize: 19 }}>Còn trống</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', margin: '1%' }}>
                             <View style={{ height: 32, width: 32, backgroundColor: '#ff867c' }} />
-                            <Text style={{ fontSize: 19 }}>Đóng cửa</Text>
+                            <Text style={{ fontSize: 19 }}>Đã được đặt</Text>
                         </View>
                     </View>
                 </Dialog>

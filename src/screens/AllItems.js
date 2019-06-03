@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, View, ScrollView, TouchableOpacity, Image, Imag
 import { Text, Header } from 'react-native-elements';
 import { List, ListItem } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import axios from 'axios';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
@@ -22,12 +23,14 @@ export default class AllItems extends Component {
   }
 
   onOpenDetailItem(data) {
-    if ((this.state.user.userId) !== (data._idDoctor)) {
-      axios({
-        method: 'get',
-        url: IPServer.ip + '/location/' + data._id,
-        responseType: 'stream'
-      });
+    if (global.isLogin) {
+      if ((this.state.user.userId) !== (data._idDoctor)) {
+        axios({
+          method: 'get',
+          url: IPServer.ip + '/location/' + data._id,
+          responseType: 'stream'
+        });
+      }
     }
     let numberOFView = data.countView + 1;
     data.countView = numberOFView
@@ -63,13 +66,13 @@ export default class AllItems extends Component {
         <Modal animationType="slide" transparent={false} visible={this.state.visiblModalFilter} onRequestClose={() => this.setState({ modalVisible: !this.state.visiblModalFilter })}>
           <View></View>
         </Modal>
-        <View style={[styles.rowView, { flex: 1 }]}>
+        {/* <View style={[styles.rowView, { flex: 1 }]}>
           <Text style={{ fontFamily: Font.textFont, fontSize: 18, marginLeft: '4%', fontWeight: 'bold', flex: 4, marginTop: '3%' }}>{this.state.label}</Text>
           <TouchableOpacity style={[styles.rowView, { flex: 1, alignItems: 'center', marginTop: '1.5%' }]} onPress={() => this.setState({ visiblModalFilter: !this.state.visiblModalFilter })}>
             <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Bộ lọc</Text>
             <Icon name={'filter'} size={21} color={'gray'} />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View style={{ width: width, borderBottomWidth: 1, borderBottomColor: '#BDBDBD', marginTop: '3%' }}></View>
 
@@ -117,7 +120,7 @@ export default class AllItems extends Component {
                       <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{l.imageUrls.length}</Text>
                     </View>
                     <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                      <Icon name={'star'} size={15} color={'gray'} />
+                      <SimpleLineIcons name={'user-following'} size={15} color={'gray'} />
                       <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{l.numberOfFollows}</Text>
                     </View>
                   </View>

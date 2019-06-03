@@ -88,7 +88,7 @@ class MainDrawer extends Component {
     onQRCode(navigation) {
         axios.get(IPServer.ip + '/reservation/' + global.user.userId).then((response) => {
             if (response.data.imageOfReservation == '') {
-                this.refs.toast.show('Bạn chưa đặt lịch!');
+                this.refs.toast.show('Không có lịch để xem!');
             } else {
                 this.props.navigation.navigate(navigation, { url: response.data.imageOfReservation, location: global.user.ticketInfo.location, dateBooking: global.user.ticketInfo.date, time: global.user.ticketInfo.time });
             }

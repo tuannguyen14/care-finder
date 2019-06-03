@@ -110,6 +110,7 @@ export default class RatingItem extends Component {
         let arrayString = ['Vị trí', 'Giá cả', 'Dịch vụ', 'Thái độ'];
         let i = 0;
         for (element in this.state.item.ratingAvg) {
+            i++;
             array.push(
                 < View style={[styles.rowView, { alignItems: 'center', justifyContent: "center" }]}>
                     <View style={[styles.rowView, { marginLeft: '3%', flex: 1, alignItems: 'center' }]}>
@@ -125,7 +126,9 @@ export default class RatingItem extends Component {
                         imageSize={26}
                         style={{ marginLeft: '1%', flex: 3 }}
                     />
-                    <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, marginLeft: '3%', marginTop: '1.6%', flex: 1 }}>{arrayString[i - 1]}</Text>
+                    <View style={{ flex: 1 }}>
+                        <Text style={{ alignSelf: 'flex-end', fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, marginTop: '1.6%', marginRight: '1%' }}>{arrayString[i - 1]}</Text>
+                    </View>
                 </View >
             )
         }
