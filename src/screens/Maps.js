@@ -147,7 +147,7 @@ export default class Maps extends Component {
                     duration: 500
                 }).start();
             }
-        })
+        });
     }
 
     onDirection(destinationCoordinate) {
@@ -233,65 +233,6 @@ export default class Maps extends Component {
                             null
                     }
                 </MapView>
-                <Animated.View style={[styles.containerShowHideScrollView, { bottom: expandIcon }]}>
-                    {
-                        this.state.visibleIconExpand ?
-                            (this.state.isHideScrollView ?
-                                <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
-                                    <Icon name={'caret-up'} size={30} color={'gray'} />
-                                </TouchableOpacity>
-                                : <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
-                                    <Icon name={'caret-down'} size={30} color={'gray'} />
-                                </TouchableOpacity>
-                            )
-                            : null
-                    }
-                </Animated.View>
-
-                <Animated.ScrollView
-                    horizontal
-                    style={[styles.scrollView, { bottom: scrollView }]}
-                >
-                    {this.state.listLocation.map((listLocation, index) => (
-                        <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: listLocation })}>
-                            <View style={[styles.rowView, { alignItems: 'center' }]}>
-                                <ImageBackground style={[styles.imageRating]}>
-                                    <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(listLocation.totalRatingAvg + "").includes('.') ? listLocation.totalRatingAvg : listLocation.totalRatingAvg + '.0'}</Text>
-                                </ImageBackground>
-                                <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', }]}>
-                                    <View>
-                                        <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: 'black' }}>{listLocation.name}</Text>
-                                        <Text numberOfLines={1} ellipsizeMode='tail'>{listLocation.address.street + ', ' + listLocation.address.ward + ', ' + listLocation.address.district + ', ' + listLocation.address.city}</Text>
-                                        <Text style={{ fontFamily: Font.textFont, }}>{listLocation.distance}</Text>
-                                    </View>
-                                </View>
-                            </View>
-                            <Image
-                                source={{ uri: listLocation.imageUrls[0].replace('http://localhost:3000', IPServer.ip) }}
-                                style={styles.cardImage}
-                                resizeMode="cover"
-                            />
-                            <View style={[styles.rowView, { justifyContent: 'space-between' }]}>
-                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                    <Icon name={'eye'} size={15} color={'gray'} />
-                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.countView}</Text>
-                                </View>
-                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                    <Icon name={'comment'} size={15} color={'gray'} />
-                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.reviews.length}</Text>
-                                </View>
-                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                    <Icon name={'camera'} size={15} color={'gray'} />
-                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.imageUrls.length}</Text>
-                                </View>
-                                <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
-                                    <Icon name={'star'} size={15} color={'gray'} />
-                                    <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{listLocation.numberOfFollows}</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    ))}
-                </Animated.ScrollView>
 
                 {
                     this.state.isFromInformationItem
@@ -300,7 +241,67 @@ export default class Maps extends Component {
                             <IconEntypo name={'arrow-long-left'} size={27} color={'gray'} />
                         </TouchableOpacity>
                         :
-                        null
+                        <Animated.View style={styles.scrollView}>
+                            <Animated.View style={[styles.containerShowHideScrollView, { bottom: expandIcon }]}>
+                                {
+                                    this.state.visibleIconExpand ?
+                                        (this.state.isHideScrollView ?
+                                            <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
+                                                <Icon name={'caret-up'} size={30} color={'gray'} />
+                                            </TouchableOpacity>
+                                            : <TouchableOpacity onPress={() => this.onShowHideScrollView()}>
+                                                <Icon name={'caret-down'} size={30} color={'gray'} />
+                                            </TouchableOpacity>
+                                        )
+                                        : null
+                                }
+                            </Animated.View>
+
+                            <Animated.ScrollView
+                                horizontal
+                                style={[{ bottom: scrollView }]}
+                            >
+                                {this.state.listLocation.map((location, index) => (
+                                    <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: location })}>
+                                        <View style={[styles.rowView, { alignItems: 'center' }]}>
+                                            <ImageBackground style={[styles.imageRating]}>
+                                                <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(location.totalRatingAvg + "").includes('.') ? location.totalRatingAvg : location.totalRatingAvg + '.0'}</Text>
+                                            </ImageBackground>
+                                            <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', }]}>
+                                                <View>
+                                                    <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: 'black' }}>{location.name}</Text>
+                                                    <Text numberOfLines={1} ellipsizeMode='tail'>{location.address.street + ', ' + location.address.ward + ', ' + location.address.district + ', ' + location.address.city}</Text>
+                                                    <Text style={{ fontFamily: Font.textFont, }}>{location.distance}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                        <Image
+                                            source={{ uri: location.imageUrls[0].replace('http://localhost:3000', IPServer.ip) }}
+                                            style={styles.cardImage}
+                                            resizeMode="cover"
+                                        />
+                                        <View style={[styles.rowView, { justifyContent: 'space-between' }]}>
+                                            <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                                <Icon name={'eye'} size={15} color={'gray'} />
+                                                <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{location.countView}</Text>
+                                            </View>
+                                            <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                                <Icon name={'comment'} size={15} color={'gray'} />
+                                                <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{location.reviews.length}</Text>
+                                            </View>
+                                            <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                                <Icon name={'camera'} size={15} color={'gray'} />
+                                                <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{location.imageUrls.length}</Text>
+                                            </View>
+                                            <View style={[styles.rowView, { alignItems: 'center', justifyContent: 'center', }]}>
+                                                <Icon name={'star'} size={15} color={'gray'} />
+                                                <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{location.numberOfFollows}</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </Animated.ScrollView>
+                        </Animated.View>
                 }
             </View >
 
@@ -339,9 +340,10 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         position: "absolute",
+        bottom: 0,
         right: 0,
         left: 0,
-        paddingVertical: 10
+        paddingVertical: 10,
     },
     card: {
         padding: 10,

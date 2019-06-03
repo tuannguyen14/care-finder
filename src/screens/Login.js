@@ -22,7 +22,7 @@ export default class Login extends Component {
         super(props);
         this.state = {
             email: "tuan123@gmail.com",
-            password: "admin123",
+            password: "Admin123",
             tabLogicColor: 'white',
             tabRegisterColor: AppColors.color,
             isLoginOrRegister: false,
