@@ -95,7 +95,7 @@ export default class Booking extends Component {
                     dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
                     spinner: !this.state.spinner
                 }, () => {
-                    this.props.navigation.navigate('QRCodeScreen', { url: response.data.url, location: this.state.location, dateBooking: this.state.today, time: this.state.dataBookingTime[this.state.indexBooking].time });
+                    this.props.navigation.navigate('QRCodeScreen', { url: response.data.url, location: this.state.location._id, dateBooking: this.state.today, time: this.state.dataBookingTime[this.state.indexBooking].time });
                 });
             }).catch(err => {
                 console.log(err)

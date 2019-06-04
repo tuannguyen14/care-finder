@@ -25,7 +25,7 @@ export default class QRCode extends Component {
         const body =
         {
             idPatient: global.user.userId,
-            idLocation: this.state.location._id,
+            idLocation: this.state.location,
             date: this.state.dateBooking,
             time: this.state.time
         };
