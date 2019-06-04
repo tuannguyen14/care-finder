@@ -124,7 +124,7 @@ export default class RatingItem extends Component {
                         fractions={0}
                         startingValue={10}
                         imageSize={26}
-                        style={{ marginLeft: '1%', flex: 3 }}
+                        style={{ flex: 3 }}
                     />
                     <View style={{ flex: 1 }}>
                         <Text style={{ alignSelf: 'flex-end', fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, marginTop: '1.6%', marginRight: '1%' }}>{arrayString[i - 1]}</Text>

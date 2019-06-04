@@ -15,19 +15,9 @@ export default class BookMark extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listIdLocation: [],
             listLocationFollow: [],
             spinner: false
         };
-    }
-
-    componentDidMount() {
-        this.props.navigation.addListener(
-            'didFocus',
-            payload => {
-                this.componentWillMount();
-            }
-        );
     }
 
     componentWillMount() {
@@ -35,19 +25,17 @@ export default class BookMark extends Component {
             spinner: !this.state.spinner,
         }, () => {
             if (global.isLogin) {
-                this.setState({
-                    listIdLocation: global.user.follows
-                });
+                const listIdLocation = global.user.follows;
                 let listLocationFollowTemp = [];
                 let promises = [];
-                for (let i = 0; i < this.state.listIdLocation.length; i++) {
-                    promises.push(axios.get(IPServer.ip + '/location/' + this.state.listIdLocation[i], {
+                for (let i = 0; i < listIdLocation.length; i++) {
+                    promises.push(axios.get(IPServer.ip + '/location/' + listIdLocation[i], {
                         headers: {
                             'Content-Type': 'application/json',
                         }
                     }));
                 }
-                console.log(this.state.listIdLocation);
+                console.log(listIdLocation);
                 Promise.all(promises)
                     .then((results) => {
                         results.forEach((locationData, i) => {
@@ -63,6 +51,15 @@ export default class BookMark extends Component {
 
             }
         });
+    }
+
+    componentDidMount() {
+        this.props.navigation.addListener(
+            'didFocus',
+            payload => {
+                this.componentWillMount();
+            }
+        );
     }
 
     render() {
