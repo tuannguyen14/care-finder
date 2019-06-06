@@ -1,21 +1,10 @@
 import React, { Component } from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    TouchableOpacity,
-    ImageBackground,
-    Platform,
-    ScrollView,
-    Animated,
-    Modal
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground, Platform, Animated, Modal } from "react-native";
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Toast, { DURATION } from "react-native-easy-toast";
-import { Button, Header } from 'react-native-elements';
+import { Button, Header, Divider } from 'react-native-elements';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { AppColors } from '../styles/AppColors.js';
-import { change_url_image } from '../utils/Utils';
 import axios from 'axios';
 const ImagePicker = require("react-native-image-picker");
 import { IPServer } from "../Server/IPServer.js";
@@ -23,6 +12,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Font } from '../styles/Font.js';
 import Icon from 'react-native-vector-icons/Entypo';
 import Styles from '../styles/Styles.js';
+
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const options = {
     title: "Chọn ảnh từ:",
     quality: 1,
@@ -151,14 +142,26 @@ export default class componentName extends Component {
                             source={{ uri: 'http://yodobi.com/4k-Wallpapers/4k-wallpapers-phone-Is-4K-Wallpaper.jpg' }}
                             style={styles.coverPhoto}
                         >
-                            <Text style={styles.textEditCoverPhoto}>{this.state.user.lastName} {this.state.user.firstName}</Text>
+                            <View style={styles.containerName}>
+                                <Text style={{
+                                    fontSize: 18,
+                                    fontWeight: "bold",
+                                    color: "#FFFFFF",
+                                    backgroundColor: 'transparent',
+                                }}>{this.state.user.lastName} {this.state.user.firstName}</Text>
+                                {
+                                    this.state.user.permission === 'DOCTOR' ?
+                                        <Entypo name={'check'} size={23} color={'green'} />
+                                        : null
+                                }
+                            </View>
                             <View style={styles.containerTextImage}>
                                 <TouchableOpacity onPress={this.selectOptions}>
                                     <Image
                                         source={{ uri: this.state.user.avatar }}
                                         style={styles.avatar}
                                     />
-                                    <Icon style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={'white'} />
+                                    <Entypo style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={AppColors.color} />
                                 </TouchableOpacity>
                             </View>
                         </ImageBackground>
@@ -181,12 +184,34 @@ export default class componentName extends Component {
                             <Text style={styles.textHeader}> Số địa điểm đang theo dõi: </Text>
                             <Text style={styles.textState}>{this.state.user.follows.length}</Text>
                         </View>
+                        <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
+                        <TouchableOpacity style={{ paddingTop: '1%', paddingBottom: '2%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', marginLeft: '3%', marginRight: '3%' }} onPress={() => navigate('ChangeInformationUserScreen')}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Entypo name={'edit'} size={23} color={AppColors.color} />
+                                <Text style={{ fontSize: 19, color: AppColors.backgroundColor, marginLeft: '7%' }}>Đổi thông tin</Text>
+                            </View>
+                            <MaterialCommunityIcons name={'chevron-right'} size={27} color={AppColors.color} style={{ alignSelf: 'flex-end' }} />
+                        </TouchableOpacity>
+                        <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
+                        {
+                            this.state.user.permission === 'DOCTOR' ? null :
+                                <View>
+                                    <TouchableOpacity style={{ paddingTop: '1%', paddingBottom: '2%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', marginLeft: '3%', marginRight: '3%' }} onPress={() => navigate('VerifyDoctorScreen')}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Entypo name={'check'} size={23} color={AppColors.color} />
+                                            <Text style={{ fontSize: 19, color: AppColors.backgroundColor, marginLeft: '5%' }}>Xác thực tài khoản bác sĩ</Text>
+                                        </View>
+                                        <MaterialCommunityIcons name={'chevron-right'} size={27} color={AppColors.color} style={{ alignSelf: 'flex-end' }} />
+                                    </TouchableOpacity>
+                                    <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
+                                </View>
+                        }
 
-                        <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                        {/* <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
                             <Button
                                 title='Đổi thông tin'
                                 buttonStyle={{
-                                    backgroundColor: AppColors.color,
+                                    backgroundColor: AppColors.backgroundColor,
                                     width: 300,
                                     height: 45,
                                     borderColor: "transparent",
@@ -196,6 +221,24 @@ export default class componentName extends Component {
                                 onPress={() => navigate("ChangeInformationUserScreen")}
                             />
                         </View>
+                        {
+                            this.state.user.permission === 'DOCTOR' ? null :
+                                <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Button
+                                        title='Xác thực tài khoản bác sĩ'
+                                        buttonStyle={{
+                                            backgroundColor: AppColors.backgroundColor,
+                                            width: 300,
+                                            height: 45,
+                                            borderColor: "transparent",
+                                            borderWidth: 0,
+                                            borderRadius: 5
+                                        }}
+                                        onPress={() => navigate("VerifyDoctorScreen")}
+                                    />
+                                </View>
+                        } */}
+
                     </View>
 
                 </View>
@@ -267,15 +310,13 @@ const styles = StyleSheet.create({
         bottom: 0,
         margin: "3%"
     },
-    textEditCoverPhoto: {
+    containerName: {
+        alignItems: 'center',
+        flexDirection: 'row',
         position: "absolute",
         alignSelf: "center",
         bottom: 0,
         marginBottom: "3%",
-        fontSize: 18,
-        fontWeight: "bold",
-        color: "#FFFFFF",
-        backgroundColor: 'transparent',
     },
     containerBelow: {
         marginTop: "1.6%",

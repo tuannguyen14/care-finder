@@ -45,16 +45,7 @@ class MainDrawer extends Component {
                 }
             ]
             const listUtilitiesItem = [
-                {
-                    icon: 'query-builder',
-                    name: 'Số thứ tự',
-                    navigation: 'QRCodeScreen'
-                },
-                {
-                    icon: 'check',
-                    name: 'Xác thực tài khoản bác sĩ',
-                    navigation: 'VerifyDoctorScreen'
-                }
+
             ];
             if (this.state.user.permission === 'DOCTOR') {
                 listUtilitiesItem.push(
@@ -63,11 +54,20 @@ class MainDrawer extends Component {
                         name: 'Tạo địa điểm',
                         navigation: 'CreateNewLocationScreen'
                     },
+                    // {
+                    //     icon: 'edit-location',
+                    //     name: 'Quản lý địa điểm',
+                    //     navigation: 'LocationManagerScreen'
+                    // }
+                );
+            } else {
+                listUtilitiesItem.push(
                     {
-                        icon: 'edit-location',
-                        name: 'Quản lý địa điểm',
-                        navigation: 'LocationManagerScreen'
-                    });
+                        icon: 'query-builder',
+                        name: 'Số thứ tự',
+                        navigation: 'QRCodeScreen'
+                    }
+                )
             }
             this.setState({
                 listSettingsItem: listDefaultItemTemp,

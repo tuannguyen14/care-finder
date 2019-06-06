@@ -60,7 +60,11 @@ export default class Register extends Component {
                         this.props.navigation.navigate('VerifyScreen', { 'user': user, root: 'Register' });
                     });
                 }).catch(err => {
-                    this.refs.toast.show('Đăng ký thất bại');
+                    this.setState({
+                        spinner: !this.state.spinner
+                    }, () => {
+                        this.refs.toast.show('Đăng ký thất bại');
+                    });
                     console.log(err)
                 })
         });

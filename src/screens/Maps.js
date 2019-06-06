@@ -12,7 +12,7 @@ import Styles from '../styles/Styles.js';
 
 let { width, height } = Dimensions.get("window");
 
-const GOOGLE_MAPS_APIKEY = 'AIzaSyDqZFsw9dShNF6QROftqbN6o4dsDUDcHtw';
+const GOOGLE_MAPS_APIKEY = 'AIzaSyCJFSrI8QrAFmJcmxO5n56vItbujpz4zAc';
 const geolib = require('geolib');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 11.0558;
@@ -35,8 +35,8 @@ export default class Maps extends Component {
                 longitudeDelta: LONGITUDE_DELTA,
             }),
             origin: {
-                latitude: 0,
-                longitude: 0
+                latitude: 11.051825,
+                longitude: 106.667890
             },
             destination: {
                 latitude: 0,
@@ -53,7 +53,7 @@ export default class Maps extends Component {
     }
 
     componentWillMount() {
-        this.getCurrentLocation();
+        // this.getCurrentLocation();
         this.calculateDistance();
         if (this.props.navigation.state.params != undefined) {
             if (this.props.navigation.state.params.isFromInformationItem != undefined) {
@@ -62,9 +62,9 @@ export default class Maps extends Component {
         }
     }
 
-    componentWillUnmount() {
-        navigator.geolocation.clearWatch(this.watchID);
-    }
+    // componentWillUnmount() {
+    //     navigator.geolocation.clearWatch(this.watchID);
+    // }
 
     componentDidMount() {
         if (this.props.navigation.state.params != undefined) {
@@ -74,25 +74,25 @@ export default class Maps extends Component {
         }
     }
 
-    getCurrentLocation() {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                this.setState({
-                    region: new MapView.AnimatedRegion({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA
-                    }),
-                    origin: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    }
-                });
-            },
-            error => console.log(error.message)
-        );
-    }
+    // getCurrentLocation() {
+    //     navigator.geolocation.getCurrentPosition(
+    //         position => {
+    //             this.setState({
+    //                 region: new MapView.AnimatedRegion({
+    //                     latitude: position.coords.latitude,
+    //                     longitude: position.coords.longitude,
+    //                     latitudeDelta: LATITUDE_DELTA,
+    //                     longitudeDelta: LONGITUDE_DELTA
+    //                 }),
+    //                 origin: {
+    //                     latitude: position.coords.latitude,
+    //                     longitude: position.coords.longitude,
+    //                 }
+    //             });
+    //         },
+    //         error => console.log(error.message)
+    //     );
+    // }
 
     calculateDistance() {
         const allLocations = this.state.allLocations;
@@ -217,21 +217,18 @@ export default class Maps extends Component {
                             </MapView.Callout>
                         </MapView.Marker>
                     ))}
-                    {
-                        this.state.isOnClickDirection ?
-                            <MapViewDirections
-                                origin={this.state.origin}
-                                destination={this.state.destination}
-                                apikey={GOOGLE_MAPS_APIKEY}
-                                strokeWidth={3}
-                                strokeColor="hotpink"
-                                onError={(errorMessage) => {
-                                    console.log(errorMessage);
-                                }}
-                            />
-                            :
-                            null
-                    }
+
+                    <MapViewDirections
+                        origin={this.state.origin}
+                        destination={this.state.destination}
+                        apikey={GOOGLE_MAPS_APIKEY}
+                        strokeWidth={3}
+                        strokeColor="hotpink"
+                        onError={(errorMessage) => {
+                            console.log(errorMessage);
+                        }}
+                    />
+
                 </MapView>
 
                 {

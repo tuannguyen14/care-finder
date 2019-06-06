@@ -10,6 +10,8 @@ import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import Styles from '../styles/Styles.js';
 
+var jwtDecode = require('jwt-decode');
+
 let { width, height } = Dimensions.get("window");
 
 export default class Booking extends Component {
@@ -42,17 +44,13 @@ export default class Booking extends Component {
             let minutes = today.getMinutes();
 
             let dataBookingTime = this.state.dataBookingTime;
-            console.log(dataBookingTime);
-            dataBookingTime.timeBooking.time.forEach(element => {
-                if (element.userId === global.user.userId) {
-                    this.setState({
-                        isBooked: true
-                    })
-                }
-            });
+            if (Object.keys(global.user.ticketInfo).length != 0) {
+                this.setState({
+                    isBooked: true
+                });
+            }
             let dateFormat = today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate());
             let dataBookingTimeValid = [];
-            console.log(dataBookingTime.timeBooking.date + '------------' + dateFormat);
             if (dataBookingTime.timeBooking.date == dateFormat) {
                 dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time.filter((e, i) => {
                     let arrayTime = e.time.split(':');
@@ -87,16 +85,27 @@ export default class Booking extends Component {
                 date: this.state.today,
                 time: this.state.dataBookingTime[this.state.indexBooking].time
             };
-            axios.post(IPServer.ip + '/reservation', body).then((response) => {
+            axios.post(IPServer.ip + '/reservation', body).then((response1) => {
                 let dataBookingTimeTemp = this.state.dataBookingTime;
                 dataBookingTimeTemp[this.state.indexBooking] = { userId: global.user.userId, time: this.state.dataBookingTime[this.state.indexBooking].time };
-                this.setState({
-                    dataBookingTime: dataBookingTimeTemp,
-                    dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
-                    spinner: !this.state.spinner
-                }, () => {
-                    this.props.navigation.navigate('QRCodeScreen', { url: response.data.url, location: this.state.location._id, dateBooking: this.state.today, time: this.state.dataBookingTime[this.state.indexBooking].time });
-                });
+                axios.get(IPServer.ip + '/me', {
+                    headers: {
+                        "Authorization": `Bearer ${global.token}`
+                    },
+                }).then(response => {
+                    let objectUser = response.data;
+                    objectUser.userId = jwtDecode(global.token).userId;
+                    global.user = objectUser;
+                    this.setState({
+                        dataBookingTime: dataBookingTimeTemp,
+                        dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
+                        spinner: !this.state.spinner
+                    }, () => {
+                        this.props.navigation.navigate('QRCodeScreen', { url: response1.data.url, location: this.state.location._id, dateBooking: this.state.today, time: this.state.dataBookingTime[this.state.indexBooking].time });
+                    });
+                }).catch(err => {
+                    console.log(err)
+                })
             }).catch(err => {
                 console.log(err)
             });

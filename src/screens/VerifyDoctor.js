@@ -157,7 +157,7 @@ export default class componentName extends Component {
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
-                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => navigate("RootDrawer") }}
+                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
                     centerComponent={{ text: 'XÁC THỰC TÀI KHOẢN BÁC SĨ', style: [Styles.header, { color: '#fff' }] }}
                 />
                 <View style={styles.container}>
