@@ -3,6 +3,10 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { List, ListItem, SearchBar, Card, Icon } from "react-native-elements";
 import _ from "lodash";
+import { Dropdown } from 'react-native-material-dropdown';
+import { IPServer } from '../Server/IPServer.js';
+import axios from 'axios';
+
 
 // create a component
 class Search extends Component {
@@ -12,17 +16,53 @@ class Search extends Component {
     loading: false,
     error: null,
     fullData: global.allLocations,
-    query: ''
+    queryData:[],
+    query: '',
+    departments: [],
+    isAll: true,
   };
 
+
+  async componentDidMount() {
+    const responseDepartment = await fetch(IPServer.ip + '/department')
+    const data = await responseDepartment.json();
+    console.log("haha" + data.doc)
+    var newArray = data.doc.map((e,i ) => {
+      return {value : e.name}
+    })
+    
+    newArray.unshift({value: "Tất cả"})
+    console.log(newArray)
+    this.setState({ departments: newArray })
+  }
 
   handleSearch = (text) => {
     console.log("text", text)
     const formatQuery = text.toLowerCase();
+    if(this.state.isAll){
+      const data = _.filter(this.state.fullData, location => {
+        return location.name.toLowerCase().includes(formatQuery)
+      })
+      this.setState({query: text, data})
+    }else{
+      const data = _.filter(this.state.queryData, location => {
+        return location.name.toLowerCase().includes(formatQuery)
+      })
+      this.setState({query: text, data: data})
+    }
+  }
+
+  handleFilter = (text) => {
+    console.log(text)
+    if(text === "Tất cả"){
+      return this.setState({isAll: true, data: this.state.fullData})
+    }else{
+      this.setState({isAll: false})
+    }
     const data = _.filter(this.state.fullData, location => {
-      return location.name.toLowerCase().includes(formatQuery)
+      return location.departments.includes(text)
     })
-    this.setState({query: text, data})
+    this.setState({queryData : data, data})
   }
 
   renderHeader = () => {
@@ -76,8 +116,15 @@ class Search extends Component {
           <View style={{flex: 1, width: "92%"}}>
             <SearchBar placeholder="Type Here..." lightTheme round onChangeText={this.handleSearch} />
           </View>
+          
 
         </View>
+        <Dropdown
+          label='Chọn chuyên khoa'
+          onChangeText={this.handleFilter}
+          data={this.state.departments}
+          value="Tất cả"
+        />
         <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
           <FlatList
             data={this.state.data}
