@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import { change_url_image } from '../utils/Utils'
 import Spinner from 'react-native-loading-spinner-overlay';
-import { NavigationActions } from 'react-navigation';
+import Carousel from 'react-native-snap-carousel';
 import { IPServer } from '../Server/IPServer.js';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
@@ -96,7 +96,15 @@ export default class Home extends Component {
       }
     );
   }
-  
+
+  _renderItem({ item, index }) {
+    return (
+      <View style={styles.slide}>
+        <Text style={styles.title}>{item.title}</Text>
+      </View>
+    );
+  }
+
 
   render() {
     return (
@@ -139,9 +147,8 @@ export default class Home extends Component {
               </TouchableOpacity>
             </View>
 
-            <FlatList
+            <Carousel
               data={this.state.bestLocation}
-              horizontal={true}
               renderItem={({ item: data }) => {
                 return (
                   <TouchableOpacity style={[styles.cardContainer]} onPress={() => this.openDetailItem(data)}>
@@ -168,7 +175,8 @@ export default class Home extends Component {
                   </TouchableOpacity>
                 );
               }}
-              keyExtractor={(item, index) => index.toString()}
+              sliderWidth={width}
+              itemWidth={width / 1.3}
             />
           </View>
           <View style={{ width: width, height: 3, backgroundColor: '#BDBDBD', marginTop: '3%' }} />
@@ -182,9 +190,8 @@ export default class Home extends Component {
                 <Icon name={'expand-more'} size={27} color={'black'} />
               </TouchableOpacity>
             </View>
-            <FlatList
+            <Carousel
               data={this.state.highestViewLocation}
-              horizontal={true}
               renderItem={({ item: data }) => {
                 return (
                   <TouchableOpacity style={styles.cardContainer} onPress={() => this.openDetailItem(data)}>
@@ -211,7 +218,8 @@ export default class Home extends Component {
                   </TouchableOpacity>
                 );
               }}
-              keyExtractor={(item, index) => index.toString()}
+              sliderWidth={width}
+              itemWidth={width / 1.3}
             />
           </View>
         </ScrollView >
@@ -225,7 +233,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: '#d9d9d9'
   },
   listSearch: {
     backgroundColor: 'red',
@@ -248,7 +256,7 @@ const styles = StyleSheet.create({
     height: height * 0.01
   },
   cardContainer: {
-    width: width * 0.7,
+    width: width * 0.8,
     height: height * 0.5
   },
   imageCard: {

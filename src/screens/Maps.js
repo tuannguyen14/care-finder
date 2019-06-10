@@ -362,4 +362,14 @@ const styles = StyleSheet.create({
         height: '100%',
         alignSelf: "center"
     },
+    imageRating: {
+        backgroundColor: AppColors.color,
+        width: 48,
+        height: 48,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        borderRadius: 100
+    },
 });

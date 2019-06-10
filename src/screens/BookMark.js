@@ -101,7 +101,8 @@ export default class BookMark extends Component {
 
 const styles = StyleSheet.create({
     cardContainer: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#d9d9d9'
     },
     image: {
         height: height,

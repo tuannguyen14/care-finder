@@ -143,15 +143,13 @@ export default class componentName extends Component {
                             style={styles.coverPhoto}
                         >
                             <View style={styles.containerName}>
-                                <Text style={{
-                                    fontSize: 18,
-                                    fontWeight: "bold",
-                                    color: "#FFFFFF",
-                                    backgroundColor: 'transparent',
-                                }}>{this.state.user.lastName} {this.state.user.firstName}</Text>
+                                <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF" }}>{this.state.user.lastName} {this.state.user.firstName}</Text>
                                 {
                                     this.state.user.permission === 'DOCTOR' ?
-                                        <Entypo name={'check'} size={23} color={'green'} />
+                                        // <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Text style={{ fontSize: 18, fontWeight: "bold", color: "green", marginBottom: '1%' }}>Đã xác thực</Text>
+                                        /* <Entypo name={'check'} size={23} color={'green'} /> */
+                                        /* </View> */
                                         : null
                                 }
                             </View>
@@ -161,7 +159,7 @@ export default class componentName extends Component {
                                         source={{ uri: this.state.user.avatar }}
                                         style={styles.avatar}
                                     />
-                                    <Entypo style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={AppColors.color} />
+                                    <Entypo style={{ position: "absolute", bottom: 0, right: 0 }} name={'edit'} size={31} color={AppColors.backgroundColor} />
                                 </TouchableOpacity>
                             </View>
                         </ImageBackground>
@@ -187,10 +185,10 @@ export default class componentName extends Component {
                         <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
                         <TouchableOpacity style={{ paddingTop: '1%', paddingBottom: '2%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', marginLeft: '3%', marginRight: '3%' }} onPress={() => navigate('ChangeInformationUserScreen')}>
                             <View style={{ flexDirection: 'row' }}>
-                                <Entypo name={'edit'} size={23} color={AppColors.color} />
+                                <Entypo name={'edit'} size={23} color={AppColors.backgroundColor} />
                                 <Text style={{ fontSize: 19, color: AppColors.backgroundColor, marginLeft: '7%' }}>Đổi thông tin</Text>
                             </View>
-                            <MaterialCommunityIcons name={'chevron-right'} size={27} color={AppColors.color} style={{ alignSelf: 'flex-end' }} />
+                            <MaterialCommunityIcons name={'chevron-right'} size={27} color={AppColors.backgroundColor} style={{ alignSelf: 'flex-end' }} />
                         </TouchableOpacity>
                         <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
                         {
@@ -198,13 +196,16 @@ export default class componentName extends Component {
                                 <View>
                                     <TouchableOpacity style={{ paddingTop: '1%', paddingBottom: '2%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', marginLeft: '3%', marginRight: '3%' }} onPress={() => navigate('VerifyDoctorScreen')}>
                                         <View style={{ flexDirection: 'row' }}>
-                                            <Entypo name={'check'} size={23} color={AppColors.color} />
+                                            <Entypo name={'check'} size={23} color={AppColors.backgroundColor} />
                                             <Text style={{ fontSize: 19, color: AppColors.backgroundColor, marginLeft: '5%' }}>Xác thực tài khoản bác sĩ</Text>
                                         </View>
-                                        <MaterialCommunityIcons name={'chevron-right'} size={27} color={AppColors.color} style={{ alignSelf: 'flex-end' }} />
+                                        <MaterialCommunityIcons name={'chevron-right'} size={27} color={AppColors.backgroundColor} style={{ alignSelf: 'flex-end' }} />
                                     </TouchableOpacity>
-                                    <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
                                 </View>
+                        }
+                        {
+                            this.state.user.permission === 'DOCTOR' ? null :
+                                <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
                         }
 
                         {/* <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
@@ -312,11 +313,10 @@ const styles = StyleSheet.create({
     },
     containerName: {
         alignItems: 'center',
-        flexDirection: 'row',
         position: "absolute",
         alignSelf: "center",
         bottom: 0,
-        marginBottom: "3%",
+        marginBottom: "0%",
     },
     containerBelow: {
         marginTop: "1.6%",
