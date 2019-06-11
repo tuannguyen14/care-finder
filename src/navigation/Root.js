@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   createStackNavigator,
 } from "react-navigation";
+import Intro from "../screens/Intro";
 import Welcome from "../screens/Welcome";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
@@ -25,6 +26,7 @@ import Booking from "../screens/Booking";
 import QRCode from "../screens/QRCode"
 
 export const MainScreen = createStackNavigator({
+  IntroScreen: { screen: Intro },
   WelcomeScreen: { screen: Welcome },
   LoginScreen: { screen: Login },
   RegisterScreen: { screen: Register },

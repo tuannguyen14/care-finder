@@ -93,6 +93,7 @@
 		AA35ACF514A04B7CA5941D51 /* Sketch 3D.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6C31EAD161A74BFE88FF54D3 /* Sketch 3D.otf */; };
 		7162EF4D100C42DEB69E3D62 /* Sketch 3D.woff in Resources */ = {isa = PBXBuildFile; fileRef = 49D84AA86AAF44FA8E3E9B0B /* Sketch 3D.woff */; };
 		50330EC4B7364ECF873F652E /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A24DEAEF618499D907262F8 /* libBVLinearGradient.a */; };
+		6C9EB938F3954741A3A07B9A /* libLottieReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E25878FD3444438522BDB5 /* libLottieReactNative.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -459,6 +460,8 @@
 		49D84AA86AAF44FA8E3E9B0B /* Sketch 3D.woff */ = {isa = PBXFileReference; name = "Sketch 3D.woff"; path = "../assets/fonts/Sketch 3D.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		6D20704E5CD744918354C641 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; name = "BVLinearGradient.xcodeproj"; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		5A24DEAEF618499D907262F8 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		F5BB1A5108A841D09BBD4056 /* LottieReactNative.xcodeproj */ = {isa = PBXFileReference; name = "LottieReactNative.xcodeproj"; path = "../node_modules/lottie-react-native/src/ios/LottieReactNative.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		E6E25878FD3444438522BDB5 /* libLottieReactNative.a */ = {isa = PBXFileReference; name = "libLottieReactNative.a"; path = "libLottieReactNative.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -491,6 +494,7 @@
 				1114C49B6C6A42FD88475C6A /* libRCTSplashScreen.a in Frameworks */,
 				4F229639C67B4DA797B07F99 /* libRNVectorIcons.a in Frameworks */,
 				50330EC4B7364ECF873F652E /* libBVLinearGradient.a in Frameworks */,
+				6C9EB938F3954741A3A07B9A /* libLottieReactNative.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,6 +687,7 @@
 				F8E2FD22F4FB4613AE606CDA /* RCTSplashScreen.xcodeproj */,
 				6DED18579B7B4BFBA10935C9 /* RNVectorIcons.xcodeproj */,
 				6D20704E5CD744918354C641 /* BVLinearGradient.xcodeproj */,
+				F5BB1A5108A841D09BBD4056 /* LottieReactNative.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1425,6 +1430,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1433,6 +1439,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Debug;
@@ -1460,6 +1467,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1468,6 +1476,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Release;
@@ -1495,6 +1504,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Debug;
@@ -1521,6 +1531,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Release;
@@ -1556,6 +1567,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1564,6 +1576,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Debug;
@@ -1599,6 +1612,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1607,6 +1621,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Release;
@@ -1641,6 +1656,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1649,6 +1665,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Debug;
@@ -1683,6 +1700,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1691,6 +1709,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-smart-splash-screen\ios\RCTSplashScreen\RCTSplashScreen",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\lottie-react-native\src\ios\LottieReactNative",
 				);
 			};
 			name = Release;

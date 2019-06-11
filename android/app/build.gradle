@@ -107,6 +107,10 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+}
     splits {
         abi {
             reset()
@@ -137,6 +141,7 @@ android {
 }
 
 dependencies {
+    compile project(':lottie-react-native')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-vector-icons')
     compile project(':react-native-smart-splash-screen')
