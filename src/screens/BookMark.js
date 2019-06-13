@@ -64,7 +64,7 @@ export default class BookMark extends Component {
 
     render() {
         return (
-            <ScrollView>
+            <ScrollView style={styles.container}>
                 <Header
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
@@ -77,7 +77,7 @@ export default class BookMark extends Component {
                     textContent={'Đang xử lý'}
                     textStyle={{ color: 'white' }}
                 />
-                <View>
+                <View style={{ backgroundColor: 'white' }}>
                     {
                         this.state.listLocationFollow.map((data, i) => (
                             <ListItem
@@ -100,9 +100,9 @@ export default class BookMark extends Component {
 }
 
 const styles = StyleSheet.create({
-    cardContainer: {
+    container: {
         flex: 1,
-        backgroundColor: '#d9d9d9'
+        backgroundColor: '#e0e0e0'
     },
     image: {
         height: height,

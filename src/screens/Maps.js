@@ -53,7 +53,7 @@ export default class Maps extends Component {
     }
 
     componentWillMount() {
-        // this.getCurrentLocation();
+        this.getCurrentLocation();
         this.calculateDistance();
         if (this.props.navigation.state.params != undefined) {
             if (this.props.navigation.state.params.isFromInformationItem != undefined) {
@@ -62,9 +62,9 @@ export default class Maps extends Component {
         }
     }
 
-    // componentWillUnmount() {
-    //     navigator.geolocation.clearWatch(this.watchID);
-    // }
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchID);
+    }
 
     componentDidMount() {
         if (this.props.navigation.state.params != undefined) {
@@ -74,25 +74,25 @@ export default class Maps extends Component {
         }
     }
 
-    // getCurrentLocation() {
-    //     navigator.geolocation.getCurrentPosition(
-    //         position => {
-    //             this.setState({
-    //                 region: new MapView.AnimatedRegion({
-    //                     latitude: position.coords.latitude,
-    //                     longitude: position.coords.longitude,
-    //                     latitudeDelta: LATITUDE_DELTA,
-    //                     longitudeDelta: LONGITUDE_DELTA
-    //                 }),
-    //                 origin: {
-    //                     latitude: position.coords.latitude,
-    //                     longitude: position.coords.longitude,
-    //                 }
-    //             });
-    //         },
-    //         error => console.log(error.message)
-    //     );
-    // }
+    getCurrentLocation() {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                this.setState({
+                    region: new MapView.AnimatedRegion({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA
+                    }),
+                    origin: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    }
+                });
+            },
+            error => console.log(error.message)
+        );
+    }
 
     calculateDistance() {
         const allLocations = this.state.allLocations;
@@ -193,7 +193,6 @@ export default class Maps extends Component {
                     {this.state.allLocations.map(marker => (
                         <MapView.Marker
                             coordinate={marker.coordinates}
-                            image
                         >
                             <Image
                                 source={require('../img/markerHospital2.png')}

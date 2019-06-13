@@ -13,7 +13,7 @@ const slides = [
         title: 'Tìm kiếm phòng khám được đánh giá tốt nhất',
         icon: 'ios-images-outline',
         animation: require('../animation/stars.json'),
-        image: require('../img/hospital.png'),
+        image: require('../img/hospitalIntro.png'),
     },
     {
         key: 'somethun1',

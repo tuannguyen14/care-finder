@@ -74,10 +74,6 @@ export default class QRCode extends Component {
                         <Text style={styles.textState}>{global.user.phoneNumber}</Text>
                     </View>
                     <View style={styles.containerText}>
-                        <Text style={styles.textHeader}> Số địa điểm đang theo dõi: </Text>
-                        <Text style={styles.textState}>{global.user.follows.length}</Text>
-                    </View>
-                    <View style={styles.containerText}>
                         <Text style={styles.textHeader}> Thời gian: </Text>
                         <View style={[styles.textHeader, { flexDirection: 'row' }]}>
                             <Text>{global.user.ticketInfo.time}</Text>

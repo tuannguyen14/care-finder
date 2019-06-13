@@ -233,7 +233,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#d9d9d9'
+    backgroundColor: '#e0e0e0'
   },
   listSearch: {
     backgroundColor: 'red',

@@ -55,7 +55,7 @@ export default class AllItems extends Component {
 
   render() {
     return (
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
         <Header
           innerContainerStyles={{ alignItems: 'center' }}
           outerContainerStyles={{ borderBottomWidth: 0 }}
@@ -63,20 +63,10 @@ export default class AllItems extends Component {
           leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
           centerComponent={{ text: 'ĐỊA ĐIỂM', style: { color: '#fff', fontSize: 20 } }}
         />
-        <Modal animationType="slide" transparent={false} visible={this.state.visiblModalFilter} onRequestClose={() => this.setState({ modalVisible: !this.state.visiblModalFilter })}>
-          <View></View>
-        </Modal>
-        {/* <View style={[styles.rowView, { flex: 1 }]}>
-          <Text style={{ fontFamily: Font.textFont, fontSize: 18, marginLeft: '4%', fontWeight: 'bold', flex: 4, marginTop: '3%' }}>{this.state.label}</Text>
-          <TouchableOpacity style={[styles.rowView, { flex: 1, alignItems: 'center', marginTop: '1.5%' }]} onPress={() => this.setState({ visiblModalFilter: !this.state.visiblModalFilter })}>
-            <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>Bộ lọc</Text>
-            <Icon name={'filter'} size={21} color={'gray'} />
-          </TouchableOpacity>
-        </View> */}
 
-        <View style={{ width: width, borderBottomWidth: 1, borderBottomColor: '#BDBDBD', marginTop: '3%' }}></View>
+        <View style={styles.bigLine}></View>
 
-        <List style={{ flex: 5 }}>
+        <View style={{ flex: 5, backgroundColor: 'white' }}>
           {
             this.state.listAllItems.map((l, i) => (
               <ListItem
@@ -129,7 +119,7 @@ export default class AllItems extends Component {
               </ListItem>
             ))
           }
-        </List>
+        </View>
       </ScrollView >
     );
   }
@@ -138,7 +128,7 @@ export default class AllItems extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: '#e0e0e0'
   },
   imageOpenClose: {
     height: 64,
