@@ -189,7 +189,7 @@ export default class InformationItem extends Component {
 
     render() {
         return (
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1, backgroundColor: '#e0e0e0' }}>
                 <Spinner
                     visible={this.state.spinner}
                     textContent={'Đang xử lý'}
@@ -209,7 +209,7 @@ export default class InformationItem extends Component {
                         onPress: () => this.setState({ dialogVisibleConfirm: !this.state.dialogVisibleConfirm })
                     }}
                 />
-                <View style={[styles.rowView, { width: width, marginTop: '1%' }]} >
+                <View style={[styles.rowView, { width: width, marginTop: '1%', backgroundColor: 'white' }]} >
                     <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => global.navigate("MapsScreen", { destinationFromInformationItem: this.state.item.coordinates, isFromInformationItem: true })}>
                         <IconFontAwesome5 name={'directions'} size={50} color={AppColors.color} />
                         <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Chỉ đường</Text>
@@ -233,12 +233,13 @@ export default class InformationItem extends Component {
                             </TouchableOpacity>
                     }
                 </View>
-                <View style={[styles.line, { marginTop: '1%' }]} />
+                <View style={[styles.line]} />
                 <View style={{ height: height }}>
                     {
                         this.state.listDefaultItem.map((l, i) => (
                             <ListItem
                                 key={i}
+                                containerStyle={{ backgroundColor: 'white' }}
                                 hideChevron={true}
                                 leftAvatar={{ source: { uri: l.avatar_url } }}
                                 title={

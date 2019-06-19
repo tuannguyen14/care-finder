@@ -266,7 +266,7 @@ export default class NearBy extends Component {
                         <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: listLocation })}>
                             <View style={[styles.rowView, { alignItems: 'center' }]}>
                                 <ImageBackground style={[styles.imageRating]}>
-                                    <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(listLocation.totalRatingAvg + "").includes('.') ? listLocation.totalRatingAvg : listLocation.totalRatingAvg + '.0'}</Text>
+                                    <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(listLocation.totalRatingAvg + "") == '0' ? '-' : ((listLocation.totalRatingAvg + "").includes('.') ? listLocation.totalRatingAvg : listLocation.totalRatingAvg + '.0')}</Text>
                                 </ImageBackground>
                                 <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', }]}>
                                     <View>

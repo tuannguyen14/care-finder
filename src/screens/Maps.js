@@ -35,12 +35,12 @@ export default class Maps extends Component {
                 longitudeDelta: LONGITUDE_DELTA,
             }),
             origin: {
-                latitude: 11.051825,
-                longitude: 106.667890
+                latitude: null,
+                longitude: null
             },
             destination: {
-                latitude: 0,
-                longitude: 0
+                latitude: null,
+                longitude: null
             },
             listLocation: [],
             isFromInformationItem: false,
@@ -261,7 +261,7 @@ export default class Maps extends Component {
                                     <TouchableOpacity style={styles.card} key={index} onPress={() => navigate("ItemScreen", { item: location })}>
                                         <View style={[styles.rowView, { alignItems: 'center' }]}>
                                             <ImageBackground style={[styles.imageRating]}>
-                                                <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(location.totalRatingAvg + "").includes('.') ? location.totalRatingAvg : location.totalRatingAvg + '.0'}</Text>
+                                                <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(location.totalRatingAvg + "") == '0' ? '-' : ((location.totalRatingAvg + "").includes('.') ? location.totalRatingAvg : location.totalRatingAvg + '.0')}</Text>
                                             </ImageBackground>
                                             <View style={[styles.rowView, { marginTop: '1%', marginLeft: '3%', }]}>
                                                 <View>

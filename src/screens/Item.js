@@ -115,7 +115,7 @@ export default class Item extends Component {
                         <View style={{ flex: 4 }}>
                             <Text style={{ fontFamily: Font.textFont, color: 'black', fontWeight: 'bold', fontSize: 19 }}>{this.state.item.name}</Text>
                             <View style={styles.rowView}>
-                                <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>{(this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0'}</Text>
+                                <Text style={{ fontFamily: Font.textFont, fontSize: 18 }}>{(this.state.item.totalRatingAvg + "") == '0' ? '-' : ((this.state.item.totalRatingAvg + "").includes('.') ? this.state.item.totalRatingAvg : this.state.item.totalRatingAvg + '.0')}</Text>
                                 <Rating
                                     type="heart"
                                     ratingCount={5}
@@ -141,7 +141,8 @@ export default class Item extends Component {
                     <View style={[styles.line, { marginTop: '1%' }]} />
 
                     <ScrollView>
-                        <Tabs>
+                        <Tabs
+                            locked={true}>
                             <Tab heading="Thông tin" tabStyle={{ backgroundColor: AppColors.color }} activeTabStyle={{ backgroundColor: AppColors.color }} activeTextStyle={{ color: '#FFFFFF' }} textStyle={{ color: 'white' }} >
                                 <InformationItem item={this.state.item} navigate={this.props.navigation.navigate} updateNumberOfFollows={this.getNumberOfFollows} />
                             </Tab>

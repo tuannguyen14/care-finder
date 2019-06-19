@@ -147,7 +147,7 @@ export default class componentName extends Component {
                                 {
                                     this.state.user.permission === 'DOCTOR' ?
                                         // <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text style={{ fontSize: 18, fontWeight: "bold", color: "green", marginBottom: '1%' }}>Đã xác thực</Text>
+                                        <Text style={{ fontSize: 18, fontWeight: "bold", color: "green", marginBottom: '1%' }}>Bác sĩ</Text>
                                         /* <Entypo name={'check'} size={23} color={'green'} /> */
                                         /* </View> */
                                         : null
@@ -178,10 +178,6 @@ export default class componentName extends Component {
                             <Text style={styles.textHeader}> Giới tính: </Text>
                             <Text style={styles.textState}>{this.state.user.gender}</Text>
                         </View>
-                        <View style={styles.containerText}>
-                            <Text style={styles.textHeader}> Số địa điểm đang theo dõi: </Text>
-                            <Text style={styles.textState}>{this.state.user.follows.length}</Text>
-                        </View>
                         <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
                         <TouchableOpacity style={{ paddingTop: '1%', paddingBottom: '2%', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', marginLeft: '3%', marginRight: '3%' }} onPress={() => navigate('ChangeInformationUserScreen')}>
                             <View style={{ flexDirection: 'row' }}>
@@ -207,38 +203,6 @@ export default class componentName extends Component {
                             this.state.user.permission === 'DOCTOR' ? null :
                                 <View style={{ height: '0.7%', backgroundColor: 'grey' }} />
                         }
-
-                        {/* <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
-                            <Button
-                                title='Đổi thông tin'
-                                buttonStyle={{
-                                    backgroundColor: AppColors.backgroundColor,
-                                    width: 300,
-                                    height: 45,
-                                    borderColor: "transparent",
-                                    borderWidth: 0,
-                                    borderRadius: 5
-                                }}
-                                onPress={() => navigate("ChangeInformationUserScreen")}
-                            />
-                        </View>
-                        {
-                            this.state.user.permission === 'DOCTOR' ? null :
-                                <View style={{ marginTop: '5%', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Button
-                                        title='Xác thực tài khoản bác sĩ'
-                                        buttonStyle={{
-                                            backgroundColor: AppColors.backgroundColor,
-                                            width: 300,
-                                            height: 45,
-                                            borderColor: "transparent",
-                                            borderWidth: 0,
-                                            borderRadius: 5
-                                        }}
-                                        onPress={() => navigate("VerifyDoctorScreen")}
-                                    />
-                                </View>
-                        } */}
 
                     </View>
 
@@ -328,11 +292,11 @@ const styles = StyleSheet.create({
     textHeader: {
         fontWeight: "bold",
         fontSize: 16,
-        flex: 2
+        flex: 1
     },
     textState: {
         fontSize: 16,
-        flex: 2
+        flex: 3
     },
     touchable: {
         marginTop: "6%",

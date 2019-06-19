@@ -23,7 +23,10 @@ import VerifyDoctor from "../screens/VerifyDoctor";
 import Search from "../screens/Search";
 import BookingDate from "../screens/BookingDate";
 import Booking from "../screens/Booking";
-import QRCode from "../screens/QRCode"
+import QRCode from "../screens/QRCode";
+import ListPatient from "../screens/ListPatient";
+import EditLocation from "../screens/EditLocation";
+import ChooseClinicQRCode from "../screens/ChooseClinicQRCode";
 
 export const MainScreen = createStackNavigator({
   IntroScreen: { screen: Intro },
@@ -47,7 +50,10 @@ export const MainScreen = createStackNavigator({
   SearchScreen: { screen: Search },
   BookingDateScreen: { screen: BookingDate },
   BookingScreen: { screen: Booking },
-  QRCodeScreen: { screen: QRCode }
+  QRCodeScreen: { screen: QRCode },
+  ListPatientScreen: { screen: ListPatient },
+  EditLocationScreen: { screen: EditLocation },
+  ChooseClinicQRCodeScreen: { screen: ChooseClinicQRCode }
 },
   {
     headerMode: 'none'

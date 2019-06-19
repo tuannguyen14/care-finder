@@ -36,7 +36,6 @@ export default class Home extends Component {
       })
         .then((response) => {
           const data = Array.from(response.data.doc);
-
           let day = new Date();
           let dayOfWeek = day.getDay();
           let hours = parseInt(day.getHours());
@@ -223,8 +222,6 @@ export default class Home extends Component {
             />
           </View>
         </ScrollView >
-
-
       </View>
     );
   }

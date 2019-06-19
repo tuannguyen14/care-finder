@@ -38,10 +38,11 @@ export default class LocationManager extends Component {
                     centerComponent={{ text: 'QUẢN LÝ ĐỊA ĐIỂM', style: [Styles.header, { color: '#fff' }] }}
                 />
                 <FlatList
+                    contentContainerStyle={{ backgroundColor: 'white' }}
                     data={this.state.listLocation}
                     renderItem={({ item: data }) => {
                         return (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate("ItemScreen", { item: data })} >
+                            <TouchableOpacity onPress={() => navigate("ItemScreen", { item: data })} >
                                 <Card
                                     title={data.name}
                                     image={{ uri: change_url_image(data.imageUrls[0]) }}
@@ -51,18 +52,16 @@ export default class LocationManager extends Component {
                                     </Text>
 
                                     <View style={styles.containerRow} >
-                                        <TouchableOpacity onPress={() => navigate('BasicInformationScreen', { item: data })}>
-                                            <View>
-                                                <Icon name={'edit'} size={24} color={'black'} />
-                                                <Text style={{ fontFamily: Font.textFont, }}>Sửa</Text>
-                                            </View>
+                                        <TouchableOpacity onPress={() => navigate('EditLocationScreen', { location: data })}>
+                                            <Icon name={'edit'} size={24} color={AppColors.backgroundColor} />
+                                            <Text style={{ fontFamily: Font.textFont, }}>Sửa</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={{ marginLeft: '3%' }}>
+                                        {/* <TouchableOpacity style={{ marginLeft: '3%' }}>
                                             <View>
                                                 <Icon name={'delete'} size={24} color={'black'} />
                                                 <Text style={{ fontFamily: Font.textFont, }}>Xóa</Text>
                                             </View>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
                                     </View>
                                 </Card>
                             </TouchableOpacity>
@@ -78,7 +77,8 @@ export default class LocationManager extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#e0e0e0'
     },
     containerRow: {
         flexDirection: 'row'

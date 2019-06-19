@@ -26,7 +26,6 @@ class MainDrawer extends Component {
                 icon: ''
             },
         };
-        // console.log(this.state.user)
     }
 
     componentWillMount() {
@@ -54,18 +53,23 @@ class MainDrawer extends Component {
                         name: 'Tạo địa điểm',
                         navigation: 'CreateNewLocationScreen'
                     },
-                    // {
-                    //     icon: 'edit-location',
-                    //     name: 'Quản lý địa điểm',
-                    //     navigation: 'LocationManagerScreen'
-                    // }
+                    {
+                        icon: 'edit-location',
+                        name: 'Quản lý địa điểm',
+                        navigation: 'LocationManagerScreen'
+                    },
+                    {
+                        icon: 'event-note',
+                        name: 'Danh sách bệnh nhân',
+                        navigation: 'ListPatientScreen'
+                    },
                 );
             } else {
                 listUtilitiesItem.push(
                     {
                         icon: 'query-builder',
                         name: 'Số thứ tự',
-                        navigation: 'QRCodeScreen'
+                        navigation: 'ChooseClinicQRCodeScreen'
                     }
                 )
             }
@@ -86,15 +90,11 @@ class MainDrawer extends Component {
     }
 
     onQRCode(navigation) {
-        axios.get(IPServer.ip + '/reservation/' + global.user.userId).then((response) => {
-            if (response.data.imageOfReservation == '') {
-                this.refs.toast.show('Không có lịch để xem!');
-            } else {
-                this.props.navigation.navigate(navigation, { url: response.data.imageOfReservation, location: global.user.ticketInfo.location, dateBooking: global.user.ticketInfo.date, time: global.user.ticketInfo.time });
-            }
-        }).catch(err => {
-            console.log(err)
-        });
+        if (global.user.ticketInfo.length == 0) {
+            this.refs.toast.show('Không có lịch để xem!');
+        } else {
+            this.props.navigation.navigate(navigation);
+        }
     }
 
     createUILogged = () => {

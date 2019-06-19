@@ -22,10 +22,8 @@ export default class ChangeInformationUser extends Component {
         this.state = {
             firstName: "",
             lastName: "",
-            email: "",
             newPassword: "",
             confirmPassword: "",
-            phoneNumber: "",
             oldPassword: "",
             male: false,
             female: false,
@@ -40,23 +38,27 @@ export default class ChangeInformationUser extends Component {
         };
     }
 
+    componentWillMount() {
+        if (global.user.gender == 'Name') {
+            this.setState({
+                male: true
+            });
+        } else {
+            this.setState({
+                female: true
+            });
+        }
+    }
+
     onChangeInformation() {
         this.setState({ spinner: !this.state.spinner }, () => {
-            let body = {}
-            console.log(this.state.visible)
+            let body = {
+            }
             if (this.state.firstName !== "") {
                 body.firstName = this.state.firstName
             }
             if (this.state.lastName !== "") {
                 body.lastName = this.state.lastName
-            }
-
-            if (this.state.phoneNumber !== "") {
-                body.phoneNumber = this.state.phoneNumber
-            }
-
-            if (this.state.email !== "") {
-                body.email = this.state.email
             }
 
             body.gender = this.state.male ? 'Nam' : 'Nữ'
@@ -151,6 +153,7 @@ export default class ChangeInformationUser extends Component {
                             <Fumi
                                 style={styles.fumi}
                                 label={'Họ'}
+                                value={global.user.lastName}
                                 labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
                                 inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                                 autoCorrect={false}
@@ -165,6 +168,7 @@ export default class ChangeInformationUser extends Component {
                             <Fumi
                                 style={styles.fumi}
                                 label={'Tên'}
+                                value={global.user.firstName}
                                 labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
                                 inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
                                 autoCorrect={false}
@@ -176,35 +180,6 @@ export default class ChangeInformationUser extends Component {
                                 onChangeText={firstName => this.setState({ firstName })}
                             />
 
-                            <Fumi
-                                keyboardType="email-address"
-                                style={styles.fumi}
-                                label={'Email'}
-                                labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
-                                inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
-                                autoCorrect={false}
-                                iconClass={Icon}
-                                iconName={'mail'}
-                                iconColor={AppColors.color}
-                                returnKeyType={"next"}
-                                iconSize={21}
-                                onChangeText={email => this.setState({ email })}
-                            />
-
-                            <Fumi
-                                keyboardType="numeric"
-                                style={styles.fumi}
-                                label={'Số điện thoại'}
-                                labelStyle={{ color: "#757575", fontFamily: Font.textFont }}
-                                inputStyle={{ color: "#424242", fontFamily: Font.textFont }}
-                                autoCorrect={false}
-                                iconClass={Icon}
-                                iconName={'phone'}
-                                iconColor={AppColors.color}
-                                returnKeyType={"next"}
-                                iconSize={21}
-                                onChangeText={phoneNumber => this.setState({ phoneNumber })}
-                            />
                         </View>
 
                         <View style={styles.containerGender}>

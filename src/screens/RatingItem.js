@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView, Modal, FlatList, TouchableOpacity, Image } from "react-native";
-import { Text, Rating, Avatar, ListItem, Button, Header, Slider } from 'react-native-elements';
+import { View, StyleSheet, Dimensions, ScrollView, Modal, FlatList, Image, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { Text, Rating, Avatar, Header, Slider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
+import Foundation from 'react-native-vector-icons/Foundation';
 import { InputGroup, Input } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
+import { Dialog } from 'react-native-simple-dialogs';
 import AwesomeButton from 'react-native-really-awesome-button';
 import { AppColors } from '../styles/AppColors.js';
 import { IPServer } from '../Server/IPServer.js';
@@ -30,6 +32,7 @@ export default class RatingItem extends Component {
             ratingAttitude: 1,
             contentPost: '',
             informationUserComment: [],
+            isEdit: false,
             isRated: false
         };
     }
@@ -79,7 +82,7 @@ export default class RatingItem extends Component {
                 this.setState({ errorContentInput: true, spinner: !this.state.spinner });
             } else {
                 const body = {
-                    _idUser: this.state.user.userId,
+                    idUser: this.state.user.userId,
                     content: this.state.contentPost,
                     rating: {
                         'location': this.state.ratingLocation,
@@ -88,19 +91,54 @@ export default class RatingItem extends Component {
                         'attitude': this.state.ratingAttitude
                     }
                 }
-                axios.patch(IPServer.ip + '/location/comment/' + this.state.item._id, body, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                    .then(response => {
-                        let arrayIdUserComment = this.state.informationUserComment;
-                        arrayIdUserComment.push(this.state.user);
-                        this.props.ratingScore(response.data.doc);
-                        this.setState({ modalVisible: !this.state.modalVisible, errorContentInput: false, reviews: response.data.doc.reviews, informationUserComment: arrayIdUserComment, item: response.data.doc, spinner: !this.state.spinner, isRated: true });
-                    }).catch(err => {
-                        console.log(err)
-                    });
+                if (this.state.isEdit) {
+                    axios.patch(IPServer.ip + '/location/comment/' + this.state.item._id, body, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                        .then(response => {
+                            let arrayIdUserComment = this.state.informationUserComment;
+                            arrayIdUserComment.push(this.state.user);
+                            this.props.ratingScore(response.data.doc);
+                            this.setState({ reviews: [] }, () => {
+                                this.setState({
+                                    modalVisible: !this.state.modalVisible,
+                                    errorContentInput: false,
+                                    reviews: response.data.doc.reviews,
+                                    informationUserComment: arrayIdUserComment,
+                                    item: response.data.doc,
+                                    spinner: !this.state.spinner,
+                                    isRated: true,
+                                    isEdit: false
+                                });
+                            });
+                        }).catch(err => {
+                            console.log(err)
+                        });
+                } else {
+                    axios.post(IPServer.ip + '/location/comment/' + this.state.item._id, body, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                        .then(response => {
+                            let arrayIdUserComment = this.state.informationUserComment;
+                            arrayIdUserComment.push(this.state.user);
+                            this.props.ratingScore(response.data.doc);
+                            this.setState({
+                                modalVisible: !this.state.modalVisible,
+                                errorContentInput: false,
+                                reviews: response.data.doc.reviews,
+                                informationUserComment: arrayIdUserComment,
+                                item: response.data.doc,
+                                spinner: !this.state.spinner,
+                                isRated: true
+                            });
+                        }).catch(err => {
+                            console.log(err)
+                        });
+                }
             }
         });
     }
@@ -112,10 +150,10 @@ export default class RatingItem extends Component {
         for (element in this.state.item.ratingAvg) {
             i++;
             array.push(
-                < View style={[styles.rowView, { alignItems: 'center', justifyContent: "center" }]}>
+                < View style={[styles.rowView, { alignItems: 'center', justifyContent: "center", backgroundColor: 'white' }]}>
                     <View style={[styles.rowView, { marginLeft: '3%', flex: 1, alignItems: 'center' }]}>
-                        <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{(this.state.item.ratingAvg[element] + "").includes('.') ? this.state.item.ratingAvg[element] : this.state.item.ratingAvg[element] + '.0'}</Text>
-                        <Icon name={'heart'} size={26} color={'#F44336'} style={{ marginLeft: '3%' }} />
+                        <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{(this.state.item.ratingAvg[element] + "").includes('.') ? (this.state.item.ratingAvg[element] + '').substring(0, 3) : this.state.item.ratingAvg[element] + '.0'}</Text>
+                        <Icon name={'heart'} size={23} color={'#F44336'} style={{ marginLeft: '3%' }} />
                     </View>
                     <Rating
                         type="custom"
@@ -123,7 +161,7 @@ export default class RatingItem extends Component {
                         ratingCount={this.state.item.ratingAvg[element] * 2}
                         fractions={0}
                         startingValue={10}
-                        imageSize={26}
+                        imageSize={23}
                         style={{ flex: 3 }}
                     />
                     <View style={{ flex: 1 }}>
@@ -139,13 +177,19 @@ export default class RatingItem extends Component {
         this.setState({ startingValueRating: rating });
     }
 
+    editComment(data) {
+        if (data._idUser == this.state.user.userId) {
+            this.setState({ modalVisible: true, isEdit: true })
+        }
+    }
+
     render() {
         const images = [];
         this.state.item.imageUrls.forEach(element => {
             images.push({ url: element.replace('http://localhost:3000', IPServer.ip) });
         });
         return (
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1, backgroundColor: '#e0e0e0' }}>
                 <Spinner
                     visible={this.state.spinner}
                     textContent={'Đang xử lý'}
@@ -154,7 +198,7 @@ export default class RatingItem extends Component {
                 {
                     global.isLogin ?
                         <Modal animationType="slide" transparent={false} visible={this.state.modalVisible} onRequestClose={() => this.setState({ modalVisible: !this.state.modalVisible })}>
-                            <View style={{ flex: 1 }}>
+                            <KeyboardAvoidingView style={{ flex: 1 }} behavior={'position'}>
                                 <Header
                                     backgroundColor={AppColors.color}
                                     leftComponent={{ icon: 'clear', color: '#fff', size: 31, onPress: () => this.setState({ modalVisible: !this.state.modalVisible }) }}
@@ -231,7 +275,7 @@ export default class RatingItem extends Component {
                                             null
                                     }
                                 </View>
-                            </View>
+                            </KeyboardAvoidingView>
                         </Modal>
                         :
                         null
@@ -242,7 +286,7 @@ export default class RatingItem extends Component {
                     }
                 </View>
 
-                <View>
+                <View style={{ backgroundColor: 'white' }}>
                     <View style={[styles.line]} />
 
                     <View style={[styles.centerContainer]}>
@@ -278,7 +322,7 @@ export default class RatingItem extends Component {
 
                 <View>
                     <View style={[styles.centerContainer]}>
-                        <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Bài đánh giá</Text>
+                        <Text style={{ fontFamily: Font.textFont, color: 'black', fontSize: 19 }}>Bài đánh giá</Text>
                     </View>
                     {
                         this.state.reviews.length == 0
@@ -288,36 +332,39 @@ export default class RatingItem extends Component {
                             </View>
                             :
                             <FlatList
-                                style={{ marginBottom: '1%' }}
+                                style={{ marginBottom: '1%', backgroundColor: 'white', borderTopColor: 'grey', borderTopWidth: 0.7 }}
                                 data={this.state.reviews}
                                 renderItem={({ item: rowData, index }) => {
                                     return (
                                         this.state.informationUserComment[index] != undefined ?
-                                            < View style={[styles.rowView, { alignItems: 'center', borderBottomWidth: 1, padding: '1%' }]} >
-                                                <View style={{ marginLeft: '3%' }}>
-                                                    <Avatar
-                                                        size="medium"
-                                                        rounded
-                                                        source={{ uri: this.state.informationUserComment[index].avatar.includes('localhost') ? this.state.informationUserComment[index].avatar.replace('http://localhost:3000', IPServer.ip) : this.state.informationUserComment[index].avatar }}
-                                                        onPress={() => console.log("Works!")}
-                                                        activeOpacity={0.7}
-                                                    />
+                                            < TouchableOpacity onPress={() => this.editComment(rowData)}  >
+                                                <View style={[styles.rowView, { alignItems: 'center', padding: '1%' }]}>
+                                                    <View style={{ marginLeft: '3%' }}>
+                                                        <Avatar
+                                                            size="medium"
+                                                            rounded
+                                                            source={{ uri: this.state.informationUserComment[index].avatar.includes('localhost') ? this.state.informationUserComment[index].avatar.replace('http://localhost:3000', IPServer.ip) : this.state.informationUserComment[index].avatar }}
+                                                            onPress={() => console.log("Works!")}
+                                                            activeOpacity={0.7}
+                                                        />
+                                                    </View>
+                                                    <View style={{ marginLeft: '3%' }}>
+                                                        <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 23 }}>{this.state.informationUserComment[index].firstName + ' ' + this.state.informationUserComment[index].lastName}</Text>
+                                                        < Rating
+                                                            type="heart"
+                                                            readonly
+                                                            ratingCount={5}
+                                                            fractions={2}
+                                                            startingValue={(rowData.rating.location + rowData.rating.price + rowData.rating.quality + rowData.rating.attitude) / 4}
+                                                            imageSize={21}
+                                                        />
+                                                        <Text style={{ fontFamily: Font.textFont, }}>{rowData.content}</Text>
+                                                    </View>
                                                 </View>
-                                                <View style={{ marginLeft: '3%' }}>
-                                                    <Text style={{ fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 23 }}>{this.state.informationUserComment[index].firstName + ' ' + this.state.informationUserComment[index].lastName}</Text>
-                                                    < Rating
-                                                        type="heart"
-                                                        readonly
-                                                        ratingCount={5}
-                                                        fractions={2}
-                                                        startingValue={(rowData.rating.location + rowData.rating.price + rowData.rating.quality + rowData.rating.attitude) / 4}
-                                                        imageSize={21}
-                                                    />
-                                                    <Text style={{ fontFamily: Font.textFont, }}>{rowData.content}</Text>
-                                                </View>
-                                            </View>
+                                                <View style={{ backgroundColor: 'grey', width: width, height: 1, marginTop: '1%' }} />
+                                            </TouchableOpacity>
                                             :
-                                            <View />
+                                            <View style={{ backgroundColor: 'grey', width: width, height: 1, marginTop: '1%' }} />
                                     );
                                 }}
                             />

@@ -28,7 +28,7 @@ export default class BookingDate extends Component {
     }
 
     getDay(day) {
-        if (parseInt(day) == 0) {
+        if (parseInt(day) == 7) {
             return "Chủ nhật";
         }
         if (parseInt(day) == 1) {

@@ -37,19 +37,26 @@ export default class Booking extends Component {
         if (this.state.dataBookingTime.status == "Closed Today") {
             this.setState({
                 closedDate: true
-            })
+            });
         } else {
             let today = new Date();
             let hours = today.getHours();
             let minutes = today.getMinutes();
-
             let dataBookingTime = this.state.dataBookingTime;
-            if (Object.keys(global.user.ticketInfo).length != 0) {
-                this.setState({
-                    isBooked: true
-                });
-            }
             let dateFormat = today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate());
+            let dateFormatTomorrow = today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate() + 1);
+            let dateFormatAfterTomorrow = today.getFullYear() + "-" + parseInt(today.getMonth() + 1) + "-" + parseInt(today.getDate() + 2);
+            this.state.location.timeBooking.forEach((e) => {
+                if (e.date == dateFormat || e.date == dateFormatTomorrow || e.date == dateFormatAfterTomorrow) {
+                    e.time.forEach((eTime) => {
+                        if (eTime.userId == global.user.userId) {
+                            this.setState({
+                                isBooked: true
+                            });
+                        }
+                    });
+                }
+            });
             let dataBookingTimeValid = [];
             if (dataBookingTime.timeBooking.date == dateFormat) {
                 dataBookingTimeValid = this.state.dataBookingTime.timeBooking.time.filter((e, i) => {
@@ -101,7 +108,7 @@ export default class Booking extends Component {
                         dialogVisibleConfirm: !this.state.dialogVisibleConfirm,
                         spinner: !this.state.spinner
                     }, () => {
-                        this.props.navigation.navigate('QRCodeScreen', { url: response1.data.url, location: this.state.location._id, dateBooking: this.state.today, time: this.state.dataBookingTime[this.state.indexBooking].time });
+                        this.props.navigation.navigate('QRCodeScreen', { ticketInfo: global.user.ticketInfo[global.user.ticketInfo.length - 1] });
                     });
                 }).catch(err => {
                     console.log(err)
@@ -121,7 +128,7 @@ export default class Booking extends Component {
             this.refs.toast.show('Thời gian đã được đặt!');
         } else {
             if (this.state.isBooked) {
-                this.refs.toast.show('Bạn đã đặt lịch ngày hôm nay rồi!');
+                this.refs.toast.show('Bạn đã đặt lịch phòng khám này rồi!');
             } else {
                 this.setState({ messageTime: "Bạn có muốn đặt " + time + " giờ không?", dialogVisibleConfirm: !this.state.dialogVisibleConfirm, indexBooking: i });
             }

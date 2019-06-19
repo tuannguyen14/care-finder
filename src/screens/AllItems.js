@@ -85,7 +85,7 @@ export default class AllItems extends Component {
                           style={styles.imageOpenClose} />
                     }
                     <ImageBackground style={styles.imageRating}>
-                      <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(l.totalRatingAvg + "").includes('.') ? l.totalRatingAvg : l.totalRatingAvg + '.0'}</Text>
+                      <Text style={{ fontFamily: Font.textFont, color: 'white' }}>{(l.totalRatingAvg + "") == '0' ? '-' : ((l.totalRatingAvg + "").includes('.') ? l.totalRatingAvg : l.totalRatingAvg + '.0')}</Text>
                     </ImageBackground>
                     <View style={{ marginTop: '1%', marginLeft: '3%' }}>
                       <Text style={{ fontFamily: Font.textFont, color: 'black' }}>{l.name}</Text>

@@ -270,7 +270,7 @@ export default class CreateNewLocation extends Component {
                     type: 'image/jpg',
                     name: 'image.jpg'
                 })
-            })
+            });
             body.append('latitude', this.state.markerNewLocation.latitude)
             body.append('longitude', this.state.markerNewLocation.longitude)
             fetch(IPServer.ip + '/location', {
@@ -431,7 +431,7 @@ export default class CreateNewLocation extends Component {
     }
 
     render() {
-        const { navigate } = this.props.navigation;
+        const { goBack } = this.props.navigation;
         const selectedItems = this.state.selectedItems;
         return (
             <ScrollView style={{ flex: 1, backgroundColor: AppColors.backgroundColor }}>
@@ -439,7 +439,7 @@ export default class CreateNewLocation extends Component {
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
-                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => navigate("RootDrawer") }}
+                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
                     centerComponent={{ text: 'TẠO ĐỊA ĐIỂM CỦA BẠN', style: [Styles.header, { color: '#fff' }] }}
                 />
                 <View style={styles.container}>
@@ -796,7 +796,7 @@ export default class CreateNewLocation extends Component {
                                     backgroundColor={'white'}
                                     borderRadius={7}
                                     onPress={() => this.createLocation()}>
-                                    <Text style={{ fontFamily: Font.textFont, fontSize: 17, fontWeight: 'bold' }}>Thêm địa điểm</Text>
+                                    <Text style={{ fontFamily: Font.textFont, fontSize: 17, fontWeight: 'bold' }}>Đồng ý</Text>
                                 </AwesomeButton>
                             </View>
                             {
