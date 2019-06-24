@@ -123,7 +123,6 @@ export default class Booking extends Component {
     }
 
     onCheck(i, time) {
-
         if (this.state.dataBookingTime[i].userId != '') {
             this.refs.toast.show('Thời gian đã được đặt!');
         } else {
@@ -170,25 +169,25 @@ export default class Booking extends Component {
                     onTouchOutside={() => this.setState({ dialogVisibleHelp: false })} >
                     <View style={{ alignItems: 'baseline' }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', margin: '1%' }}>
-                            <View style={{ height: 32, width: 32, backgroundColor: '#98ee99' }} />
+                            <View style={{ height: 32, width: 32, backgroundColor: '#81c784' }} />
                             <Text style={{ fontSize: 19 }}>Còn trống</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center', margin: '1%' }}>
-                            <View style={{ height: 32, width: 32, backgroundColor: '#ff867c' }} />
+                            <View style={{ height: 32, width: 32, backgroundColor: '#e57373' }} />
                             <Text style={{ fontSize: 19 }}>Đã được đặt</Text>
                         </View>
                     </View>
                 </Dialog>
                 {
                     this.state.closedDate ?
-                        <View style={{ width: width, backgroundColor: '#ff867c' }}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={{ fontSize: 21 }}>Đóng cửa ngày hôm nay!</Text>
                         </View>
                         :
                         <ScrollView style={{ marginBottom: '3%' }}>
                             {
                                 this.state.dataBookingTime.map((l, i) => (
-                                    < View style={{ backgroundColor: l.userId == '' ? '#98ee99' : '#ff867c' }}>
+                                    < View style={{ backgroundColor: l.userId == '' ? '#81c784' : (l.userId == global.user.userId ? '#64b5f6' : '#e57373') }}>
                                         <ListItem
                                             key={i}
                                             title={l.time}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, ScrollView, Modal, FlatList, Image, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { Text, Rating, Avatar, Header, Slider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
-import Foundation from 'react-native-vector-icons/Foundation';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { InputGroup, Input } from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 import axios from 'axios';
@@ -33,7 +33,9 @@ export default class RatingItem extends Component {
             contentPost: '',
             informationUserComment: [],
             isEdit: false,
-            isRated: false
+            isRated: false,
+            dialogVisible: false,
+            detailRatingFromUser: []
         };
     }
 
@@ -173,13 +175,48 @@ export default class RatingItem extends Component {
         return array;
     }
 
+    createRatingDetailItem = () => {
+        let array = [];
+        let arrayString = ['Vị trí', 'Giá cả', 'Dịch vụ', 'Thái độ'];
+        let i = 0;
+        console.log(this.state.detailRatingFromUser)
+        for (element in this.state.detailRatingFromUser.rating) {
+            i++;
+            array.push(
+                < View style={[styles.rowView, { alignItems: 'center', justifyContent: "center", backgroundColor: 'white' }]}>
+                    <View style={[styles.rowView, { marginLeft: '3%', flex: 1, alignItems: 'center' }]}>
+                        <Text style={{ fontFamily: Font.textFont, marginLeft: '3%' }}>{this.state.detailRatingFromUser.rating[element].toFixed(1)}</Text>
+                        <Icon name={'heart'} size={23} color={'#F44336'} style={{ marginLeft: '3%' }} />
+                    </View>
+                    <Rating
+                        type="custom"
+                        ratingImage={square}
+                        ratingCount={this.state.detailRatingFromUser.rating[element]}
+                        fractions={0}
+                        startingValue={10}
+                        imageSize={23}
+                        style={{ flex: 3 }}
+                    />
+                    <View style={{ flex: 1 }}>
+                        <Text style={{ alignSelf: 'flex-end', fontFamily: Font.textFont, fontWeight: 'bold', fontSize: 16, marginTop: '1.6%', marginRight: '1%' }}>{arrayString[i - 1]}</Text>
+                    </View>
+                </View >
+            )
+        }
+        return array;
+    }
+
     ratingCompleted = (rating) => {
         this.setState({ startingValueRating: rating });
     }
 
     editComment(data) {
-        if (data._idUser == this.state.user.userId) {
-            this.setState({ modalVisible: true, isEdit: true })
+        if (global.isLogin) {
+            if (data._idUser == this.state.user.userId) {
+                this.setState({ modalVisible: true, isEdit: true })
+            } else {
+                this.setState({ dialogVisible: true, detailRatingFromUser: data })
+            }
         }
     }
 
@@ -198,7 +235,7 @@ export default class RatingItem extends Component {
                 {
                     global.isLogin ?
                         <Modal animationType="slide" transparent={false} visible={this.state.modalVisible} onRequestClose={() => this.setState({ modalVisible: !this.state.modalVisible })}>
-                            <KeyboardAvoidingView style={{ flex: 1 }} behavior={'position'}>
+                            <View style={{ flex: 1 }}>
                                 <Header
                                     backgroundColor={AppColors.color}
                                     leftComponent={{ icon: 'clear', color: '#fff', size: 31, onPress: () => this.setState({ modalVisible: !this.state.modalVisible }) }}
@@ -275,11 +312,25 @@ export default class RatingItem extends Component {
                                             null
                                     }
                                 </View>
-                            </KeyboardAvoidingView>
+                            </View>
                         </Modal>
                         :
                         null
                 }
+                <Dialog
+                    visible={this.state.dialogVisible}
+                    onTouchOutside={() => this.setState({ dialogVisible: false })} >
+                    <View>
+                        {
+                            this.createRatingDetailItem()
+                        }
+                        <View style={{ height: 1, backgroundColor: 'grey', marginTop: '1%' }} />
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <MaterialCommunityIcons name={'message-text-outline'} size={21} style={{ marginTop: '1.99%' }} />
+                            <Text style={{ fontSize: 19, marginLeft: '3%' }}>{this.state.detailRatingFromUser.content}</Text>
+                        </View>
+                    </View>
+                </Dialog>
                 <View>
                     {
                         this.createRatingoneToFive()
@@ -380,6 +431,12 @@ const styles = StyleSheet.create({
         height: 80,
         width: 80,
         borderRadius: 40,
+    },
+    modalRatingDetail: {
+        width: width / 2,
+        height: height / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     image: {
         height: height * 0.3,

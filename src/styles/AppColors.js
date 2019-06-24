@@ -1,4 +1,4 @@
 export class AppColors {
-    static color = '#f44336';
-    static backgroundColor = '#e57373';
+    static color = '#e57373';
+    static backgroundColor = '#ef9a9a';
 }

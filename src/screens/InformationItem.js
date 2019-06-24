@@ -31,7 +31,7 @@ export default class InformationItem extends Component {
             dataArray: [],
             isFollowed: false,
             spinner: false,
-            isVisibleModal: false,
+            modalVisible: false,
             dialogVisibleConfirm: false
         };
     }
@@ -147,7 +147,7 @@ export default class InformationItem extends Component {
     }
 
     onModifyFollow() {
-        this.setState({ isVisibleModal: !this.setState.modalVisible });
+        this.setState({ modalVisible: !this.setState.modalVisible });
     }
 
     onUnFollow() {
@@ -177,7 +177,7 @@ export default class InformationItem extends Component {
                         console.log(err)
                     })
                     this.props.updateNumberOfFollows(temp);
-                    this.setState({ isFollowed: false, isVisibleModal: false })
+                    this.setState({ isFollowed: false, modalVisible: false })
                 }).catch(err => {
                     console.log(err)
                 })
@@ -185,6 +185,12 @@ export default class InformationItem extends Component {
         else {
             //warning
         }
+    }
+
+    setModalVisible(visible) {
+        this.setState({
+            modalVisible: visible,
+        })
     }
 
     render() {
@@ -217,8 +223,8 @@ export default class InformationItem extends Component {
                     {
                         this.state.isFollowed ?
                             <TouchableOpacity style={[styles.centerContainer, { width: width * 0.5 }]} onPress={() => this.onModifyFollow()}>
-                                <Modal isVisible={this.state.isVisibleModal} onRequestClose={() => this.setState({ isVisibleModal: !this.state.isVisibleModal })}>
-                                    <TouchableOpacity style={styles.modalContainer} onPress={() => this.onUnFollow()}>
+                                <Modal animationType="fade" transparent={true} isVisible={this.state.modalVisible} onRequestClose={() => { this.setModalVisible(false) }}>
+                                    <TouchableOpacity onPressOut={() => { this.setModalVisible(false) }} style={styles.modalContainer} onPress={() => this.onUnFollow()}>
                                         <IconSimpleLineIcons name={'user-unfollow'} size={50} color={AppColors.color} />
                                         <Text style={{ fontFamily: Font.textFont, color: 'black' }}>Bỏ theo dõi</Text>
                                     </TouchableOpacity>

@@ -12,7 +12,7 @@ export default class ChooseClinicQRCode extends Component {
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
-                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => goBack() }}
+                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
                     centerComponent={{ text: 'CHỌN PHÒNG KHÁM', style: [Styles.header, { color: '#fff' }] }}
                 />
                 {

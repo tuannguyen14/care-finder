@@ -3,6 +3,7 @@ import { Dimensions, View, Image, Text, StyleSheet, ScrollView } from 'react-nat
 import { Header } from 'react-native-elements';
 import axios from 'axios';
 import AwesomeButton from 'react-native-really-awesome-button';
+import LottieView from 'lottie-react-native';
 import { AppColors } from '../styles/AppColors.js';
 import { Font } from '../styles/Font.js';
 import Styles from '../styles/Styles.js';
@@ -27,23 +28,23 @@ export default class QRCode extends Component {
         let hours = parseInt(date.getHours());
         let minutes = parseInt(date.getMinutes());
         ticketInfo = this.state.ticketInfo;
-        if (parseInt(day) < parseInt(ticketInfo.date.split('-')[2])) {
-            ticketInfo.expired = true;
-        } else if (day == ticketInfo.date.split('-')[2] && hours > parseInt((ticketInfo.time).substring(0, 2))) {
-            ticketInfo.expired = true;
-            console.log(1)
-            console.log(hours + '-------' + parseInt((ticketInfo.time).substring(0, 2)))
-        } else if (hours == parseInt((ticketInfo.time).substring(0, 2)) && minutes > parseInt((ticketInfo.time).substring(3, 5))) {
-            console.log(2)
-            console.log(hours + '-------' + parseInt((ticketInfo.time).substring(0, 2)))
-            console.log(minutes + '-------' + parseInt((ticketInfo.time).substring(3, 5)))
-            ticketInfo.expired = true;
-        } else if (hours == parseInt((ticketInfo.time).substring(0, 2)) && minutes < parseInt((ticketInfo.time).substring(3, 5))) {
-            console.log(3)
-            ticketInfo.expired = true;
-        } else {
-            ticketInfo.expired = false;
-        }
+        // if (parseInt(day) < parseInt(ticketInfo.date.split('-')[2])) {
+        //     ticketInfo.expired = true;
+        // } else if (day == ticketInfo.date.split('-')[2] && hours > parseInt((ticketInfo.time).substring(0, 2))) {
+        //     ticketInfo.expired = true;
+        //     console.log(1)
+        //     console.log(hours + '-------' + parseInt((ticketInfo.time).substring(0, 2)))
+        // } else if (hours == parseInt((ticketInfo.time).substring(0, 2)) && minutes > parseInt((ticketInfo.time).substring(3, 5))) {
+        //     console.log(2)
+        //     console.log(hours + '-------' + parseInt((ticketInfo.time).substring(0, 2)))
+        //     console.log(minutes + '-------' + parseInt((ticketInfo.time).substring(3, 5)))
+        //     ticketInfo.expired = true;
+        // } else if (hours == parseInt((ticketInfo.time).substring(0, 2)) && minutes < parseInt((ticketInfo.time).substring(3, 5))) {
+        //     console.log(3)
+        //     ticketInfo.expired = true;
+        // } else {
+        ticketInfo.expired = false;
+        // }
 
     }
 
@@ -80,11 +81,22 @@ export default class QRCode extends Component {
                     innerContainerStyles={{ alignItems: 'center' }}
                     outerContainerStyles={{ borderBottomWidth: 0 }}
                     backgroundColor={AppColors.color}
-                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.navigate('RootDrawer') }}
+                    leftComponent={{ icon: 'keyboard-backspace', color: '#fff', size: 31, onPress: () => this.props.navigation.goBack() }}
                     centerComponent={{ text: 'MÃ THỨ TỰ', style: [Styles.header, { color: '#fff' }] }}
                 />
+                {/* <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: '3%' }}>
+                    <LottieView
+                        autoPlay={true}
+                        ref={animation => {
+                            this.animation = animation;
+                        }}
+                        source={props.animation}
+                        style={props.animation != require('../animation/stars.json') ? { width: 320, height: 320 } : {}}
+                    />
+                    <Text></Text>
+                </View> */}
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: '3%' }}>
-                    <Image source={{ uri: `${this.state.ticketInfo.imageOfReservation}` }} style={{ width: width, height: height / 2 }} />
+                    <Image source={{ uri: `${this.state.ticketInfo.imageOfReservation}` }} style={{ width: width / 2, height: height / 4 }} />
                     {
                         this.state.ticketInfo.expired ?
                             <Text style={{ fontSize: 19, color: 'red', alignSelf: 'center' }}>Phiếu hết hạn</Text> :
